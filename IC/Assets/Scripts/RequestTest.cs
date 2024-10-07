@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-
 public class RequestTest : MonoBehaviour {
     public Text paramsText, respostaText;
     public Button getParamsButton, makeRequestButton;
@@ -18,16 +17,24 @@ public class RequestTest : MonoBehaviour {
     [DllImport("__Internal")]
     private static extern string GetURLParams();
 
+
     public void HandleMostrarParams() {
-        HelloString("Teste!");
-/*
         string parametrosStr = GetURLParams();
+
+        if (string.IsNullOrEmpty(parametrosStr) || !parametrosStr.StartsWith("?")) {
+            paramsText.text = "Nenhum parâmetro encontrado";
+            return;
+        }
+
+        parametrosStr = parametrosStr.Substring(1);
+
         string[] parametros = parametrosStr.Split('&');
         string texto = "";
         foreach (string parametro in parametros) {
             texto += parametro + "\n";
-        }*/
-        paramsText.text = GetURLParams();;
+        }
+
+        paramsText.text = texto;
     }
 
     public void HandleFazerRequisicao() {

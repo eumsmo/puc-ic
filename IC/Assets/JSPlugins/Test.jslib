@@ -1,14 +1,15 @@
 mergeInto(LibraryManager.library, {
 
-  Hello: function () {
-    window.alert("Hello, world!");
-  },
-
   HelloString: function (str) {
     window.alert(UTF8ToString(str));
   },
-  
+
   GetURLParams: function () {
-    return window.location.search;
+    let str =  document.location.search;
+    let bufferSize = lengthBytesUTF8(str) + 1;
+    let buffer = _malloc(bufferSize);
+    stringToUTF8(str, buffer, bufferSize);
+    return buffer;
   },
+
 });
