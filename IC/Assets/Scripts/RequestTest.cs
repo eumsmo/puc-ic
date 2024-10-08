@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class RequestTest : MonoBehaviour {
     public Text paramsText, respostaText;
@@ -53,5 +54,9 @@ public class RequestTest : MonoBehaviour {
                 respostaText.text = webRequest.downloadHandler.text;
             }
         }
+    }
+
+    public void VoltarAoJogo() {
+        SceneManager.LoadScene("Jogo");
     }
 }
