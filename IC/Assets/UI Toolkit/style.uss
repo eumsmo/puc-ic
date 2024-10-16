@@ -21,6 +21,11 @@
     border-bottom-left-radius: 4px;
     flex-grow: 1;
     width: 100%;
+    padding-top: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    height: 45px;
 }
 
 .input-tentativa > * {
@@ -38,4 +43,5 @@
     border-top-right-radius: 11px;
     border-bottom-right-radius: 11px;
     border-bottom-left-radius: 11px;
+    font-size: 20px;
 }
