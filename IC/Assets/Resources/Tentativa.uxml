@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Tentativa" class="tentativa">
+        <ui:Label tabindex="-1" text="palavra" parse-escape-sequences="true" display-tooltip-when-elided="true" name="palavra" style="color: rgb(255, 255, 255);" />
+        <ui:Label tabindex="-1" text="10" parse-escape-sequences="true" display-tooltip-when-elided="true" name="numero" style="color: rgb(255, 255, 255);" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour {
     public static UIController instance;
@@ -10,14 +9,19 @@ public class UIController : MonoBehaviour {
     public string textHolderName;
     public string attemptButtonName;
     public string inputFieldName;
-    public string testButtonName;
+    public string startButtonName;
+    public string startScreenName;
 
     public string textoClassName;
     public string ocultoClassName;
 
-    VisualElement textHolder;
+    public VisualTreeAsset tentativaTemplate;
+
+    VisualElement textHolder, startScreen;
+    ScrollView tentativasList;
     Button attemptButton;
     TextField inputField;
+    Label tempoLabel;
 
     // Palavras que por padrão não serão ocultas
     string[] palavrasNaoOcultas = new string[] {
@@ -27,6 +31,8 @@ public class UIController : MonoBehaviour {
         "quando", "onde", "quem", "qual", "quais", "porque",
         "pois", "então", "assim", "logo"
     };
+
+    List<string> tentativas = new List<string>();
 
     void Awake() {
         if (instance == null) {
@@ -38,24 +44,46 @@ public class UIController : MonoBehaviour {
 
         var root = GetComponent<UIDocument>().rootVisualElement;
         textHolder = root.Q<VisualElement>(textHolderName);
+        startScreen = root.Q<VisualElement>(startScreenName);
+        tempoLabel = root.Q<Label>("Tempo");
+        tentativasList = root.Q<ScrollView>("TentativasList");
+
+        tentativasList.Clear();
+        tentativas.Clear();
 
         inputField = root.Q<TextField>(inputFieldName);
 
         attemptButton = root.Q<Button>(attemptButtonName);
         attemptButton.clicked += OnAttemptButtonClicked;
 
-        Button testButton = root.Q<Button>(testButtonName);
-        testButton.clicked += OnTestButtonClicked;
+        Button startButton = root.Q<Button>(startButtonName);
+        startButton.clicked += OnStartGameClicked;
+
+        startScreen.style.display = DisplayStyle.Flex;
     }
 
-    void OnTestButtonClicked() {
-        SceneManager.LoadScene("RequestTest");
+    public void OnStartGameClicked() {
+        GameManager.instance.StartGame();
+    }
+    
+
+    public void HandleGameStarted() {
+        startScreen.style.display = DisplayStyle.None;
+    }
+
+    public void UpdateTempo(int tempoSeconds) {
+        int min = tempoSeconds / 60;
+        int sec = tempoSeconds % 60;
+        tempoLabel.text = string.Format("{0:00}:{1:00}", min, sec);
     }
 
     void OnAttemptButtonClicked() {
         string tentativa = inputField.value;
         inputField.value = "";
 
+        if (tentativas.Contains(tentativa)) return;
+
+        int encontrados = 0;
         foreach (VisualElement child in textHolder.Children()) {
             Label label = (Label)child;
             string palavra = (string)label.userData;
@@ -63,8 +91,20 @@ public class UIController : MonoBehaviour {
             if (palavra == tentativa) {
                 label.text = palavra;
                 label.RemoveFromClassList(ocultoClassName);
+                encontrados++;
             }
         }
+
+        ArmazenarTentativa(tentativa, encontrados);
+    }
+
+    public void ArmazenarTentativa(string tentativa, int resultados) {
+        var tentativaEl = tentativaTemplate.Instantiate();
+        tentativaEl.Q<Label>("palavra").text = tentativa;
+        tentativaEl.Q<Label>("numero").text = "" + resultados;
+
+        tentativasList.Add(tentativaEl);
+        tentativas.Add(tentativa);
     }
 
     public void GerarPalavras(List<string> palavras) {

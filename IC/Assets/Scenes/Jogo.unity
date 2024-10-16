@@ -186,9 +186,11 @@ MonoBehaviour:
   textHolderName: TextHolder
   attemptButtonName: ButtonTentativa
   inputFieldName: InputTentativa
-  testButtonName: TestButton
+  startButtonName: ComecarButton
+  startScreenName: StartScreen
   textoClassName: texto
   ocultoClassName: oculto
+  tentativaTemplate: {fileID: 9197481963319205126, guid: 81f1ddaa7486632438e15391b09d678f, type: 3}
 --- !u!1 &1419520399
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,6 +201,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1419520401}
   - component: {fileID: 1419520400}
+  - component: {fileID: 1419520402}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -218,7 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26a5deb40b4d49848bbd02db6ab40e28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  texto: teste
+  gameState: 0
 --- !u!4 &1419520401
 Transform:
   m_ObjectHideFlags: 0
@@ -234,6 +237,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1419520402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419520399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5acd78387aabb94780e4c05b2ff16f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1887063523
 GameObject:
   m_ObjectHideFlags: 0

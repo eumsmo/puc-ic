@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Jogo.unity
     guid: 4a16f6eb16a75fc4a875ef20ed7a7fa3
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/RequestTest.unity
     guid: c4c247d3e21ce8444952ae4a40f6e7a5
   m_configObjects: {}

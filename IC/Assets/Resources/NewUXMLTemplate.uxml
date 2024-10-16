@@ -1,10 +1,11 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="Tentativa" src="project://database/Assets/Resources/Tentativa.uxml?fileID=9197481963319205126&amp;guid=81f1ddaa7486632438e15391b09d678f&amp;type=3#Tentativa" />
     <Style src="project://database/Assets/UI%20Toolkit/style.uss?fileID=7433441132597879392&amp;guid=d1262be886dfb9240948683fa2d3fb30&amp;type=3#style" />
     <ui:VisualElement name="Base" style="flex-grow: initial; width: 100%; height: 100%; background-color: rgba(255, 0, 0, 0); align-items: center; justify-content: center; flex-direction: row;">
         <ui:VisualElement name="GameHolder" style="flex-grow: initial; flex-basis: auto; flex-shrink: 1; width: 800px; height: 100%;">
             <ui:Button text="Ir para teste" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TestButton" style="position: absolute; left: 0; top: 0; font-size: 8px; padding-top: 2px; padding-right: 2px; padding-bottom: 2px; padding-left: 2px; background-color: rgb(151, 83, 164); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; color: rgb(255, 255, 255);" />
             <ui:VisualElement name="Header" style="flex-grow: initial; background-color: rgb(111, 72, 115); height: 60px;">
-                <ui:Label tabindex="-1" text="00:00" parse-escape-sequences="true" display-tooltip-when-elided="true" style="-unity-font-style: bold; -unity-text-align: middle-right; flex-grow: 1; font-size: 30px; color: rgb(243, 243, 243);" />
+                <ui:Label tabindex="-1" text="00:00" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Tempo" style="-unity-font-style: bold; -unity-text-align: middle-right; flex-grow: 1; font-size: 30px; color: rgb(243, 243, 243);" />
             </ui:VisualElement>
             <ui:VisualElement name="Middle" style="flex-grow: 1;">
                 <ui:VisualElement name="TextHolderHolder" style="flex-grow: 1; background-color: rgb(173, 116, 184); width: 100%; height: 100%; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: center; align-self: center; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;">
@@ -19,9 +20,16 @@
             <ui:VisualElement name="Footer" style="flex-grow: initial; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; background-color: rgb(111, 72, 115); height: 30%;">
                 <ui:VisualElement name="VisualElement" style="flex-grow: initial; flex-direction: row; height: 45px; width: 100%; bottom: 0; align-items: stretch;">
                     <ui:TextField picking-mode="Ignore" value="Advinhe uma palavra" multiline="false" name="InputTentativa" class="input-tentativa" style="width: 60%;" />
-                    <ui:Button text="Tentar" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonTentativa" style="background-color: rgb(149, 58, 156); border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; color: rgb(238, 238, 238); width: 14%; font-size: 16px; -unity-font-style: bold;" />
+                    <ui:Button text="Tentar" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonTentativa" class="botao" />
                 </ui:VisualElement>
+                <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" name="TentativasList" style="flex-grow: 1; padding-top: 6px; padding-right: 6px; padding-bottom: 6px; padding-left: 6px;">
+                    <ui:Instance template="Tentativa" name="Tentativa" />
+                    <ui:Instance template="Tentativa" name="Tentativa" />
+                </ui:ScrollView>
             </ui:VisualElement>
         </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="StartScreen" style="flex-grow: 1; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgb(173, 116, 184); display: none; align-items: center; justify-content: center;">
+        <ui:Button text="Jogar" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ComecarButton" class="botao" style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; font-size: 20px; width: 22%;" />
     </ui:VisualElement>
 </ui:UXML>
