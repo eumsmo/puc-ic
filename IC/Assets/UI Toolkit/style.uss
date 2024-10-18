@@ -6,6 +6,7 @@
     border-bottom-left-radius: 2px;
     border-left-width: 4px;
     border-right-width: 4px;
+    font-size: 12px;
 }
 
 .oculto {

@@ -59,3 +59,7 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+# Secrets file (like API keys)
+[Aa]ssets/Resources/SECRETS.asset
+[Aa]ssets/Resources/SECRETS.asset.meta

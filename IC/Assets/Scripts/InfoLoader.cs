@@ -9,6 +9,17 @@ public class InfoLoader : MonoBehaviour {
     private static extern string GetURLParams();
     public ArtigoInfo info;
 
+    public string API_KEY { 
+        get { 
+            Secrets asset = Resources.Load<Secrets>("SECRETS");
+            if (asset == null) {
+                Debug.LogError("SECRETS não encontrado, defina um scriptable 'SECRETS' na pasta Resources");
+                return "";
+            }
+            return asset.API_KEY;
+        } 
+    }
+
     public IEnumerator LoadTexto() {
         string url = GetURLInParams();
 
@@ -17,7 +28,7 @@ public class InfoLoader : MonoBehaviour {
         else
             yield return StartCoroutine(LoadTextoWeb(url));
     }
-
+    
     public string GetURLInParams() {
         #if UNITY_WEBGL && !UNITY_EDITOR
 
@@ -39,6 +50,10 @@ public class InfoLoader : MonoBehaviour {
                 if (parametro.StartsWith("url=")) {
                     texto = parametro.Substring(4);
                     break;
+                } else if (parametro.StartsWith("drive=")) {
+                    string fileID = parametro.Substring(6);
+                    texto = string.Format("https://www.googleapis.com/drive/v3/files/{0}?alt=media&key={1}", fileID, API_KEY);
+                    break;
                 }
             }
 
@@ -58,9 +73,7 @@ public class InfoLoader : MonoBehaviour {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url)) {
             yield return webRequest.SendWebRequest();
 
-            if (webRequest.result == UnityWebRequest.Result.ConnectionError) {
-                errorMessage = "Erro de rede: " + webRequest.error;
-            } else {
+            if (webRequest.result == UnityWebRequest.Result.Success) {
                 try {
                     string json = webRequest.downloadHandler.text;
                     info = JsonUtility.FromJson<ArtigoInfo>(json);
@@ -72,6 +85,8 @@ public class InfoLoader : MonoBehaviour {
                 } catch (System.Exception e) {
                     errorMessage = "Erro de resposta: " + e.Message;
                 }
+            } else {
+                errorMessage = "Erro de rede: " + webRequest.error;
             }
         }
 
