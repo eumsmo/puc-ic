@@ -4,10 +4,17 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
+public enum LoadMode {
+    LOCAL,
+    WEB_URL,
+    WEB_DRIVE
+}
+
 public class InfoLoader : MonoBehaviour {
     [DllImport("__Internal")]
     private static extern string GetURLParams();
     public ArtigoInfo info;
+    public LoadMode loadMode = LoadMode.LOCAL;
 
     public string API_KEY { 
         get { 
@@ -23,10 +30,12 @@ public class InfoLoader : MonoBehaviour {
     public IEnumerator LoadTexto() {
         string url = GetURLInParams();
 
-        if (string.IsNullOrEmpty(url))
+        if (string.IsNullOrEmpty(url)){
+            loadMode = LoadMode.LOCAL;
             yield return StartCoroutine(LoadTextoLocal());
-        else
+        } else {
             yield return StartCoroutine(LoadTextoWeb(url));
+        }
     }
     
     public string GetURLInParams() {
@@ -49,11 +58,15 @@ public class InfoLoader : MonoBehaviour {
             foreach (string parametro in parametros) {
                 if (parametro.StartsWith("url=")) {
                     texto = parametro.Substring(4);
+                    loadMode = LoadMode.WEB_URL;
                     break;
                 } else if (parametro.StartsWith("drive=")) {
                     string fileID = parametro.Substring(6);
                     texto = string.Format("https://www.googleapis.com/drive/v3/files/{0}?alt=media&key={1}", fileID, API_KEY);
+                    loadMode = LoadMode.WEB_DRIVE;
                     break;
+                } else {
+                    loadMode = LoadMode.LOCAL;
                 }
             }
 
@@ -81,12 +94,37 @@ public class InfoLoader : MonoBehaviour {
                     List<string> palavras = SepararPalavras(info.resumo);
                     deuCerto = true;
 
-                    UIController.instance.GerarPalavras(palavras);
+                    UIController.game.GerarPalavras(palavras);
                 } catch (System.Exception e) {
                     errorMessage = "Erro de resposta: " + e.Message;
+
+                    switch (loadMode) {
+                        case LoadMode.WEB_URL:
+                            GameManager.instance.SetError("Não foi possível carregar o conteúdo do link fornecido");
+                            break;
+                        case LoadMode.WEB_DRIVE:
+                            GameManager.instance.SetError("Não foi possível carregar o conteúdo apartir do ID fornecido");
+                            break;
+                        default:
+                            GameManager.instance.SetError("Um erro não especificado ocorreu ao carregar o conteúdo do jogo");
+                            break;
+                    }
+                }
+            } else if(webRequest.responseCode == 404) {
+                switch (loadMode) {
+                    case LoadMode.WEB_URL:
+                        GameManager.instance.SetError("Não foi possível encontrar o conteúdo do link fornecido");
+                        break;
+                    case LoadMode.WEB_DRIVE:
+                        GameManager.instance.SetError("Não foi possível encontrar o conteúdo apartir do ID fornecido");
+                        break;
+                    default:
+                        GameManager.instance.SetError("Um erro não especificado ocorreu ao carregar o conteúdo do jogo");
+                        break;
                 }
             } else {
                 errorMessage = "Erro de rede: " + webRequest.error;
+                GameManager.instance.SetError("Problema de conexão com a internet");
             }
         }
 
@@ -102,12 +140,16 @@ public class InfoLoader : MonoBehaviour {
 
         if (!System.IO.File.Exists(filePath)) {
             Debug.LogError("Arquivo não encontrado: " + filePath);
+
+            if (loadMode == LoadMode.LOCAL) {
+                GameManager.instance.SetError("Nenhum artigo selecionado, tenha certeza que digitou o link corretamente");
+            }
         } else {
             string json = System.IO.File.ReadAllText(filePath);
             info = JsonUtility.FromJson<ArtigoInfo>(json);
             
             List<string> palavras = SepararPalavras(info.resumo);
-            UIController.instance.GerarPalavras(palavras);
+            UIController.game.GerarPalavras(palavras);
         }
 
         yield return null;

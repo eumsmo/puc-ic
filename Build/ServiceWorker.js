@@ -1,4 +1,4 @@
-const cacheName = "Juan Vitor-IC-1.0";
+const cacheName = "Juan Vitor-IC-1.1";
 const contentToCache = [
     "Build/Build.loader.js",
     "Build/Build.framework.js",

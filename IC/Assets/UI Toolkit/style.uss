@@ -84,3 +84,9 @@
     align-items: stretch;
     margin-top: 8px;
 }
+
+.imagem-alerta {
+    --unity-image: resource('Sprites/Alerta');
+    --unity-image-tint-color: rgba(0,0,0, 0.7);
+    width: 150px;
+}

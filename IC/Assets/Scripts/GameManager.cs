@@ -41,10 +41,18 @@ public class GameManager : MonoBehaviour {
         UIController.instance.HandleGameStarted();
     }
 
+    public void SetError(string error) {
+        UIController.instance.HandleGameError(error);
+    }
+
+    public void SetError() {
+        SetError("Ocorreu um erro ao carregar o texto");
+    }
+
     void FixedUpdate() {
         if (gameState != GameState.PLAYING) return;
 
         tempo += Time.fixedDeltaTime;
-        UIController.instance.UpdateTempo(Mathf.RoundToInt(tempo));
+        UIController.game.UpdateTempo(Mathf.RoundToInt(tempo));
     }
 }

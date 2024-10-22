@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 994494840}
   - component: {fileID: 994494839}
   - component: {fileID: 994494841}
+  - component: {fileID: 994494842}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -183,11 +184,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5ddcf80d50e724b83c46f7a9d14b55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &994494842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 994494838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f81d005254ac534c87b2cfe239fe30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   textHolderName: TextHolder
   attemptButtonName: ButtonTentativa
   inputFieldName: InputTentativa
-  startButtonName: ComecarButton
-  startScreenName: StartScreen
   textoClassName: texto
   ocultoClassName: oculto
   tentativaTemplate: {fileID: 9197481963319205126, guid: 81f1ddaa7486632438e15391b09d678f, type: 3}
@@ -249,6 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5acd78387aabb94780e4c05b2ff16f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadMode: 1
 --- !u!1 &1887063523
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,7 +298,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.62081224, g: 0.41429335, b: 0.6603774, a: 0}
+  m_BackGroundColor: {r: 0.49333367, g: 0.31149876, b: 0.5283019, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
