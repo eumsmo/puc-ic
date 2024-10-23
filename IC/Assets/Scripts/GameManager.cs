@@ -26,9 +26,11 @@ public class GameManager : MonoBehaviour {
         }
 
         infoLoader = GetComponent<InfoLoader>();
+        
     }
 
     void Start() {
+        infoLoader.LoadStopWords();
         StartCoroutine(infoLoader.LoadTexto());
     }
 

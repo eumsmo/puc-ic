@@ -16,6 +16,8 @@ public class InfoLoader : MonoBehaviour {
     public ArtigoInfo info;
     public LoadMode loadMode = LoadMode.LOCAL;
 
+    public string stopwordsFile = "stopwords";
+
     public string API_KEY { 
         get { 
             Secrets asset = Resources.Load<Secrets>("SECRETS");
@@ -25,6 +27,12 @@ public class InfoLoader : MonoBehaviour {
             }
             return asset.API_KEY;
         } 
+    }
+
+    public void LoadStopWords() {
+        TextAsset arquivo = Resources.Load<TextAsset>(stopwordsFile);
+        string texto = arquivo.text;
+        UIController.game.GerarStopWords(texto.Split(" \n"));
     }
 
     public IEnumerator LoadTexto() {

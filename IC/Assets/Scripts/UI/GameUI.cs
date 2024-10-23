@@ -45,6 +45,10 @@ public class GameUI : MonoBehaviour {
         attemptButton.clicked += OnAttemptButtonClicked;
     }
 
+    public void GerarStopWords(string[] words) {
+        palavrasNaoOcultas = words;
+    }
+
     public void UpdateTempo(int tempoSeconds) {
         int min = tempoSeconds / 60;
         int sec = tempoSeconds % 60;
@@ -83,6 +87,8 @@ public class GameUI : MonoBehaviour {
 
     public void GerarPalavras(List<string> palavras) {
         textHolder.Clear();
+
+        Debug.Log(string.Join("\n", palavrasNaoOcultas));
 
         foreach (string palavra in palavras) {
             Label label = GerarPalavra(palavra);
