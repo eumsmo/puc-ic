@@ -21,10 +21,10 @@
                         <ui:Label tabindex="-1" text="_____" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto oculto" />
                         <ui:Label tabindex="-1" text="arroz" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto" />
                         <ui:Label tabindex="-1" text="Eu" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto" />
-                        <ui:Label tabindex="-1" text="amo" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto" />
+                        <ui:Label tabindex="-1" text="," parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto pontuacao" />
                         <ui:Label tabindex="-1" text="_____" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto oculto" />
                         <ui:Label tabindex="-1" text="arroz" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto" />
-                        <ui:Label tabindex="-1" text="Eu" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto" />
+                        <ui:Label tabindex="-1" text="!" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto pontuacao" />
                         <ui:Label tabindex="-1" text="amo" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto" />
                         <ui:Label tabindex="-1" text="_____" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto oculto" />
                         <ui:Label tabindex="-1" text="arroz" parse-escape-sequences="true" display-tooltip-when-elided="true" class="texto" />

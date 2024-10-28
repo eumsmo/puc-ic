@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -37,6 +38,10 @@ public class InfoLoader : MonoBehaviour {
 
         for (int i = 0; i < words.Length; i++) {
             words[i] = words[i].Trim();
+
+            if (string.IsNullOrEmpty(words[i])) {
+                continue;
+            }
         }
 
         UIController.game.GerarStopWords(words);
@@ -181,9 +186,15 @@ public class InfoLoader : MonoBehaviour {
     List<string> SepararPalavras(string texto) {
         List<string> palavras = new List<string>();
         string[] palavrasSeparadas = texto.Split(' ');
+
         foreach (string palavra in palavrasSeparadas) {
-            if (!string.IsNullOrEmpty(palavra)) {
-                palavras.Add(palavra);
+            if (string.IsNullOrEmpty(palavra)) continue;
+
+            string[] splitted = Regex.Split(palavra, @"([.!?,;:\(\)\[\]{}<>”'])");
+
+            foreach (string piece in splitted) {
+                if (string.IsNullOrEmpty(piece)) continue;
+                palavras.Add(piece);
             }
         }
         return palavras;

@@ -29,6 +29,8 @@ public class GameUI : MonoBehaviour {
         "pois", "então", "assim", "logo"
     };
 
+    string pontuacoes = ".!?,;:()[]{}<>\"'";
+
     List<string> tentativas = new List<string>();
 
     void Awake() {
@@ -48,8 +50,16 @@ public class GameUI : MonoBehaviour {
         attemptButton.clicked += OnAttemptButtonClicked;
     }
 
+    void Start() {
+        GameManager.instance.controls.Game.Submit.performed += ctx => OnAttemptButtonClicked();
+    }
+
     public void GerarStopWords(string[] words) {
-        palavrasNaoOcultas = words;
+        List<string> stopWords = new List<string>();
+        stopWords.AddRange(words);
+        stopWords.AddRange(pontuacoes.ToCharArray().Select(c => c.ToString()).ToArray());
+
+        palavrasNaoOcultas = stopWords.ToArray();
     }
 
     public void UpdateTempo(int tempoSeconds) {
@@ -58,11 +68,21 @@ public class GameUI : MonoBehaviour {
         tempoLabel.text = string.Format("{0:00}:{1:00}", min, sec);
     }
 
+    public bool Comparar(string a, string b) {/*
+        foreach (char pontuacao in pontuacoes) {
+            string pontuacaoStr = pontuacao + "";
+            a = a.Replace(pontuacaoStr + "", "");
+            b = b.Replace(pontuacaoStr + "", "");
+        }*/
+        
+        return a.ToUpper() == b.ToUpper();
+    }
+
     void OnAttemptButtonClicked() {
         string tentativa = inputField.value;
         inputField.value = "";
 
-        if (tentativas.Contains(tentativa)) return;
+        if (tentativas.Contains(tentativa) || tentativa.Trim() == "") return;
 
         IEnumerable<VisualElement> children = textHolder.Children();
         children = children.Concat(tituloHolder.Children());
@@ -75,7 +95,7 @@ public class GameUI : MonoBehaviour {
             // Palavras já reveladas não precisam ser verificadas
             if (palavra == null) continue;
 
-            if (palavra.ToUpper() == tentativa.ToUpper()) {
+            if (Comparar(palavra, tentativa)) {
                 label.text = palavra;
                 label.userData = null;
                 label.RemoveFromClassList(ocultoClassName);
@@ -117,14 +137,18 @@ public class GameUI : MonoBehaviour {
         foreach (string palavra in palavras) {
             Label label = GerarPalavra(palavra, textHolder);
 
-            if (OcultarPalavra(palavra))
+            if (pontuacoes.Contains(palavra)) {
+                label.AddToClassList("pontuacao");
+            } else if (OcultarPalavra(palavra))
                 SetPalavraOculta(label);
         }
 
         foreach (string palavra in titulo) {
             Label label = GerarPalavra(palavra, tituloHolder);
 
-            if (OcultarPalavra(palavra))
+            if (pontuacoes.Contains(palavra)) {
+                label.AddToClassList("pontuacao");
+            } else if (OcultarPalavra(palavra))
                 SetPalavraOculta(label);
         }
     }
@@ -138,7 +162,7 @@ public class GameUI : MonoBehaviour {
 
     public bool OcultarPalavra(string palavra) {
         foreach (string naoOculta in palavrasNaoOcultas) {
-            if (palavra.ToUpper() == naoOculta.ToUpper()) {
+            if (Comparar(palavra, naoOculta)) {
                 return false;
             }
         }
@@ -153,7 +177,11 @@ public class GameUI : MonoBehaviour {
         int length = palavra.Length;
         string palavraOculta = "";
         for (int i = 0; i < length; i++) {
-            palavraOculta += "_";
+            if (pontuacoes.Contains(palavra[i])) {
+                palavraOculta += palavra[i];
+            } else {
+                palavraOculta += "_";
+            }
         }
 
         label.text = palavraOculta;

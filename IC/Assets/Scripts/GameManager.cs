@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour {
 
     public GameState gameState = GameState.WAITING_TO_START;
 
+    public Controls controls;
+
     float tempo = 0;
     public float TempoPartida {
         get { return tempo; }
@@ -30,7 +32,8 @@ public class GameManager : MonoBehaviour {
         }
 
         infoLoader = GetComponent<InfoLoader>();
-        
+        controls = new Controls();
+        controls.Game.Enable();
     }
 
     void Start() {
