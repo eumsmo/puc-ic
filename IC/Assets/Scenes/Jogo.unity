@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 994494839}
   - component: {fileID: 994494841}
   - component: {fileID: 994494842}
+  - component: {fileID: 994494843}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -202,6 +203,18 @@ MonoBehaviour:
   textoClassName: texto
   ocultoClassName: oculto
   tentativaTemplate: {fileID: 9197481963319205126, guid: 81f1ddaa7486632438e15391b09d678f, type: 3}
+--- !u!114 &994494843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 994494838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56afc193f5e89854dbbc8847614acd7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1419520399
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,6 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadMode: 1
+  stopwordsFile: stopwords
 --- !u!1 &1887063523
 GameObject:
   m_ObjectHideFlags: 0

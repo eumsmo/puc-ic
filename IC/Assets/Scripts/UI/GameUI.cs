@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,7 +14,7 @@ public class GameUI : MonoBehaviour {
 
     public VisualTreeAsset tentativaTemplate;
 
-    VisualElement textHolder;
+    VisualElement textHolder, tituloHolder;
     ScrollView tentativasList;
     Button attemptButton;
     TextField inputField;
@@ -33,6 +34,8 @@ public class GameUI : MonoBehaviour {
     void Awake() {
         var root = GetComponent<UIDocument>().rootVisualElement;
         textHolder = root.Q<VisualElement>(textHolderName);
+        tituloHolder = root.Q<VisualElement>("TituloHolder");
+
         tempoLabel = root.Q<Label>("Tempo");
         tentativasList = root.Q<ScrollView>("TentativasList");
 
@@ -61,19 +64,41 @@ public class GameUI : MonoBehaviour {
 
         if (tentativas.Contains(tentativa)) return;
 
+        IEnumerable<VisualElement> children = textHolder.Children();
+        children = children.Concat(tituloHolder.Children());
+
         int encontrados = 0;
-        foreach (VisualElement child in textHolder.Children()) {
+        foreach (VisualElement child in children) {
             Label label = (Label)child;
             string palavra = (string)label.userData;
 
-            if (palavra == tentativa) {
+            // Palavras já reveladas não precisam ser verificadas
+            if (palavra == null) continue;
+
+            if (palavra.ToUpper() == tentativa.ToUpper()) {
                 label.text = palavra;
+                label.userData = null;
                 label.RemoveFromClassList(ocultoClassName);
                 encontrados++;
             }
         }
 
         ArmazenarTentativa(tentativa, encontrados);
+
+        if (CheckIfWin()) {
+            GameManager.instance.EndGame();
+        }
+    }
+
+    public bool CheckIfWin() {
+        foreach (VisualElement child in tituloHolder.Children()) {
+            Label label = (Label)child;
+            if (label.ClassListContains(ocultoClassName)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void ArmazenarTentativa(string tentativa, int resultados) {
@@ -85,29 +110,35 @@ public class GameUI : MonoBehaviour {
         tentativas.Add(tentativa);
     }
 
-    public void GerarPalavras(List<string> palavras) {
+    public void GerarPalavras(List<string> titulo, List<string> palavras) {
+        tituloHolder.Clear();
         textHolder.Clear();
 
-        Debug.Log(string.Join("\n", palavrasNaoOcultas));
-
         foreach (string palavra in palavras) {
-            Label label = GerarPalavra(palavra);
+            Label label = GerarPalavra(palavra, textHolder);
+
+            if (OcultarPalavra(palavra))
+                SetPalavraOculta(label);
+        }
+
+        foreach (string palavra in titulo) {
+            Label label = GerarPalavra(palavra, tituloHolder);
 
             if (OcultarPalavra(palavra))
                 SetPalavraOculta(label);
         }
     }
 
-    public Label GerarPalavra(string texto) {
+    public Label GerarPalavra(string texto, VisualElement holder) {
         Label label = new Label(texto);
         label.AddToClassList(textoClassName);
-        textHolder.Add(label);
+        holder.Add(label);
         return label;
     }
 
     public bool OcultarPalavra(string palavra) {
         foreach (string naoOculta in palavrasNaoOcultas) {
-            if (palavra == naoOculta) {
+            if (palavra.ToUpper() == naoOculta.ToUpper()) {
                 return false;
             }
         }

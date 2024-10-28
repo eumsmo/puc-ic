@@ -9,6 +9,11 @@
     font-size: 12px;
 }
 
+#TituloHolder > .texto {
+    -unity-font-style: normal;
+    font-size: 16px;
+}
+
 .oculto {
     letter-spacing: 6px;
     background-color: rgb(130, 89, 147);
@@ -87,6 +92,15 @@
 
 .imagem-alerta {
     --unity-image: resource('Sprites/Alerta');
-    --unity-image-tint-color: rgba(0,0,0, 0.7);
+    --unity-image-tint-color: rgba(0, 0, 0, 0.7);
     width: 150px;
+}
+
+.conteudo-holder {
+    flex-grow: initial;
+    flex-basis: auto;
+    flex-shrink: 1;
+    width: 100%;
+    height: 100%;
+    max-width: 600px;
 }

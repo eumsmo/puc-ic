@@ -17,6 +17,7 @@ public class InfoLoader : MonoBehaviour {
     public LoadMode loadMode = LoadMode.LOCAL;
 
     public string stopwordsFile = "stopwords";
+    bool stopWordsLoaded = false;
 
     public string API_KEY { 
         get { 
@@ -32,7 +33,14 @@ public class InfoLoader : MonoBehaviour {
     public void LoadStopWords() {
         TextAsset arquivo = Resources.Load<TextAsset>(stopwordsFile);
         string texto = arquivo.text;
-        UIController.game.GerarStopWords(texto.Split(" \n"));
+        string[] words = texto.Split("\n");
+
+        for (int i = 0; i < words.Length; i++) {
+            words[i] = words[i].Trim();
+        }
+
+        UIController.game.GerarStopWords(words);
+        stopWordsLoaded = true;
     }
 
     public IEnumerator LoadTexto() {
@@ -98,11 +106,9 @@ public class InfoLoader : MonoBehaviour {
                 try {
                     string json = webRequest.downloadHandler.text;
                     info = JsonUtility.FromJson<ArtigoInfo>(json);
-
-                    List<string> palavras = SepararPalavras(info.resumo);
                     deuCerto = true;
 
-                    UIController.game.GerarPalavras(palavras);
+                    SetarArtigo(info);
                 } catch (System.Exception e) {
                     errorMessage = "Erro de resposta: " + e.Message;
 
@@ -155,12 +161,21 @@ public class InfoLoader : MonoBehaviour {
         } else {
             string json = System.IO.File.ReadAllText(filePath);
             info = JsonUtility.FromJson<ArtigoInfo>(json);
-            
-            List<string> palavras = SepararPalavras(info.resumo);
-            UIController.game.GerarPalavras(palavras);
+            SetarArtigo(info);
         }
 
         yield return null;
+    }
+
+    public void SetarArtigo(ArtigoInfo info) {
+        List<string> titulo = SepararPalavras(info.titulo);
+        List<string> palavras = SepararPalavras(info.resumo);
+
+        if (!stopWordsLoaded) {
+            LoadStopWords();
+        }
+
+        UIController.game.GerarPalavras(titulo, palavras);
     }
 
     List<string> SepararPalavras(string texto) {

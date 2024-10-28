@@ -6,8 +6,9 @@ using UnityEngine.UIElements;
 public class UIController : MonoBehaviour {
     public static UIController instance;
     public static GameUI game;
+    public static EndScreenUI end;
 
-    VisualElement startScreen, errorScreen;
+    VisualElement startScreen, errorScreen, endScreen;
     Label errorMessage;
     
 
@@ -20,6 +21,7 @@ public class UIController : MonoBehaviour {
         }
 
         game = GetComponent<GameUI>();
+        end = GetComponent<EndScreenUI>();
    }
 
    void Start() {
@@ -30,10 +32,13 @@ public class UIController : MonoBehaviour {
 
         errorScreen = root.Q<VisualElement>("ErrorScreen");
         startScreen = root.Q<VisualElement>("StartScreen");
+        endScreen = root.Q<VisualElement>("WinScreen");
 
         errorMessage = root.Q<Label>("ErrorMessage");
 
         startScreen.style.display = DisplayStyle.Flex;
+        errorScreen.style.display = DisplayStyle.None;
+        endScreen.style.display = DisplayStyle.None;
    }
 
    public void OnStartGameClicked() {
@@ -42,6 +47,11 @@ public class UIController : MonoBehaviour {
 
     public void HandleGameStarted() {
         startScreen.style.display = DisplayStyle.None;
+    }
+
+    public void HandleGameEnded(bool vitoria) {
+        end.SetarValores(vitoria);
+        endScreen.style.display = DisplayStyle.Flex;
     }
 
     public void HandleGameError() {
