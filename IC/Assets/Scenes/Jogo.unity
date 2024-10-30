@@ -203,6 +203,7 @@ MonoBehaviour:
   textoClassName: texto
   ocultoClassName: oculto
   tentativaTemplate: {fileID: 9197481963319205126, guid: 81f1ddaa7486632438e15391b09d678f, type: 3}
+  timeToDica: 3
 --- !u!114 &994494843
 MonoBehaviour:
   m_ObjectHideFlags: 0

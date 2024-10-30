@@ -124,3 +124,7 @@
     border-bottom-left-radius: 0;
     font-size: 14px;
 }
+
+#TentativasList #unity-content-container {
+    flex-direction: column-reverse;
+}

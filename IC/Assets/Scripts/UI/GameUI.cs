@@ -16,9 +16,13 @@ public class GameUI : MonoBehaviour {
 
     VisualElement textHolder, tituloHolder;
     ScrollView tentativasList;
-    Button attemptButton;
+    Button attemptButton, dicaButton;
     TextField inputField;
     Label tempoLabel;
+
+    VisualElement btnDicaProgress;
+    bool dicaDisponivel = true;
+    public float timeToDica = 5f;
 
     // Palavras que por padrão não serão ocultas
     string[] palavrasNaoOcultas = new string[] {
@@ -48,10 +52,17 @@ public class GameUI : MonoBehaviour {
 
         attemptButton = root.Q<Button>(attemptButtonName);
         attemptButton.clicked += OnAttemptButtonClicked;
+
+        dicaButton = root.Q<Button>("ButtonDica");
+        dicaButton.clicked += OnDicaButtonClicked;
+
+        btnDicaProgress = root.Q<VisualElement>("ButtonDicaProgress");
     }
 
     void Start() {
         GameManager.instance.controls.Game.Submit.performed += ctx => OnAttemptButtonClicked();
+
+        btnDicaProgress.style.width = Length.Percent(100);
     }
 
     public void GerarStopWords(string[] words) {
@@ -78,10 +89,7 @@ public class GameUI : MonoBehaviour {
         return a.ToUpper() == b.ToUpper();
     }
 
-    void OnAttemptButtonClicked() {
-        string tentativa = inputField.value;
-        inputField.value = "";
-
+    public void Tentar(string tentativa) {
         if (tentativas.Contains(tentativa) || tentativa.Trim() == "") return;
 
         IEnumerable<VisualElement> children = textHolder.Children();
@@ -108,6 +116,13 @@ public class GameUI : MonoBehaviour {
         if (CheckIfWin()) {
             GameManager.instance.EndGame();
         }
+    }
+
+    void OnAttemptButtonClicked() {
+        string tentativa = inputField.value;
+        inputField.value = "";
+
+        Tentar(tentativa);
     }
 
     public bool CheckIfWin() {
@@ -186,5 +201,74 @@ public class GameUI : MonoBehaviour {
 
         label.text = palavraOculta;
         label.AddToClassList(ocultoClassName);
+    }
+
+    public void OnDicaButtonClicked() {
+        if (!dicaDisponivel) return;
+
+        string dica = GetPalavraChave();
+        if (dica == null || dica == "") return;
+
+        Tentar(dica);
+
+        dicaDisponivel = false;
+        StartCoroutine(LoadDicaProgress());
+    }
+
+    IEnumerator LoadDicaProgress() {
+        float time = 0;
+        btnDicaProgress.style.width = Length.Percent(0);
+        while (time < timeToDica) {
+            time += Time.deltaTime;
+            btnDicaProgress.style.width = Length.Percent((time / timeToDica) * 100);
+            yield return null;
+        }
+
+        dicaDisponivel = true;
+    }
+
+    public string GetPalavraChave() {
+        // if has palavra chave on artigo (não tem ainda)
+        // else:
+        Dictionary<string, int> palavras = new Dictionary<string, int>();
+
+        foreach (VisualElement child in textHolder.Children()) {
+            Label label = (Label)child;
+            if (label.ClassListContains(ocultoClassName)) {
+                string palavra = (string)label.userData;
+                if (palavras.ContainsKey(palavra)) {
+                    palavras[palavra]++;
+                } else {
+                    palavras[palavra] = 1;
+                }
+            }
+        }
+
+        foreach (VisualElement child in tituloHolder.Children()) {
+            Label label = (Label)child;
+            if (label.ClassListContains(ocultoClassName)) {
+                string palavra = (string)label.userData;
+                if (palavras.ContainsKey(palavra)) {
+                    palavras[palavra]++;
+                } else {
+                    palavras[palavra] = 1;
+                }
+            }
+        }
+
+        List<string> menosOcorrencias = new List<string>();
+        int menorOcorrencia = int.MaxValue;
+        foreach (KeyValuePair<string, int> entry in palavras) {
+            if (entry.Value < menorOcorrencia) {
+                menorOcorrencia = entry.Value;
+                menosOcorrencias.Clear();
+                menosOcorrencias.Add(entry.Key);
+            } else if (entry.Value == menorOcorrencia) {
+                menosOcorrencias.Add(entry.Key);
+            }
+        }
+
+        int indexOcorrencia = (textHolder.childCount - palavras.Count) % menosOcorrencias.Count;
+        return menosOcorrencias[indexOcorrencia];
     }
 }
