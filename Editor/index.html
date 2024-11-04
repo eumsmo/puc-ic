@@ -1,0 +1,57 @@
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script type="importmap">
+      {
+        "imports": {
+          "@material/web/": "https://esm.run/@material/web/"
+        }
+      }
+    </script>
+    <script type="module">
+      import '@material/web/all.js';
+      import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+  
+      document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
+
+    <link rel="stylesheet" href="src/style.css">
+    <script src="https://accounts.google.com/gsi/client" async></script>
+  </head>
+  <body>
+    <section id="holder">
+        <header>
+            <!--
+            <span class="material-symbols-outlined">
+                arrow_back
+            </span>
+            -->
+            <h1>Criando o jogo</h1>
+        </header>
+        <form>
+            <md-outlined-text-field id="titulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
+            <md-outlined-text-field id= "url" class="text-input" label="Link do artigo" type="url" supporting-text="URL de acesso ao artigo"></md-outlined-text-field>
+            <md-outlined-text-field
+                id="resumo"
+                class="textarea"
+                type="textarea"
+                label="Resumo do artigo"
+                rows="3">
+            </md-outlined-text-field>
+            <!---
+            <section>
+                <h1>Arquitetando Segredos: o Círculo Magico e o  Level Design em Tunic</h1>
+                <p>Este artigo explora o conceito do círculo magico, elemento  ́intimamente ligado a catarse da atividade lúdica e descreve a imersão do jogador em um mundo virtual, distinto da realidade, onde ele pode explorare aprender as regras desse novo ambiente.</p>
+                <md-outlined-button type="reset">Reset</md-outlined-button>
+            </section>
+            -->
+        </form>
+        <footer>
+            <p id="indicadorProvisorio" style="flex-grow:1; text-align: right;"></p>
+            <md-outlined-button id="gerarBtnGoogle">Salvar com Google</md-outlined-button>
+            <md-outlined-button id="gerarBtn">Salvar manualmente</md-outlined-button>
+        </footer>
+    </section>
+
+    <script src="src/publicar.js"></script>
+  </body>
