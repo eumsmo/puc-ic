@@ -1,5 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Open%20Sans:wght@400;500;700&display=swap');
 
+#holder:not(.valores) #infoSection {
+    display: none !important;
+}
+
+#holder:not(.manual) #manualSaveSection {
+    display: none !important;
+}
+
+#holder:not(.google) #googleSaveSection {
+    display: none !important;
+}
+
+#holder:not(.link) #linkSection {
+    display: none !important;
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -7,14 +23,24 @@ body {
     background-color: #7e4f86;
 }
 
+h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+}
+
+p {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 16px;
+}
+
 #holder {
     display: flex;
     flex-direction: column;
-
-    width: 100%;
-    max-width: 60em;
-    height: 100%;
-    max-height: 40em;
+    box-sizing: border-box;
 
     padding: 16px;
     background-color: white;
@@ -23,13 +49,20 @@ body {
 #holder header {
     display: flex;
     align-items: center;
-    
     margin-bottom: 1.5em;
+    
+}
+
+#holder header h1:only-child {
+    margin: 0;
 }
 
 #holder header h1 {
-    margin: 0;
-    margin-left: 24px;
+    margin: 0 0 0 16px;
+}
+
+.voltar:hover {
+    cursor: pointer;
 }
 
 #holder footer {
@@ -51,33 +84,126 @@ form {
     gap: 16px;
 }
 
-.text-input {
-    width: calc(50% - 8px);
-}
-
-.textarea {
-    resize: none;
-    height: calc(100% - 5em);
-    width: 100%;
-}
-
-section {
+#holder > section {
+    display: flex;
+    flex-grow: 1;
+    /*
     border: 1px solid #79747e;
     border-radius: 4px;
     padding: 16px;
+    box-sizing: border-box;*/
+}
+
+#infoSection {
+    flex-direction: column;
+}
+
+#manualSaveSection {
+    align-content: flex-start;
+    flex-direction: column;
+}
+
+#manualSaveSection > section {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+    flex-wrap: wrap;
+}
+
+#manualSaveSection > section > section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
     box-sizing: border-box;
 }
 
-h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0 0 16px 0;
+#manualSaveSection > section > section:first-child::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: calc(100% - 2em);
+    background-color: #cac4d0;
+
+    position: absolute;
+    top: 0;
+    right: 0px;
+    margin-top: 1em;
 }
 
-p {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    margin-bottom: 16px;
+#googleSaveSection, #linkSection {
+    flex-direction: column;
 }
+
+#googleSaveSection > section, #linkSection > section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#googleSaveSection #googleProgress {
+    width: 60%;
+}
+
+#googleSaveSection .indeterminateProgress {
+    margin-bottom: 5em;
+}
+
+.erro .indeterminateProgress, .erro #googleProgress {
+    display: none !important;
+}
+
+@media (min-width: 550px) {
+    #holder {
+        width: 100%;
+        max-width: 60em;
+        height: 100%;
+        max-height: 40em;
+    }
+
+    .text-input {
+        width: calc(50% - 8px);
+    }
+
+    .textarea {
+        resize: none;
+        height: calc(100% - 5em);
+        width: 100%;
+    } 
+
+    #manualSaveSection > section > section {
+        width: 50%;
+        flex-grow: 1;
+    }
+}
+
+@media (max-width: 549px) {
+
+    #holder {
+        width: 100%;
+        height: 100%;
+    }
+
+    .text-input {
+        width: 100%;
+    }
+
+    .textarea {
+        resize: none;
+        height: calc(100% - 9em);
+        width: 100%;
+    }
+
+    #irGoogle, #irManual {
+        flex-grow: 1;
+    }
+
+    #manualSaveSection > section > section {
+        width: 100%;
+    }
+}
+
+
