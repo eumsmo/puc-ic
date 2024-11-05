@@ -122,14 +122,8 @@ form {
 #manualSaveSection > section > section:first-child::after {
     content: '';
     display: block;
-    width: 1px;
-    height: calc(100% - 2em);
     background-color: #cac4d0;
-
     position: absolute;
-    top: 0;
-    right: 0px;
-    margin-top: 1em;
 }
 
 #googleSaveSection, #linkSection {
@@ -152,8 +146,20 @@ form {
     margin-bottom: 5em;
 }
 
+#googleProgressText {
+    text-align: center;
+}
+
 .erro .indeterminateProgress, .erro #googleProgress {
     display: none !important;
+}
+
+#linkSection p {
+    margin-top: 0;
+}
+
+#linkSection a {
+    text-align: center;
 }
 
 @media (min-width: 550px) {
@@ -177,6 +183,14 @@ form {
     #manualSaveSection > section > section {
         width: 50%;
         flex-grow: 1;
+    }
+
+    #manualSaveSection > section > section:first-child::after {
+        width: 1px;
+        height: calc(100% - 2em);
+
+        top: 1em;
+        right: 0px;
     }
 }
 
@@ -203,6 +217,14 @@ form {
 
     #manualSaveSection > section > section {
         width: 100%;
+    }
+
+    #manualSaveSection > section > section:first-child::after {
+        width: calc(100% - 2em);
+        height: 1px;
+
+        bottom: 0;
+        right: 1em;
     }
 }
 

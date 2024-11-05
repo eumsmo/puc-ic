@@ -150,13 +150,13 @@ class Publicador {
             // Criar o documento
             const uploadRes = await this.uplodarDocumentoDrive(documento, access_token);
 
-            googleProgress.value = 0.7; // 70%
+            googleProgress.value = 0.85; // 85%
             googleProgressText.innerHTML = 'Setando permissões...';
 
             file_id = uploadRes.id;
             const permRes = await this.setarPermissoesDrive(file_id, access_token);
 
-            googleProgress.value = 0.9; // 90%
+            googleProgress.value = 0.95; // 95%
             googleProgressText.innerHTML = 'Gerando link...';
             
         } catch (error) {
@@ -171,7 +171,7 @@ class Publicador {
         let link = criar_link_jogo(file_id);
         console.log(link);
 
-        googleProgress.value = 1; // 90%
+        googleProgress.value = 1;
         googleProgressText.innerHTML = 'Concluído';
 
         setarLink(link);
