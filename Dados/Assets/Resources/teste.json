@@ -1,0 +1,27 @@
+{
+    "titulo": "alguma coisa",
+    "dados": [
+        {
+            "tipo": "Boleano",
+            "texto": "Ornitorrincos são mamiferos",
+            "resposta": true,
+            "explicação": "Sei lá o que sei lá quem e sei lá porque"
+        },
+        {
+            "tipo": "Porcentagem",
+            "texto": "A porcentagem de alguma coisa",
+            "resposta": 0.55,
+            "range": 0.05,
+            "explicação": "é meio que isso né"
+        },
+        {
+            "tipo": "Grafico",
+            "graficos": {
+                "batata": 0.3,
+                "cenoura": 0.1
+            },
+            "range": 0.075,
+            "explicacao": "bla bla bla"
+        }
+    ]
+}
