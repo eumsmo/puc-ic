@@ -1,24 +1,66 @@
 {
     "titulo": "alguma coisa",
+    "url": "...",
     "dados": [
+        {
+            "tipo": "Grafico",
+            "texto": "Defina a porcentagem de água presente nos alimentos abaixo",
+            "grafico": {
+                "min": 0.0,
+                "max": 1.0,
+                "campos": [
+                    {
+                        "nome": "Abacate",
+                        "valor": 0.83
+                    },
+                    {
+                        "nome": "Manteiga",
+                        "valor": 0.16
+                    },
+                    {
+                        "nome": "Alface",
+                        "valor": 0.96
+                    }
+                ]
+            },
+            "range": 0.075,
+            "explicacao": "bla bla bla"
+        },
         {
             "tipo": "Boleano",
             "texto": "Ornitorrincos são mamiferos",
-            "resposta": true,
-            "explicação": "Sei lá o que sei lá quem e sei lá porque"
+            "respostaBool": true,
+            "explicação": "Apesar de parecer um pato, ornitorrincos são mamiferos!"
         },
         {
             "tipo": "Porcentagem",
             "texto": "A porcentagem de alguma coisa",
-            "resposta": 0.55,
+            "respostaFloat": 0.55,
             "range": 0.05,
             "explicação": "é meio que isso né"
         },
         {
+            "tipo": "Boleano",
+            "texto": "O Perry é um ornitorrinco?",
+            "respostaBool": true,
+            "explicação": "Perry, também conhecido como Agente P, é um ornitorrinco!"
+        },
+        {
             "tipo": "Grafico",
-            "graficos": {
-                "batata": 0.3,
-                "cenoura": 0.1
+            "texto": "Defina corretamente a porcentagem de cada item",
+            "grafico": {
+                "min": 0.0,
+                "max": 1.0,
+                "campos": [
+                    {
+                        "nome": "batata",
+                        "valor": 0.3
+                    },
+                    {
+                        "nome": "cenoura",
+                        "valor": 0.1
+                    }
+                ]
             },
             "range": 0.075,
             "explicacao": "bla bla bla"

@@ -35,6 +35,7 @@ public class BoleanoSection : MonoBehaviour, SecaoDoJogo {
 
     public void Comecar(Dados dados) {
         secao.style.display = DisplayStyle.Flex;
+        texto.text = dados.texto;
     }
 
     public void Finalizar() {

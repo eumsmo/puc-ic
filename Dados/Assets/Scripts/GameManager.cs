@@ -13,7 +13,7 @@ public enum GameState {
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
     InfoLoader infoLoader;
-    public ArtigoInfo info;
+    public DadosInfo info;
 
     public GameState gameState = GameState.WAITING_TO_START;
 
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(infoLoader.LoadTexto());
     }
 
-    public void OnLoadedInfo(ArtigoInfo info) {
+    public void OnLoadedInfo(DadosInfo info) {
         this.info = info;
         quantasPerguntas = info.dados.Length;
     }
@@ -64,10 +64,12 @@ public class GameManager : MonoBehaviour {
 
     public void ProximaPergunta() {
         qualPergunta++;
-        if (qualPergunta > quantasPerguntas - 1) qualPergunta = 0;
+        if (qualPergunta > quantasPerguntas - 1) {
+            EndGame(true);
+            return;
+        }
 
         UIController.game.UpdateQual(qualPergunta, quantasPerguntas);
-
         LoadPergunta(info.dados[qualPergunta]);
     }
 
@@ -110,11 +112,11 @@ public class GameManager : MonoBehaviour {
         UIController.game.UpdateTempo(Mathf.RoundToInt(tempo));
     }
 
-    public ArtigoInfo GetArtigoInfo() {
+    public DadosInfo GetInfo() {
         return infoLoader.info;
     }
 
     public void IrAoArtigo() {
-        Application.OpenURL(GetArtigoInfo().url);
+        Application.OpenURL(GetInfo().url);
     }
 }

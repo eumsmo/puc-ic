@@ -21,19 +21,19 @@ public class EndScreenUI : MonoBehaviour {
     }
 
     public void SetarValores(bool vitoria) {
-        ArtigoInfo info = GameManager.instance.GetArtigoInfo();
+        DadosInfo info = GameManager.instance.GetInfo();
         float tempo = GameManager.instance.TempoPartida;
 
         if (vitoria) {
             statusLabel.text = "Parabéns!";
-            tempoLabel.text = "Resolvido em" + string.Format(" {0:00}:{1:00}", tempo / 60, tempo % 60);
+            tempoLabel.text = "Você acertou 50% dos problemas em" + string.Format(" {0:00}:{1:00}", tempo / 60, tempo % 60);
         } else {
             statusLabel.text = "Que pena!";
             tempoLabel.text = "Tempo esgotado!";
         }
 
         tituloArtigo.text = info.titulo;
-        conteudoArtigo.text = info.resumo;
+        // conteudoArtigo.text = info.resumo;
     }
 
     public void OnIrAoArtigoButtonClicked() {

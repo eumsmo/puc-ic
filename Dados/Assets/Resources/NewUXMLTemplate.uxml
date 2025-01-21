@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="CampoGrafico" src="project://database/Assets/Resources/CampoGrafico.uxml?fileID=9197481963319205126&amp;guid=0edddb7ef7e38124197060e457c4a6ab&amp;type=3#CampoGrafico" />
     <Style src="project://database/Assets/UI%20Toolkit/style.uss?fileID=7433441132597879392&amp;guid=d1262be886dfb9240948683fa2d3fb30&amp;type=3#style" />
     <ui:VisualElement name="Base" style="flex-grow: initial; width: 100%; height: 100%; background-color: rgba(255, 0, 0, 0); align-items: center; justify-content: center; flex-direction: row;">
         <ui:VisualElement name="GameHolder" class="conteudo-holder" style="display: flex;">
@@ -11,10 +12,18 @@
                 <ui:VisualElement name="Holder" style="flex-grow: 1; background-color: rgb(204, 203, 146); width: 100%; height: 100%; flex-direction: column; flex-wrap: wrap; align-items: center; justify-content: center; align-self: center; padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px;">
                     <ui:VisualElement name="Graficos" style="flex-grow: 1; flex-shrink: 0; width: 100%; justify-content: center; align-items: center; display: flex;">
                         <ui:Label tabindex="-1" text="Quantos porcento de alguma coisa" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GraficosTexto" style="white-space: normal; -unity-text-align: upper-center; color: rgb(0, 0, 0); width: 80%; margin-bottom: 12px;" />
-                        <ui:VisualElement name="Grafico" style="flex-grow: 0; flex-direction: row; height: 144px; width: 109px; justify-content: space-between;">
-                            <ui:Slider label="Slider" high-value="100" direction="Vertical" name="SliderGrafico" class="escolher_porcentagem vertical limpo" style="width: 14px; height: 100%;" />
-                            <ui:Slider label="Slider" high-value="100" direction="Vertical" name="SliderGrafico2" class="escolher_porcentagem vertical limpo" style="width: 14px; height: 100%;" />
-                            <ui:Slider label="Slider" high-value="100" direction="Vertical" name="SliderGrafico3" class="escolher_porcentagem vertical limpo" style="width: 14px; height: 100%;" />
+                        <ui:VisualElement name="GraficoHolder" style="flex-grow: 0; width: 256px; height: 256px; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
+                            <ui:VisualElement name="MaxBar" style="flex-grow: 1; width: 100%; position: absolute; border-left-color: rgba(0, 0, 0, 0.43); border-right-color: rgba(0, 0, 0, 0.43); border-top-color: rgba(0, 0, 0, 0.43); border-bottom-color: rgba(0, 0, 0, 0.43); border-top-width: 2px; top: 12px; margin-left: -2px;">
+                                <ui:Label tabindex="-1" text="100" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MaxValue" style="position: absolute; left: -63px; white-space: normal; align-self: flex-end; font-size: 14px; flex-shrink: 1; width: 60px; -unity-text-align: middle-right; top: -15px; height: 20px; color: rgba(0, 0, 0, 0.94); margin-right: 4px;" />
+                            </ui:VisualElement>
+                            <ui:VisualElement name="Grafico" style="flex-grow: 0; flex-direction: row; justify-content: space-between; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; padding-left: 8px; padding-right: 8px; padding-top: 8px; margin-bottom: 16px; width: 100%; height: 100%;">
+                                <ui:Instance template="CampoGrafico" name="CampoGrafico" />
+                                <ui:Instance template="CampoGrafico" name="CampoGrafico" />
+                                <ui:Instance template="CampoGrafico" name="CampoGrafico" />
+                            </ui:VisualElement>
+                            <ui:VisualElement name="MinBar" style="flex-grow: 1; width: 100%; position: absolute; border-left-color: rgba(0, 0, 0, 0.43); border-right-color: rgba(0, 0, 0, 0.43); border-top-color: rgba(0, 0, 0, 0.43); border-bottom-color: rgba(0, 0, 0, 0.43); border-top-width: 2px; margin-left: -2px; bottom: 27px;">
+                                <ui:Label tabindex="-1" text="0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="MinValue" style="position: absolute; left: -63px; white-space: normal; align-self: flex-end; font-size: 14px; flex-shrink: 1; width: 60px; -unity-text-align: middle-right; top: -15px; height: 20px; color: rgba(0, 0, 0, 0.94); margin-right: 4px;" />
+                            </ui:VisualElement>
                         </ui:VisualElement>
                         <ui:Button text="Confirmar" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GraficosConfirmar" class="botao" style="width: auto; height: 29px; margin-top: 16px;" />
                     </ui:VisualElement>
@@ -40,16 +49,16 @@
             </ui:VisualElement>
             <ui:Button text="Jogar" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ComecarButton" class="botao" style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; font-size: 20px; width: 22%; flex-grow: 0; background-color: rgb(142, 130, 50);" />
         </ui:VisualElement>
-        <ui:VisualElement name="ErrorScreen" class="conteudo-holder" style="flex-grow: initial; position: absolute; top: 0; background-color: rgb(173, 116, 184); display: none; align-items: center; justify-content: center;">
+        <ui:VisualElement name="ErrorScreen" class="conteudo-holder" style="flex-grow: initial; position: absolute; top: 0; background-color: rgb(184, 182, 116); display: none; align-items: center; justify-content: center;">
             <ui:Image name="ImagemAlerta" class="imagem-alerta" />
             <ui:Label tabindex="-1" text="Nenhum artigo selecionado, tenha certeza que digitou o link corretamente" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ErrorMessage" style="width: 300px; white-space: normal; -unity-text-align: upper-center; font-size: 18px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="WinScreen" class="conteudo-holder" style="flex-grow: initial; position: absolute; top: 0; background-color: rgb(173, 116, 184); display: none; align-items: center; justify-content: space-between; padding-top: 40px; padding-right: 40px; padding-bottom: 40px; padding-left: 40px;">
+        <ui:VisualElement name="WinScreen" class="conteudo-holder" style="flex-grow: initial; position: absolute; top: 0; background-color: rgb(184, 182, 116); display: none; align-items: center; justify-content: space-between; padding-top: 40px; padding-right: 40px; padding-bottom: 40px; padding-left: 40px;">
             <ui:VisualElement name="Header" style="flex-grow: 0; align-items: center; justify-content: center;">
                 <ui:Label tabindex="-1" text="Parabéns!" parse-escape-sequences="true" display-tooltip-when-elided="true" name="VitoriaTitulo" style="font-size: 43px; -unity-font-style: bold; display: flex;" />
                 <ui:Label tabindex="-1" text="Resolvido em 1:35" parse-escape-sequences="true" display-tooltip-when-elided="true" name="VitoriaIndicadorTempo" style="width: 300px; white-space: normal; -unity-text-align: upper-center; font-size: 18px; -unity-font-style: bold;" />
             </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 0; background-color: rgb(179, 125, 202); padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; align-items: center;">
+            <ui:VisualElement style="flex-grow: 0; background-color: rgb(171, 169, 97); padding-top: 8px; padding-right: 8px; padding-bottom: 8px; padding-left: 8px; border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; align-items: center;">
                 <ui:Label tabindex="-1" text="Por que personagens fictícios se tornam importantes para jogadores reais? Um breve estudo" parse-escape-sequences="true" display-tooltip-when-elided="true" name="InfoTitulo" style="white-space: normal; -unity-text-align: upper-center; font-size: 18px; -unity-font-style: bold;" />
                 <ui:Label tabindex="-1" text="Apesar de estarmos vivendo uma ”crise da narracão”(Han, 23), As obras fictícias atraem os indivíduos porque os transportam do mundo real para um universo desejado. Muitos preferem viver em um mundo irreal, pois ele se tornou um refugio seguro. No entanto, abandonar a realidade tem consequencias, como a criação ilusória de sentimentos, que podem ser divididos em interações ou relações parassociais. Este artigo ira explorar o significado de cada uma e apresentar alguns jogos que despertam esses sentimentos. Alem disso, será explicado por que as relações parassociais em jogos podem se tornar um problema." parse-escape-sequences="true" display-tooltip-when-elided="true" name="InfoConteudo" style="white-space: normal; -unity-text-align: upper-center;" />
             </ui:VisualElement>

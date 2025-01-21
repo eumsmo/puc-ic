@@ -192,4 +192,37 @@
 
 .escolher_porcentagem.limpo #unity-tracker {
     background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+}
+
+.escolher_porcentagem.limpo #unity-dragger {
+    background-color: rgba(0, 0, 0, 0);
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+}
+
+#Grafico > * {
+    flex-grow: 1;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 4px;
+    flex-shrink: 0;
+    min-width: 20px;
+}
+
+.new_dragger {
+    position: absolute;
+    width: 110%;
+    height: 2px;
+    background-color: rgba(121, 121, 121, 0.53);
 }

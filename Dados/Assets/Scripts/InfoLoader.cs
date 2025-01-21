@@ -14,8 +14,10 @@ public enum LoadMode {
 public class InfoLoader : MonoBehaviour {
     [DllImport("__Internal")]
     private static extern string GetURLParams();
-    public ArtigoInfo info;
+    public DadosInfo info;
     public LoadMode loadMode = LoadMode.LOCAL;
+
+    private const string localPath = "Resources/teste.json";
 
 
     public string API_KEY { 
@@ -91,7 +93,7 @@ public class InfoLoader : MonoBehaviour {
             if (webRequest.result == UnityWebRequest.Result.Success) {
                 try {
                     string json = webRequest.downloadHandler.text;
-                    info = JsonUtility.FromJson<ArtigoInfo>(json);
+                    info = JsonUtility.FromJson<DadosInfo>(json);
                     deuCerto = true;
 
                     SetarArtigo(info);
@@ -135,8 +137,7 @@ public class InfoLoader : MonoBehaviour {
     }
 
     public IEnumerator LoadTextoLocal() {
-        string rootPath = Application.dataPath;
-        string filePath = rootPath + "/info.json";
+        string filePath = Application.dataPath + "/" + localPath;
 
         if (!System.IO.File.Exists(filePath)) {
             Debug.LogError("Arquivo não encontrado: " + filePath);
@@ -146,14 +147,14 @@ public class InfoLoader : MonoBehaviour {
             }
         } else {
             string json = System.IO.File.ReadAllText(filePath);
-            info = JsonUtility.FromJson<ArtigoInfo>(json);
+            info = JsonUtility.FromJson<DadosInfo>(json);
             SetarArtigo(info);
         }
 
         yield return null;
     }
 
-    public void SetarArtigo(ArtigoInfo info) {
+    public void SetarArtigo(DadosInfo info) {
         GameManager.instance.OnLoadedInfo(info);
     }
 }

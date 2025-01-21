@@ -429,6 +429,9 @@ MonoBehaviour:
   textoId: GraficosTexto
   graficosHolderId: Grafico
   confirmarId: GraficosConfirmar
+  minValueId: MinValue
+  maxValueId: MaxValue
+  campoPrefab: {fileID: 9197481963319205126, guid: 0edddb7ef7e38124197060e457c4a6ab, type: 3}
 --- !u!1 &1887063523
 GameObject:
   m_ObjectHideFlags: 0
