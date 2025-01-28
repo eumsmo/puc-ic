@@ -6,6 +6,7 @@
             "tipo": "Grafico",
             "texto": "Defina a porcentagem de água presente nos alimentos abaixo",
             "grafico": {
+                "porcentagem": true,
                 "min": 0.0,
                 "max": 1.0,
                 "campos": [
@@ -23,8 +24,7 @@
                     }
                 ]
             },
-            "range": 0.075,
-            "explicacao": "bla bla bla"
+            "range": 0.075
         },
         {
             "tipo": "Boleano",
@@ -47,23 +47,22 @@
         },
         {
             "tipo": "Grafico",
-            "texto": "Defina corretamente a porcentagem de cada item",
+            "texto": "Defina corretamente a quantidade",
             "grafico": {
-                "min": 0.0,
-                "max": 1.0,
+                "min": 10,
+                "max": 40,
                 "campos": [
                     {
                         "nome": "batata",
-                        "valor": 0.3
+                        "valor": 20
                     },
                     {
                         "nome": "cenoura",
-                        "valor": 0.1
+                        "valor": 34
                     }
                 ]
             },
-            "range": 0.075,
-            "explicacao": "bla bla bla"
+            "range": 2
         }
     ]
 }

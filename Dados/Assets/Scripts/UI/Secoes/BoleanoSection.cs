@@ -7,6 +7,8 @@ public class BoleanoSection : MonoBehaviour, SecaoDoJogo {
     VisualElement secao;
     public string secaoId;
     GameUI game;
+    Dados dados;
+    bool resposta;
 
     Label texto;
     Button sim, nao;
@@ -25,20 +27,26 @@ public class BoleanoSection : MonoBehaviour, SecaoDoJogo {
 
         secao.style.display = DisplayStyle.None;
 
-        sim.clicked += HandleConfirmar;
-        nao.clicked += HandleConfirmar;
+        sim.clicked += () => HandleConfirmar(true);
+        nao.clicked += () => HandleConfirmar(false);
     }
 
-    public void HandleConfirmar() {
-        GameManager.instance.ProximaPergunta();
+    public void HandleConfirmar(bool resposta) {
+        this.resposta = resposta;
+        UIController.game.OnAttemptButtonClicked();
     }
 
     public void Comecar(Dados dados) {
         secao.style.display = DisplayStyle.Flex;
         texto.text = dados.texto;
+        this.dados = dados;
     }
 
     public void Finalizar() {
         secao.style.display = DisplayStyle.None;
+    }
+
+    public bool GetResposta() {
+        return resposta == dados.respostaBool;
     }
 }

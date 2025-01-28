@@ -221,7 +221,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 994494838}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70b15c046afd1264fbfafebe42a244ea, type: 3}
   m_Name: 
@@ -431,6 +431,7 @@ MonoBehaviour:
   confirmarId: GraficosConfirmar
   minValueId: MinValue
   maxValueId: MaxValue
+  halfValueId: HalfValue
   campoPrefab: {fileID: 9197481963319205126, guid: 0edddb7ef7e38124197060e457c4a6ab, type: 3}
 --- !u!1 &1887063523
 GameObject:

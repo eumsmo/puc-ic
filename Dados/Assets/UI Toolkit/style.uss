@@ -226,3 +226,21 @@
     height: 2px;
     background-color: rgba(121, 121, 121, 0.53);
 }
+
+.escolher_porcentagem .informativo_valor {
+    display: flex !important;
+    position: absolute;
+    top: -18px;
+    text-align: center;
+    font-size: 14px;
+    align-self: center;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 4px;
+
+}

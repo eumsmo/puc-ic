@@ -7,6 +7,7 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
     VisualElement secao;
     public string secaoId;
     GameUI game;
+    Dados dados;
 
     Label texto;
     VisualElement slider;
@@ -30,15 +31,25 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
     }
 
     public void HandleConfirmar() {
-        GameManager.instance.ProximaPergunta();
+        UIController.game.OnAttemptButtonClicked();
     }
 
     public void Comecar(Dados dados) {
         secao.style.display = DisplayStyle.Flex;
         texto.text = dados.texto;
+        this.dados = dados;
     }
 
     public void Finalizar() {
         secao.style.display = DisplayStyle.None;
+    }
+
+    public bool GetResposta() {
+        Slider sliderAsSlider = slider as Slider;
+        float resposta = sliderAsSlider.value;
+        float respostaCorreta = dados.respostaFloat;
+        float range = dados.range;
+
+        return Mathf.Abs(resposta - respostaCorreta) <= range;
     }
 }

@@ -8,8 +8,21 @@ public interface SecaoDoJogo {
     void Inicializar(GameUI game);
     void Comecar(Dados dados);
     void Finalizar();
+    bool GetResposta();
 }
+
+
+
 public class GameUI : MonoBehaviour {
+    public enum CurrentGameState {
+        WaitingStart,
+        Playing,
+        ShowingStatus,
+        Ended
+    }
+
+    public CurrentGameState state = CurrentGameState.WaitingStart;
+
     public VisualElement root;
     Label tempoLabel, perguntasQuantLabel;
 
@@ -17,11 +30,24 @@ public class GameUI : MonoBehaviour {
     SecaoDoJogo[] _secoes;
     public SecaoDoJogo secaoAtual;
 
+    public VisualElement statusHolder;
+    public Label statusLabel, statusDescricao;
+    public Button nextButton;
+
+    Dados dadosAtuais;
+
 
     void Awake() {
         root = GetComponent<UIDocument>().rootVisualElement;
         tempoLabel = root.Q<Label>("Tempo");
         perguntasQuantLabel = root.Q<Label>("Rodadas");
+
+        statusHolder = root.Q<VisualElement>("Status");
+        statusLabel = root.Q<Label>("InformaStatus");
+        statusDescricao = root.Q<Label>("InformaMotivo");
+        nextButton = root.Q<Button>("ContinuarInformativo");
+        nextButton.clicked += GoToNext;
+
 
         _secoes = new SecaoDoJogo[secoes.Length];
         int i = 0;
@@ -42,10 +68,10 @@ public class GameUI : MonoBehaviour {
     }
 
     public void LoadSecao(int secaoId, Dados dados) {
-        Debug.Log(secaoId);
         if (secaoAtual != null) secaoAtual.Finalizar();
         secaoAtual = _secoes[secaoId];
-        Debug.Log(secaoAtual);
+        dadosAtuais = dados;
+        state = CurrentGameState.Playing;
         secaoAtual.Comecar(dados);
     }
 
@@ -55,7 +81,29 @@ public class GameUI : MonoBehaviour {
         tempoLabel.text = string.Format("{0:00}:{1:00}", min, sec);
     }
 
-    void OnAttemptButtonClicked() {
+    public void OnAttemptButtonClicked() {
+        if (state == CurrentGameState.ShowingStatus) return;
+        state = CurrentGameState.ShowingStatus;
+
+        bool resposta = secaoAtual.GetResposta();
+        statusHolder.style.display = DisplayStyle.Flex;
+
+        if (resposta) {
+            statusLabel.text = "Correto!";
+            statusDescricao.text = "Parabéns, você acertou!";
+        } else {
+            statusLabel.text = "Incorreto!";
+            statusDescricao.text = "Que pena, você errou!";
+        }
+
+        if (dadosAtuais.explicacao != null && dadosAtuais.explicacao != "") {
+            statusDescricao.text += dadosAtuais.explicacao;
+        }
+    }
+
+    public void GoToNext() {
+        statusHolder.style.display = DisplayStyle.None;
+        GameManager.instance.ProximaPergunta();
     }
 
     public bool CheckIfWin() {

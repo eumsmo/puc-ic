@@ -17,6 +17,7 @@ public class Dados {
 
 [System.Serializable]
 public class Dados_GraficoInfo {
+    public bool porcentagem = false;
     public float min, max;
     public Dados_Grafico_Campo[] campos;
 }
