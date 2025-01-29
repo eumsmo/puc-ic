@@ -13,21 +13,24 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
     public Text minValue, maxValue, halfValue;
 
     public GameObject campoPrefab;
-
+    public List<ValorGrafico> campos = new List<ValorGrafico>();
 
     // REF Values
     bool porcentagem;
-    float v_min, v_max;
+    float v_min, v_max, range;
     
     public void Inicializar(GameUI game) {
         this.game = game;
 
         gameObject.SetActive(false);
-        // confirmar.clicked += HandleConfirmar;
     }
 
     public void HandleConfirmar() {
         UIController.game.OnAttemptButtonClicked();
+
+        foreach (ValorGrafico campo in campos) {
+            campo.Tentar();
+        }
     }
 
     public void Comecar(Dados dados) {
@@ -39,6 +42,7 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
         foreach (Transform child in graficosHolder.transform) {
             Destroy(child.gameObject);
         }
+        campos.Clear();
 
         string min = "" + grafico.min;
         string half = "" + (grafico.min + grafico.max) / 2;
@@ -57,42 +61,23 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
         porcentagem = grafico.porcentagem;
         v_min = grafico.min;
         v_max = grafico.max;
+        range = dados.range;
 
         foreach (Dados_Grafico_Campo campo in grafico.campos) {
-            GerarCampo(campo);
+            ValorGrafico vg = GerarCampo(campo);
+            campos.Add(vg);
         }
     }
 
-    public Slider GerarCampo(Dados_Grafico_Campo campo) {
+    public ValorGrafico GerarCampo(Dados_Grafico_Campo campo) {
         GameObject campoObj = Instantiate(campoPrefab);
-
-        Text label = campoObj.transform.Find("Label").GetComponent<Text>();
-        label.text = campo.nome;
+        ValorGrafico valorGrafico = campoObj.GetComponent<ValorGrafico>();
+        valorGrafico.Inicializar(campo.nome, campo.valor, v_min, v_max, range, porcentagem);
 
         campoObj.transform.SetParent(graficosHolder.transform);
         campoObj.transform.localScale = Vector3.one;
 
-        Slider slider = campoObj.GetComponent<Slider>();
-        slider.onValueChanged.AddListener((float value) => OnSliderChange(slider, value));
-
-        return slider;
-    }
-
-    void OnSliderChange(Slider slider, float val) {
-        float value = slider.value;
-
-        value = Mathf.Round(value*100.0f)/100.0f;
-        
-        Text valorInfo = slider.transform.Find("Handle Slide Area/Handle/ValorLabel").GetComponent<Text>();
-
-        if (porcentagem) {
-            valorInfo.text = "" + (value*100) + "%";
-        } else {
-            float min = v_min;
-            float max = v_max;
-            float valor = min + (max - min) * (value/100.0f);
-            valorInfo.text = "" + valor;
-        }
+        return valorGrafico;
     }
 
     public void Finalizar() {
@@ -100,6 +85,12 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
     }
 
     public bool GetResposta() {
-        return true;
+        int corretas = 0, incorretas = 0;
+        foreach (ValorGrafico campo in campos) {
+            if (campo.GetResposta()) corretas++;
+            else incorretas++;
+        }
+
+        return corretas >= incorretas;
     }
 }

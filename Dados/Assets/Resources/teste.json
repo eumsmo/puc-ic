@@ -2,6 +2,7 @@
     "titulo": "alguma coisa",
     "url": "...",
     "dados": [
+        
         {
             "tipo": "Grafico",
             "texto": "Defina a porcentagem de água presente nos alimentos abaixo",
@@ -25,6 +26,25 @@
                 ]
             },
             "range": 0.075
+        },
+        {
+            "tipo": "Grafico",
+            "texto": "Defina corretamente a quantidade",
+            "grafico": {
+                "min": 10,
+                "max": 40,
+                "campos": [
+                    {
+                        "nome": "batata",
+                        "valor": 20
+                    },
+                    {
+                        "nome": "cenoura",
+                        "valor": 34
+                    }
+                ]
+            },
+            "range": 2
         },
         {
             "tipo": "Boleano",
