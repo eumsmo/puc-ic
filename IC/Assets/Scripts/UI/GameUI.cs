@@ -2,25 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour {
-    public string textHolderName = "TextHolder";
-    public string attemptButtonName = "ButtonTentativa";
-    public string inputFieldName = "InputTentativa";
+    public GameObject tentativaPrefab, termoPrefab, termoPrefabTitulo;
 
-    public string textoClassName = "texto";
-    public string ocultoClassName = "oculto";
+    public GameObject textHolder, tituloHolder;
+    public GameObject tentativasList;
+    public InputField inputField;
+    public Text tempoLabel;
 
-    public VisualTreeAsset tentativaTemplate;
-
-    VisualElement textHolder, tituloHolder;
-    ScrollView tentativasList;
-    Button attemptButton, dicaButton;
-    TextField inputField;
-    Label tempoLabel;
-
-    VisualElement btnDicaProgress;
     bool dicaDisponivel = true;
     public float timeToDica = 5f;
 
@@ -38,31 +29,19 @@ public class GameUI : MonoBehaviour {
     List<string> tentativas = new List<string>();
 
     void Awake() {
-        var root = GetComponent<UIDocument>().rootVisualElement;
-        textHolder = root.Q<VisualElement>(textHolderName);
-        tituloHolder = root.Q<VisualElement>("TituloHolder");
+        foreach (Transform child in tentativasList.transform) {
+            Destroy(child.gameObject);
+        }
 
-        tempoLabel = root.Q<Label>("Tempo");
-        tentativasList = root.Q<ScrollView>("TentativasList");
-
-        tentativasList.Clear();
         tentativas.Clear();
 
-        inputField = root.Q<TextField>(inputFieldName);
-
-        attemptButton = root.Q<Button>(attemptButtonName);
-        attemptButton.clicked += OnAttemptButtonClicked;
-
-        dicaButton = root.Q<Button>("ButtonDica");
-        dicaButton.clicked += OnDicaButtonClicked;
-
-        btnDicaProgress = root.Q<VisualElement>("ButtonDicaProgress");
+        // dicaButton.clicked += OnDicaButtonClicked;
     }
 
     void Start() {
         GameManager.instance.controls.Game.Submit.performed += ctx => OnAttemptButtonClicked();
 
-        btnDicaProgress.style.width = Length.Percent(100);
+        // btnDicaProgress.style.width = Length.Percent(100);
     }
 
     public void GerarStopWords(string[] words) {
@@ -91,22 +70,25 @@ public class GameUI : MonoBehaviour {
 
     public void Tentar(string tentativa) {
         if (tentativas.Contains(tentativa) || tentativa.Trim() == "") return;
+        
+        List<Transform> children = new List<Transform>();
 
-        IEnumerable<VisualElement> children = textHolder.Children();
-        children = children.Concat(tituloHolder.Children());
+        foreach (Transform child in textHolder.transform) {
+            children.Add(child);
+        }
+
+        foreach (Transform child in tituloHolder.transform) {
+            children.Add(child);
+        }
 
         int encontrados = 0;
-        foreach (VisualElement child in children) {
-            Label label = (Label)child;
-            string palavra = (string)label.userData;
+        foreach (Transform child in children) {
+            Termo termo = child.GetComponent<Termo>();
 
-            // Palavras já reveladas não precisam ser verificadas
-            if (palavra == null) continue;
+            if (termo == null || !termo.oculto) continue;
 
-            if (Comparar(palavra, tentativa)) {
-                label.text = palavra;
-                label.userData = null;
-                label.RemoveFromClassList(ocultoClassName);
+            if (Comparar(termo.termo, tentativa)) {
+                termo.oculto = false;
                 encontrados++;
             }
         }
@@ -118,17 +100,18 @@ public class GameUI : MonoBehaviour {
         }
     }
 
-    void OnAttemptButtonClicked() {
-        string tentativa = inputField.value;
-        inputField.value = "";
+    public void OnAttemptButtonClicked() {
+        string tentativa = inputField.text;
+        inputField.text = "";
 
         Tentar(tentativa);
     }
 
     public bool CheckIfWin() {
-        foreach (VisualElement child in tituloHolder.Children()) {
-            Label label = (Label)child;
-            if (label.ClassListContains(ocultoClassName)) {
+        foreach (Transform child in tituloHolder.transform) {
+            Termo termo = child.GetComponent<Termo>();
+
+            if (termo != null && termo.oculto) {
                 return false;
             }
         }
@@ -137,42 +120,60 @@ public class GameUI : MonoBehaviour {
     }
 
     public void ArmazenarTentativa(string tentativa, int resultados) {
-        var tentativaEl = tentativaTemplate.Instantiate();
-        tentativaEl.Q<Label>("palavra").text = tentativa;
-        tentativaEl.Q<Label>("numero").text = "" + resultados;
+        GameObject tentativaEl = Instantiate(tentativaPrefab);
 
-        tentativasList.Add(tentativaEl);
+        tentativaEl.transform.localScale = Vector3.one;
+
+        Text palavra = tentativaEl.transform.Find("Palavra").GetComponent<Text>();
+        Text numero = tentativaEl.transform.Find("Numero").GetComponent<Text>();
+
+        palavra.text = tentativa;
+        numero.text = "" + resultados;
+        
+        tentativaEl.transform.SetParent(tentativasList.transform);
         tentativas.Add(tentativa);
+
+        tentativaEl.transform.localScale = Vector3.one;
     }
 
     public void GerarPalavras(List<string> titulo, List<string> palavras) {
-        tituloHolder.Clear();
-        textHolder.Clear();
+        GameObject[] holders = new GameObject[] { textHolder, tituloHolder };
+        List<string>[] palavrasList = new List<string>[] { palavras, titulo };
 
-        foreach (string palavra in palavras) {
-            Label label = GerarPalavra(palavra, textHolder);
+        for (int i = 0; i < holders.Length; i++) {
+            GameObject holder = holders[i];
+            List<string> termos = palavrasList[i];
 
-            if (pontuacoes.Contains(palavra)) {
-                label.AddToClassList("pontuacao");
-            } else if (OcultarPalavra(palavra))
-                SetPalavraOculta(label);
+            foreach (Transform child in holder.transform) {
+                Destroy(child.gameObject);
+            }
+
+            foreach (string palavra in termos) {
+                Termo termo = GerarPalavra(palavra, holder, i == 1);
+
+                if (pontuacoes.Contains(palavra))
+                    termo.SetPontuacao();
+                else if (OcultarPalavra(palavra))
+                    termo.SetOculto();
+            }
+
+            holder.GetComponent<HorizontalLayoutGroup>().enabled = false;
+            holder.GetComponent<HorizontalLayoutGroup>().enabled = true;
         }
 
-        foreach (string palavra in titulo) {
-            Label label = GerarPalavra(palavra, tituloHolder);
-
-            if (pontuacoes.Contains(palavra)) {
-                label.AddToClassList("pontuacao");
-            } else if (OcultarPalavra(palavra))
-                SetPalavraOculta(label);
-        }
+        Canvas.ForceUpdateCanvases();
     }
 
-    public Label GerarPalavra(string texto, VisualElement holder) {
-        Label label = new Label(texto);
-        label.AddToClassList(textoClassName);
-        holder.Add(label);
-        return label;
+    public Termo GerarPalavra(string texto, GameObject holder, bool titulo) {
+        GameObject termoObj = Instantiate(titulo ? termoPrefabTitulo : termoPrefab);
+
+        Termo termo = termoObj.GetComponent<Termo>();
+        termo.SetTermo(texto);
+
+        termoObj.transform.SetParent(holder.transform);
+        termoObj.transform.localScale = Vector3.one;
+
+        return termo;
     }
 
     public bool OcultarPalavra(string palavra) {
@@ -183,24 +184,6 @@ public class GameUI : MonoBehaviour {
         }
 
         return true;
-    }
-
-    public void SetPalavraOculta(Label label) {
-        string palavra = label.text;
-        label.userData = palavra;
-            
-        int length = palavra.Length;
-        string palavraOculta = "";
-        for (int i = 0; i < length; i++) {
-            if (pontuacoes.Contains(palavra[i])) {
-                palavraOculta += palavra[i];
-            } else {
-                palavraOculta += "_";
-            }
-        }
-
-        label.text = palavraOculta;
-        label.AddToClassList(ocultoClassName);
     }
 
     public void OnDicaButtonClicked() {
@@ -217,10 +200,10 @@ public class GameUI : MonoBehaviour {
 
     IEnumerator LoadDicaProgress() {
         float time = 0;
-        btnDicaProgress.style.width = Length.Percent(0);
+        // btnDicaProgress.style.width = Length.Percent(0);
         while (time < timeToDica) {
             time += Time.deltaTime;
-            btnDicaProgress.style.width = Length.Percent((time / timeToDica) * 100);
+            // btnDicaProgress.style.width = Length.Percent((time / timeToDica) * 100);
             yield return null;
         }
 
@@ -232,32 +215,22 @@ public class GameUI : MonoBehaviour {
         // else:
         Dictionary<string, int> palavras = new Dictionary<string, int>();
 
-        foreach (VisualElement child in textHolder.Children()) {
-            Label label = (Label)child;
-            if (label.ClassListContains(ocultoClassName)) {
-                string palavra = (string)label.userData;
-                if (palavras.ContainsKey(palavra)) {
-                    palavras[palavra]++;
-                } else {
-                    palavras[palavra] = 1;
+        GameObject[] holders = new GameObject[] { textHolder, tituloHolder };
+
+        foreach (GameObject holder in holders) {
+            foreach (Transform child in holder.transform) {
+                Termo termo = child.GetComponent<Termo>();
+                if (termo != null && termo.oculto) {
+                    if (palavras.ContainsKey(termo.termo))  palavras[termo.termo]++;
+                    else palavras[termo.termo] = 1;
                 }
             }
         }
 
-        foreach (VisualElement child in tituloHolder.Children()) {
-            Label label = (Label)child;
-            if (label.ClassListContains(ocultoClassName)) {
-                string palavra = (string)label.userData;
-                if (palavras.ContainsKey(palavra)) {
-                    palavras[palavra]++;
-                } else {
-                    palavras[palavra] = 1;
-                }
-            }
-        }
 
         List<string> menosOcorrencias = new List<string>();
         int menorOcorrencia = int.MaxValue;
+
         foreach (KeyValuePair<string, int> entry in palavras) {
             if (entry.Value < menorOcorrencia) {
                 menorOcorrencia = entry.Value;
@@ -268,7 +241,7 @@ public class GameUI : MonoBehaviour {
             }
         }
 
-        int indexOcorrencia = (textHolder.childCount - palavras.Count) % menosOcorrencias.Count;
+        int indexOcorrencia = (textHolder.transform.childCount - palavras.Count) % menosOcorrencias.Count;
         return menosOcorrencias[indexOcorrencia];
     }
 }

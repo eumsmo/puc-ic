@@ -1,23 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class EndScreenUI : MonoBehaviour {
-    Label statusLabel, tempoLabel;
-    Label tituloArtigo, conteudoArtigo;
-    Button irAoArtigoButton;
+    public Text statusLabel, tempoLabel;
+    public Text tituloArtigo, conteudoArtigo;
+
+    
 
     void Awake() {
-        var root = GetComponent<UIDocument>().rootVisualElement;
-        statusLabel = root.Q<Label>("VitoriaTitulo");
-        tempoLabel = root.Q<Label>("VitoriaIndicadorTempo");
-
-        tituloArtigo = root.Q<Label>("InfoTitulo");
-        conteudoArtigo = root.Q<Label>("InfoConteudo");
-
-        irAoArtigoButton = root.Q<Button>("IrAoArtigo");
-        irAoArtigoButton.clicked += OnIrAoArtigoButtonClicked;
+        // irAoArtigoButton.clicked += OnIrAoArtigoButtonClicked;
     }
 
     public void SetarValores(bool vitoria) {
