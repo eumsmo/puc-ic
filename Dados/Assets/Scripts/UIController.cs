@@ -1,15 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
     public static UIController instance;
     public static GameUI game;
     public static EndScreenUI end;
 
-    VisualElement startScreen, errorScreen, endScreen;
-    Label errorMessage;
+    public GameObject startScreen, gameScreen, errorScreen, endScreen;
+    public Text errorMessage;
     
 
    void Awake() {
@@ -20,43 +20,38 @@ public class UIController : MonoBehaviour {
             return;
         }
 
-        game = GetComponent<GameUI>();
-        end = GetComponent<EndScreenUI>();
+        game = GetComponentInChildren<GameUI>(true);
+        end = GetComponentInChildren<EndScreenUI>(true);
    }
 
    void Start() {
-        var root = GetComponent<UIDocument>().rootVisualElement;
+        // startButton.clicked += OnStartGameClicked;
 
-        Button startButton = root.Q<Button>("ComecarButton");
-        startButton.clicked += OnStartGameClicked;
-
-        errorScreen = root.Q<VisualElement>("ErrorScreen");
-        startScreen = root.Q<VisualElement>("StartScreen");
-        endScreen = root.Q<VisualElement>("WinScreen");
-
-        errorMessage = root.Q<Label>("ErrorMessage");
-
-        startScreen.style.display = DisplayStyle.Flex;
-        errorScreen.style.display = DisplayStyle.None;
-        endScreen.style.display = DisplayStyle.None;
+        startScreen.SetActive(true);
+        gameScreen.SetActive(false);
+        errorScreen.SetActive(false);
+        endScreen.SetActive(false);
    }
 
-   public void OnStartGameClicked() {
+    public void OnStartGameClicked() {
         GameManager.instance.StartGame();
     }
 
     public void HandleGameStarted() {
-        startScreen.style.display = DisplayStyle.None;
+        startScreen.SetActive(false);
+        gameScreen.SetActive(true);
     }
 
     public void HandleGameEnded(bool vitoria) {
         end.SetarValores(vitoria);
-        endScreen.style.display = DisplayStyle.Flex;
+        gameScreen.SetActive(false);
+        endScreen.SetActive(true);
     }
 
     public void HandleGameError() {
-        errorScreen.style.display = DisplayStyle.Flex;
-        startScreen.style.display = DisplayStyle.None;
+        errorScreen.SetActive(true);
+        gameScreen.SetActive(false);
+        startScreen.SetActive(false);
     }
 
     public void HandleGameError(string error) {

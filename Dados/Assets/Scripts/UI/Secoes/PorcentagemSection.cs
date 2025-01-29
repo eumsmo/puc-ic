@@ -1,33 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
-    VisualElement secao;
-    public string secaoId;
     GameUI game;
     Dados dados;
 
-    Label texto;
-    VisualElement slider;
-    Button confirmar;
+    public Text texto;
+    public Slider slider;
 
-    public string textoId, sliderId, confirmarId;
     
     public void Inicializar(GameUI game) {
         this.game = game;
-
-        var root = game.root;
-
-        secao = root.Q<VisualElement>(secaoId);
-        texto = root.Q<Label>(textoId);
-        slider = root.Q<VisualElement>(sliderId);
-        confirmar = root.Q<Button>(confirmarId);
         
-        secao.style.display = DisplayStyle.None;
+        gameObject.SetActive(false);
         
-        confirmar.clicked += HandleConfirmar;
+        // confirmar.clicked += HandleConfirmar;
     }
 
     public void HandleConfirmar() {
@@ -35,18 +24,17 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
     }
 
     public void Comecar(Dados dados) {
-        secao.style.display = DisplayStyle.Flex;
+        gameObject.SetActive(true);
         texto.text = dados.texto;
         this.dados = dados;
     }
 
     public void Finalizar() {
-        secao.style.display = DisplayStyle.None;
+        gameObject.SetActive(false);
     }
 
     public bool GetResposta() {
-        Slider sliderAsSlider = slider as Slider;
-        float resposta = sliderAsSlider.value;
+        float resposta = slider.value;
         float respostaCorreta = dados.respostaFloat;
         float range = dados.range;
 

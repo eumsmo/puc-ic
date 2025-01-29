@@ -1,24 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class GraficoSection : MonoBehaviour, SecaoDoJogo {
-    VisualElement secao;
-    public string secaoId;
     GameUI game;
 
-    Label texto;
-    VisualElement graficosHolder;
-    Button confirmar;
+    public Text texto;
+    public GameObject graficosHolder;
 
 
-    Label minValue, maxValue, halfValue;
+    public Text minValue, maxValue, halfValue;
 
-
-    public string textoId, graficosHolderId, confirmarId;
-    public string minValueId, maxValueId, halfValueId;
-    public VisualTreeAsset campoPrefab;
+    public GameObject campoPrefab;
 
 
     // REF Values
@@ -28,20 +22,8 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
     public void Inicializar(GameUI game) {
         this.game = game;
 
-        var root = game.root;
-
-        secao = root.Q<VisualElement>(secaoId);
-        texto = root.Q<Label>(textoId);
-        graficosHolder = root.Q<VisualElement>(graficosHolderId);
-        confirmar = root.Q<Button>(confirmarId);
-
-        minValue = root.Q<Label>(minValueId);
-        maxValue = root.Q<Label>(maxValueId);
-        halfValue = root.Q<Label>(halfValueId);
-        
-        secao.style.display = DisplayStyle.None;
-
-        confirmar.clicked += HandleConfirmar;
+        gameObject.SetActive(false);
+        // confirmar.clicked += HandleConfirmar;
     }
 
     public void HandleConfirmar() {
@@ -49,11 +31,14 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
     }
 
     public void Comecar(Dados dados) {
-        secao.style.display = DisplayStyle.Flex;
+        gameObject.SetActive(true);
         texto.text = dados.texto;
 
         Dados_GraficoInfo grafico = dados.grafico;
-        graficosHolder.Clear();
+
+        foreach (Transform child in graficosHolder.transform) {
+            Destroy(child.gameObject);
+        }
 
         string min = "" + grafico.min;
         string half = "" + (grafico.min + grafico.max) / 2;
@@ -74,69 +59,44 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
         v_max = grafico.max;
 
         foreach (Dados_Grafico_Campo campo in grafico.campos) {
-            var campoEl = campoPrefab.Instantiate();
-            Label texto = campoEl.Q<Label>("TextoGrafico");
-            texto.text = campo.nome;
-
-            VisualElement slider = campoEl.Q<VisualElement>("SliderGrafico");
-            AddFillBar(slider);
-
-            graficosHolder.Add(campoEl);
-
-            slider.RegisterCallback<ChangeEvent<float>>(evt => OnSliderChange(slider, evt.newValue));
-            slider.RegisterCallback<GeometryChangedEvent>(evt => OnSliderChange(slider));
+            GerarCampo(campo);
         }
     }
 
-    void AddFillBar(VisualElement slider) {
-        VisualElement dragger = slider.Q<VisualElement>("unity-dragger");
-        VisualElement fill = new VisualElement();
-        fill.name = "SliderFill";
-        fill.AddToClassList("slider_bar");
-        dragger.Add(fill);
+    public Slider GerarCampo(Dados_Grafico_Campo campo) {
+        GameObject campoObj = Instantiate(campoPrefab);
 
-        VisualElement newDragger = new VisualElement();
-        slider.Add(newDragger);
-        newDragger.name = "NewDragger";
-        newDragger.AddToClassList("new_dragger");
-        newDragger.pickingMode = PickingMode.Ignore;
+        Text label = campoObj.transform.Find("Label").GetComponent<Text>();
+        label.text = campo.nome;
 
-        Label valueView = new Label();
-        valueView.name = "InformativoValor";
-        valueView.AddToClassList("informativo_valor");
-        valueView.text = "eba";
-        slider.Add(valueView);
+        campoObj.transform.SetParent(graficosHolder.transform);
+        campoObj.transform.localScale = Vector3.one;
 
-        // OnSliderChange(newDragger);
+        Slider slider = campoObj.GetComponent<Slider>();
+        slider.onValueChanged.AddListener((float value) => OnSliderChange(slider, value));
+
+        return slider;
     }
 
-    void OnSliderChange(VisualElement target) {
-        OnSliderChange(target, (target as Slider).value);
-    }
+    void OnSliderChange(Slider slider, float val) {
+        float value = slider.value;
 
-    void OnSliderChange(VisualElement target, float value) {
-        VisualElement dragger = target.Q<VisualElement>("unity-dragger");
-        VisualElement newDragger = target.Q<VisualElement>("NewDragger");
-        Label valueView = target.Q<Label>("InformativoValor");
-
-        Vector2 offset = new Vector2((newDragger.layout.width - dragger.layout.width) / 2, 0);
-
-        Vector2 pos = target.LocalToWorld(dragger.transform.position);
-        newDragger.transform.position = target.WorldToLocal(pos - offset);
-        valueView.transform.position = target.WorldToLocal(pos);
+        value = Mathf.Round(value*100.0f)/100.0f;
+        
+        Text valorInfo = slider.transform.Find("Handle Slide Area/Handle/ValorLabel").GetComponent<Text>();
 
         if (porcentagem) {
-            valueView.text = "" + value + "%";
+            valorInfo.text = "" + (value*100) + "%";
         } else {
             float min = v_min;
             float max = v_max;
             float valor = min + (max - min) * (value/100.0f);
-            valueView.text = "" + valor;
+            valorInfo.text = "" + valor;
         }
     }
 
     public void Finalizar() {
-        secao.style.display = DisplayStyle.None;
+        gameObject.SetActive(false);
     }
 
     public bool GetResposta() {

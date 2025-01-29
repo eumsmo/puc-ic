@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public interface SecaoDoJogo {
     void Inicializar(GameUI game);
@@ -23,32 +23,19 @@ public class GameUI : MonoBehaviour {
 
     public CurrentGameState state = CurrentGameState.WaitingStart;
 
-    public VisualElement root;
-    Label tempoLabel, perguntasQuantLabel;
+    public Text tempoLabel, perguntasQuantLabel;
 
     public GameObject[] secoes;
     SecaoDoJogo[] _secoes;
     public SecaoDoJogo secaoAtual;
 
-    public VisualElement statusHolder;
-    public Label statusLabel, statusDescricao;
-    public Button nextButton;
+    public GameObject statusHolder;
+    public Text statusLabel, statusDescricao;
 
     Dados dadosAtuais;
 
 
     void Awake() {
-        root = GetComponent<UIDocument>().rootVisualElement;
-        tempoLabel = root.Q<Label>("Tempo");
-        perguntasQuantLabel = root.Q<Label>("Rodadas");
-
-        statusHolder = root.Q<VisualElement>("Status");
-        statusLabel = root.Q<Label>("InformaStatus");
-        statusDescricao = root.Q<Label>("InformaMotivo");
-        nextButton = root.Q<Button>("ContinuarInformativo");
-        nextButton.clicked += GoToNext;
-
-
         _secoes = new SecaoDoJogo[secoes.Length];
         int i = 0;
         foreach (GameObject secaoObj in secoes) {
@@ -86,7 +73,7 @@ public class GameUI : MonoBehaviour {
         state = CurrentGameState.ShowingStatus;
 
         bool resposta = secaoAtual.GetResposta();
-        statusHolder.style.display = DisplayStyle.Flex;
+        statusHolder.SetActive(true);
 
         if (resposta) {
             statusLabel.text = "Correto!";
@@ -102,7 +89,7 @@ public class GameUI : MonoBehaviour {
     }
 
     public void GoToNext() {
-        statusHolder.style.display = DisplayStyle.None;
+        statusHolder.SetActive(false);
         GameManager.instance.ProximaPergunta();
     }
 

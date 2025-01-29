@@ -87,6 +87,8 @@ public class GameManager : MonoBehaviour {
             Debug.LogError("Nenhum tipo encontrado para [" + dado.tipo + "]");
         }
 
+        Debug.Log("Carregando pergunta " + qualPergunta + " do tipo " + dado.tipo);
+
         UIController.game.LoadSecao(id, dado);
     }
 

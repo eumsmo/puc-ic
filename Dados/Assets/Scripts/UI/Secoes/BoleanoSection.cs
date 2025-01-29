@@ -1,34 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class BoleanoSection : MonoBehaviour, SecaoDoJogo {
-    VisualElement secao;
-    public string secaoId;
     GameUI game;
     Dados dados;
     bool resposta;
 
-    Label texto;
-    Button sim, nao;
-
-    public string textoId, graficosHolderId, simId, naoId;
+    public Text texto;
     
     public void Inicializar(GameUI game) {
         this.game = game;
 
-        var root = game.root;
+        gameObject.SetActive(false);
 
-        secao = root.Q<VisualElement>(secaoId);
-        texto = root.Q<Label>(textoId);
-        sim = root.Q<Button>(simId);
-        nao = root.Q<Button>(naoId);
-
-        secao.style.display = DisplayStyle.None;
-
-        sim.clicked += () => HandleConfirmar(true);
-        nao.clicked += () => HandleConfirmar(false);
+        // sim.clicked += () => HandleConfirmar(true);
+        // nao.clicked += () => HandleConfirmar(false);
     }
 
     public void HandleConfirmar(bool resposta) {
@@ -37,13 +25,13 @@ public class BoleanoSection : MonoBehaviour, SecaoDoJogo {
     }
 
     public void Comecar(Dados dados) {
-        secao.style.display = DisplayStyle.Flex;
+        gameObject.SetActive(true);
         texto.text = dados.texto;
         this.dados = dados;
     }
 
     public void Finalizar() {
-        secao.style.display = DisplayStyle.None;
+        gameObject.SetActive(false);
     }
 
     public bool GetResposta() {
