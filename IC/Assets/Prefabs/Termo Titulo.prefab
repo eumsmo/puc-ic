@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6090625819302319179}
   - component: {fileID: 8452356943181100313}
   - component: {fileID: 2054121525501779827}
+  - component: {fileID: 7130957635368074834}
   m_Layer: 5
   m_Name: Termo Titulo
   m_TagString: Untagged
@@ -68,7 +69,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7591f77b09974cf44876d12185b5db87, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -77,7 +78,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 9.09
+  m_PixelsPerUnitMultiplier: 2
 --- !u!114 &8452356943181100313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,6 +119,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &7130957635368074834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8560202110695981295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40c69a07394897744be071777add7e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  estado: 0
+  text: {fileID: 6718056426471120451}
+  fundo: {fileID: 6090625819302319179}
 --- !u!1 &9094303791738823359
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +170,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 4, y: -0}
-  m_SizeDelta: {x: 18.333334, y: 26.9315}
+  m_SizeDelta: {x: 19, y: 26.9315}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &7014706200400325073
 CanvasRenderer:
