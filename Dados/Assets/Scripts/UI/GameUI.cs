@@ -23,7 +23,7 @@ public class GameUI : MonoBehaviour {
 
     public CurrentGameState state = CurrentGameState.WaitingStart;
 
-    public Text tempoLabel, perguntasQuantLabel;
+    public Text acertosLabel, perguntasQuantLabel;
 
     public GameObject[] secoes;
     SecaoDoJogo[] _secoes;
@@ -33,6 +33,8 @@ public class GameUI : MonoBehaviour {
     public Text statusLabel, statusDescricao;
 
     Dados dadosAtuais;
+
+    public int acertos = 0, erros = 0;
 
 
     void Awake() {
@@ -62,10 +64,11 @@ public class GameUI : MonoBehaviour {
         secaoAtual.Comecar(dados);
     }
 
+    // Vou manter essa função aqui caso voltemos atrás na decisão
     public void UpdateTempo(int tempoSeconds) {
         int min = tempoSeconds / 60;
         int sec = tempoSeconds % 60;
-        tempoLabel.text = string.Format("{0:00}:{1:00}", min, sec);
+        // tempoLabel.text = string.Format("{0:00}:{1:00}", min, sec);
     }
 
     public void OnAttemptButtonClicked() {
@@ -76,9 +79,11 @@ public class GameUI : MonoBehaviour {
         statusHolder.SetActive(true);
 
         if (resposta) {
+            acertos++;
             statusLabel.text = "Correto!";
             statusDescricao.text = "Parabéns, você acertou!";
         } else {
+            erros++;
             statusLabel.text = "Incorreto!";
             statusDescricao.text = "Que pena, você errou!";
         }
@@ -86,6 +91,8 @@ public class GameUI : MonoBehaviour {
         if (dadosAtuais.explicacao != null && dadosAtuais.explicacao != "") {
             statusDescricao.text += dadosAtuais.explicacao;
         }
+
+        acertosLabel.text = "" + acertos;
     }
 
     public void GoToNext() {

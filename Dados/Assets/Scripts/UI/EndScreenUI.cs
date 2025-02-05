@@ -15,12 +15,17 @@ public class EndScreenUI : MonoBehaviour {
         DadosInfo info = GameManager.instance.GetInfo();
         float tempo = GameManager.instance.TempoPartida;
 
+        int acertos = UIController.game.acertos;
+        int erros = UIController.game.erros;
+        float porcentagem = (acertos + erros) == 0 ? 0 : ( 1.0f * acertos / (acertos + erros)) * 100;
+        string porcentagemStr = Mathf.Round(porcentagem) + "%";
+
         if (vitoria) {
             statusLabel.text = "Parabéns!";
-            tempoLabel.text = "Você acertou 50% dos problemas em" + string.Format(" {0:00}:{1:00}", tempo / 60, tempo % 60);
+            tempoLabel.text = "Você acertou " + porcentagemStr + " dos problemas!";
         } else {
             statusLabel.text = "Que pena!";
-            tempoLabel.text = "Tempo esgotado!";
+            tempoLabel.text = "Você acertou apenas " + porcentagemStr + " dos problemas!";
         }
 
         tituloArtigo.text = info.titulo;
