@@ -38,6 +38,7 @@ public class UIController : MonoBehaviour {
     public void HandleGameStarted() {
         startScreen.SetActive(false);
         gameScreen.SetActive(true);
+        game.OnGameStarted();
     }
 
     public void HandleGameEnded(bool vitoria) {

@@ -7,13 +7,19 @@ using UnityEngine.UI;
 public class GameUI : MonoBehaviour {
     public GameObject tentativaPrefab, termoPrefab, termoPrefabTitulo;
 
-    public GameObject textHolder, tituloHolder;
+    public GameObject holdersHolder, textHolder, tituloHolder;
     public GameObject tentativasList;
     public InputField inputField;
+    public Slider dicaProgress;
     public Text tempoLabel;
 
     bool dicaDisponivel = true;
     public float timeToDica = 5f;
+
+    [Header("Separar termos em linhas")]
+    public GameObject linhaTermosPrefab;
+    public int caracteresPorLinhaTitulo = 20;
+    public int caracteresPorLinha = 20;
 
     // Palavras que por padrão não serão ocultas
     string[] palavrasNaoOcultas = new string[] {
@@ -41,7 +47,12 @@ public class GameUI : MonoBehaviour {
     void Start() {
         GameManager.instance.controls.Game.Submit.performed += ctx => OnAttemptButtonClicked();
 
-        // btnDicaProgress.style.width = Length.Percent(100);
+        dicaProgress.value = 1;
+    }
+
+    // Chamado quando o jogo é iniciado
+    public void OnGameStarted() {
+        ForceUpdate();
     }
 
     public void GerarStopWords(string[] words) {
@@ -71,20 +82,11 @@ public class GameUI : MonoBehaviour {
     public void Tentar(string tentativa) {
         if (tentativas.Contains(tentativa) || tentativa.Trim() == "") return;
         
-        List<Transform> children = new List<Transform>();
+        List<Termo> termos = GetTermos();
 
-        foreach (Transform child in textHolder.transform) {
-            children.Add(child);
-        }
-
-        foreach (Transform child in tituloHolder.transform) {
-            children.Add(child);
-        }
 
         int encontrados = 0;
-        foreach (Transform child in children) {
-            Termo termo = child.GetComponent<Termo>();
-
+        foreach (Termo termo in termos) {
             if (termo == null || !termo.oculto) continue;
 
             if (Comparar(termo.termo, tentativa)) {
@@ -98,6 +100,8 @@ public class GameUI : MonoBehaviour {
         if (CheckIfWin()) {
             GameManager.instance.EndGame();
         }
+
+        ForceUpdate();
     }
 
     public void OnAttemptButtonClicked() {
@@ -108,10 +112,11 @@ public class GameUI : MonoBehaviour {
     }
 
     public bool CheckIfWin() {
-        foreach (Transform child in tituloHolder.transform) {
-            Termo termo = child.GetComponent<Termo>();
+        List<Termo> termosTitulo = GetTermos(true, false);
 
+        foreach (Termo termo in termosTitulo) {
             if (termo != null && termo.oculto) {
+                // Debug.Log("Ainda tem palavra oculta: " + termo.termo);
                 return false;
             }
         }
@@ -136,6 +141,26 @@ public class GameUI : MonoBehaviour {
         tentativaEl.transform.localScale = Vector3.one;
     }
 
+    public IEnumerator ForceUpdateAsync(int calls = 0) {
+        Canvas.ForceUpdateCanvases();
+
+        List<VerticalLayoutGroup> layouts = new List<VerticalLayoutGroup>();
+        layouts.AddRange(holdersHolder.GetComponentsInChildren<VerticalLayoutGroup>());
+        layouts.Add(holdersHolder.GetComponent<VerticalLayoutGroup>());
+
+        foreach (VerticalLayoutGroup layout in layouts) {
+            layout.enabled = false;
+            // yield return null;
+
+            layout.enabled = true;
+            yield return null;
+        }
+    }
+
+    public void ForceUpdate(int calls = 0) {
+        StartCoroutine(ForceUpdateAsync(calls));
+    }
+
     public void GerarPalavras(List<string> titulo, List<string> palavras) {
         GameObject[] holders = new GameObject[] { textHolder, tituloHolder };
         List<string>[] palavrasList = new List<string>[] { palavras, titulo };
@@ -144,9 +169,16 @@ public class GameUI : MonoBehaviour {
             GameObject holder = holders[i];
             List<string> termos = palavrasList[i];
 
+            List<GameObject> linhas = new List<GameObject>();
+
             foreach (Transform child in holder.transform) {
                 Destroy(child.gameObject);
             }
+
+            GameObject linha = null;
+            int caracteres = 0;
+
+            int limiteCaracteres = i == 1 ? caracteresPorLinhaTitulo : caracteresPorLinha;
 
             foreach (string palavra in termos) {
                 Termo termo = GerarPalavra(palavra, holder, i == 1);
@@ -155,13 +187,31 @@ public class GameUI : MonoBehaviour {
                     termo.SetPontuacao();
                 else if (OcultarPalavra(palavra))
                     termo.SetOculto();
+                else
+                    termo.SetRevelado();
+
+                caracteres += palavra.Length + 1;
+                
+                if (linha == null || caracteres > limiteCaracteres) {
+                    if (linha != null) {
+                        linhas.Add(linha);
+                    }
+
+                    linha = Instantiate(linhaTermosPrefab);
+                    linha.transform.SetParent(holder.transform);
+                    linha.transform.localScale = Vector3.one;
+
+                    caracteres = palavra.Length;
+                }
+
+                termo.transform.SetParent(linha.transform);
+                termo.transform.localScale = Vector3.one;
             }
 
-            holder.GetComponent<HorizontalLayoutGroup>().enabled = false;
-            holder.GetComponent<HorizontalLayoutGroup>().enabled = true;
+            if (linha != null) {
+                linhas.Add(linha);
+            }
         }
-
-        Canvas.ForceUpdateCanvases();
     }
 
     public Termo GerarPalavra(string texto, GameObject holder, bool titulo) {
@@ -170,8 +220,8 @@ public class GameUI : MonoBehaviour {
         Termo termo = termoObj.GetComponent<Termo>();
         termo.SetTermo(texto);
 
-        termoObj.transform.SetParent(holder.transform);
-        termoObj.transform.localScale = Vector3.one;
+        //termoObj.transform.SetParent(holder.transform);
+        //termoObj.transform.localScale = Vector3.one;
 
         return termo;
     }
@@ -200,10 +250,11 @@ public class GameUI : MonoBehaviour {
 
     IEnumerator LoadDicaProgress() {
         float time = 0;
-        // btnDicaProgress.style.width = Length.Percent(0);
+        dicaProgress.value = 0;
+
         while (time < timeToDica) {
             time += Time.deltaTime;
-            // btnDicaProgress.style.width = Length.Percent((time / timeToDica) * 100);
+            dicaProgress.value = time / timeToDica;
             yield return null;
         }
 
@@ -215,15 +266,17 @@ public class GameUI : MonoBehaviour {
         // else:
         Dictionary<string, int> palavras = new Dictionary<string, int>();
 
-        GameObject[] holders = new GameObject[] { textHolder, tituloHolder };
+        List<Termo> termosTexto = GetTermos(false, true);
+        List<Termo> termosTitulo = GetTermos(true, false);
+        List<Termo> termos = new List<Termo>();
 
-        foreach (GameObject holder in holders) {
-            foreach (Transform child in holder.transform) {
-                Termo termo = child.GetComponent<Termo>();
-                if (termo != null && termo.oculto) {
-                    if (palavras.ContainsKey(termo.termo))  palavras[termo.termo]++;
-                    else palavras[termo.termo] = 1;
-                }
+        termos.AddRange(termosTexto);
+        termos.AddRange(termosTitulo);
+
+        foreach (Termo termo in termos) {
+            if (termo != null && termo.oculto) {
+                if (palavras.ContainsKey(termo.termo))  palavras[termo.termo]++;
+                else palavras[termo.termo] = 1;
             }
         }
 
@@ -241,7 +294,30 @@ public class GameUI : MonoBehaviour {
             }
         }
 
-        int indexOcorrencia = (textHolder.transform.childCount - palavras.Count) % menosOcorrencias.Count;
+        int indexOcorrencia = (termosTexto.Count - palavras.Count) % menosOcorrencias.Count;
         return menosOcorrencias[indexOcorrencia];
+    }
+
+    public List<Termo> GetTermos(bool titulo = true, bool palavra = true) {
+        List<Termo> termos = new List<Termo>();
+
+        GameObject[] holders;
+
+        if (titulo && palavra) holders = new GameObject[] { textHolder, tituloHolder };
+        else if (titulo) holders = new GameObject[] { tituloHolder };
+        else holders = new GameObject[] { textHolder };
+
+        foreach (GameObject holder in holders) {
+            foreach (Transform linha in holder.transform) {
+                foreach (Transform child in linha.transform) {
+                    Termo termo = child.GetComponent<Termo>();
+                    if (termo != null) {
+                        termos.Add(termo);
+                    }
+                }
+            }
+        }
+
+        return termos;
     }
 }

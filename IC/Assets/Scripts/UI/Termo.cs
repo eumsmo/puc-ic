@@ -12,6 +12,17 @@ public class Termo : MonoBehaviour {
 
     public Text text;
     public Image fundo;
+    public HorizontalLayoutGroup layout;
+
+    [Header("Valores"), Range(0, 10)]
+    public int espacamentoEntreLetras = 2;
+    public int pontuacaoFontSize = 10;
+
+    [Header("Cores")]
+    public Color escondidoFundo;
+    public Color escondidoTexto;
+    public Color pontuacaoFundo, pontuacaoTexto;
+    public Color reveladoFundo, reveladoTexto;
 
     public string termo {
         get { return _termo; }
@@ -24,7 +35,6 @@ public class Termo : MonoBehaviour {
         set { if (value) SetOculto(); else SetRevelado(); }
     }
 
-
     public void SetTermo(string termo) {
         _termo = termo;
         text.text = termo;
@@ -33,11 +43,21 @@ public class Termo : MonoBehaviour {
 
     public void SetPontuacao() {
         estado = Estado.Pontuacao;
+
+        text.color = pontuacaoTexto;
+        fundo.color = pontuacaoFundo;
+
+        text.fontSize = pontuacaoFontSize;
+        fundo.enabled = false;
+        layout.padding = new RectOffset(0, 0, 0, 0);
     }
 
     public void SetRevelado() {
         estado = Estado.Revelado;
         text.text = termo;
+
+        text.color = reveladoTexto;
+        fundo.color = reveladoFundo;
     }
 
     public void SetOculto() {
@@ -51,9 +71,14 @@ public class Termo : MonoBehaviour {
                 palavraOculta += termo[i];
             } else {
                 palavraOculta += "_";
+                if (i < length - 1 && !pontuacoes.Contains(termo[i + 1]))
+                    palavraOculta += "<size=" + espacamentoEntreLetras + "><color=#00000000>.</color></size>";
             }
         }
 
         text.text = palavraOculta;
+
+        text.color = escondidoTexto;
+        fundo.color = escondidoFundo;
     }
 }
