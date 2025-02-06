@@ -18,99 +18,158 @@
     <title>Criar jogo</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
     <link rel="stylesheet" href="src/style.css">
     <script src="https://accounts.google.com/gsi/client" async></script>
   </head>
   <body>
-    <main id="holder" class="valores">
-        <section id="infoSection">
-          <header>
-            <h1>Criar o jogo</h1>
-          </header>
-          <form>
-            <md-outlined-text-field id="titulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
-            <md-outlined-text-field id= "url" class="text-input" label="Link do artigo" type="url" supporting-text="URL de acesso ao artigo"></md-outlined-text-field>
-            <md-outlined-text-field
-                id="resumo"
-                class="textarea"
-                type="textarea"
-                label="Resumo do artigo"
-                rows="3">
-            </md-outlined-text-field>
-          </form>
-          <footer>
-              <md-outlined-button id="irGoogle">
-                Salvar com Google
-              </md-outlined-button>
-              <md-outlined-button id="irManual">Salvar manualmente</md-outlined-button>
-          </footer>
-        </section>
-      
+    <main id="holder" class="escolha">
 
-        <section id="manualSaveSection">
-          <header>
-            <span class="material-symbols-outlined voltar">
-                arrow_back
-            </span>
-            <h1>Salvando manualmente</h1>
-          </header>
+      <section id="escolherJogo">
+        <header>
+          <h1>Crie um jogo!</h1>
+        </header>
+        <section>
+          <div class="card" id="escolheArtigo">
+            <img src="src/imgs/artigo.png" alt="">
+            <div>
+              <h2>Artigo</h2>
+              <p>Descubra o título do artígo a partir de seu resumo!</p>
+            </div>
+          </div>
+
+          <div class="card" id="escolheDados">
+            <img src="src/imgs/dados.png" alt="">
+            <div>
+              <h2>Dados</h2>
+              <p>Responda corretamente as questões relacionadas ao artigo!</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section id="dadosSection">
+        <header>
+          <h1>Criar o jogo - Dados [EM PROGRESO]</h1>
+        </header>
+        <form>
+          <md-outlined-text-field id="titulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
+          <md-outlined-text-field id= "url" class="text-input" label="Link do artigo" type="url" supporting-text="URL de acesso ao artigo"></md-outlined-text-field>
+        </form>
+        <div id="dadosHolder">
+          <form class="dadosForm">
+            <md-outlined-text-field class="pergunta" class="text-input" label="Pergunta"></md-outlined-text-field>
+            <md-outlined-select>
+              <md-select-option selected value="booleano">
+                <div slot="headline">Afirmativa</div>
+              </md-select-option>
+              <md-select-option value="porcentagem">
+                <div slot="headline">Porcentagem</div>
+              </md-select-option>
+              <md-select-option value="grafico">
+                <div slot="headline">Grafico</div>
+              </md-select-option>
+            </md-outlined-select>
+            
+
+          </form>
+        </div>
+        <footer>
+            <md-outlined-button>
+              Salvar com Google
+            </md-outlined-button>
+            <md-outlined-button>Salvar manualmente</md-outlined-button>
+        </footer>
+      </section>
+    
+      <section id="infoSection">
+        <header>
+          <h1>Criar o jogo</h1>
+        </header>
+        <form>
+          <md-outlined-text-field id="titulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
+          <md-outlined-text-field id= "url" class="text-input" label="Link do artigo" type="url" supporting-text="URL de acesso ao artigo"></md-outlined-text-field>
+          <md-outlined-text-field
+              id="resumo"
+              class="textarea"
+              type="textarea"
+              label="Resumo do artigo"
+              rows="3">
+          </md-outlined-text-field>
+        </form>
+        <footer>
+            <md-outlined-button id="irGoogle">
+              Salvar com Google
+            </md-outlined-button>
+            <md-outlined-button id="irManual">Salvar manualmente</md-outlined-button>
+        </footer>
+      </section>
+
+      <section id="manualSaveSection">
+        <header>
+          <span class="material-symbols-outlined voltar">
+              arrow_back
+          </span>
+          <h1>Salvando manualmente</h1>
+        </header>
+        <section>
           <section>
-            <section>
-              <div>
-                <p>1. Baixe o arquivo em seu dispositivo</p>
-                <md-outlined-button id="baixarArquivoBtn">Baixar arquivo</md-outlined-button>
-              </div>
-              <md-divider></md-divider>
-              <div>
-                <p>2. Dê upload do arquivo no Google Drive</p>
-              </div>
-              <md-divider></md-divider>
-              <div>
-                <p>3. Permita acesso para qualquer um com o link</p>
-              </div>
-              <md-divider></md-divider>
-              <div>
-                <p>4. Copie o link de compartilhamento do arquivo e cole no input</p>
-              </div>
-            </section>
-            <section>
-              <p>Siga o passo a passo e cole o link de compartilhamento</p>
-              <md-outlined-text-field id="compartilhamentoLink" label="URL do arquivo"></md-outlined-text-field>
-              <md-outlined-button id="gerarLinkBtn">Gerar</md-outlined-button>
-            </section>
+            <div>
+              <p>1. Baixe o arquivo em seu dispositivo</p>
+              <md-outlined-button id="baixarArquivoBtn">Baixar arquivo</md-outlined-button>
+            </div>
+            <md-divider></md-divider>
+            <div>
+              <p>2. Dê upload do arquivo no Google Drive</p>
+            </div>
+            <md-divider></md-divider>
+            <div>
+              <p>3. Permita acesso para qualquer um com o link</p>
+            </div>
+            <md-divider></md-divider>
+            <div>
+              <p>4. Copie o link de compartilhamento do arquivo e cole no input</p>
+            </div>
           </section>
-          
+          <section>
+            <p>Siga o passo a passo e cole o link de compartilhamento</p>
+            <md-outlined-text-field id="compartilhamentoLink" label="URL do arquivo"></md-outlined-text-field>
+            <md-outlined-button id="gerarLinkBtn">Gerar</md-outlined-button>
+          </section>
         </section>
         
-        <section id="googleSaveSection">
-          <header>
-            <span class="material-symbols-outlined voltar">
-                arrow_back
-            </span>
-            <h1>Salvando com o Google</h1>
-          </header>
-          <section>
-            <md-circular-progress indeterminate class="indeterminateProgress"></md-circular-progress>
-            <md-linear-progress id="googleProgress" value="0.5"></md-linear-progress>
-            <p id="googleProgressText" >Criando arquivo no drive...</p>
-          </section>
-          
+      </section>
+      
+      <section id="googleSaveSection">
+        <header>
+          <span class="material-symbols-outlined voltar">
+              arrow_back
+          </span>
+          <h1>Salvando com o Google</h1>
+        </header>
+        <section>
+          <md-circular-progress indeterminate class="indeterminateProgress"></md-circular-progress>
+          <md-linear-progress id="googleProgress" value="0.5"></md-linear-progress>
+          <p id="googleProgressText" >Criando arquivo no drive...</p>
         </section>
+        
+      </section>
 
-        <section id="linkSection">
-          <header>
-            <span class="material-symbols-outlined voltar">
-                arrow_back
-            </span>
-            <h1>Jogo gerado com sucesso</h1>
-          </header>
-          <section>
-            <p>O seu jogo pode ser acessado no seguinte link:</p>
-            <a id="linkEl" href="" target="_blank">Link aqui</a>
-          </section>
-          
+      <section id="linkSection">
+        <header>
+          <span class="material-symbols-outlined voltar">
+              arrow_back
+          </span>
+          <h1>Jogo gerado com sucesso</h1>
+        </header>
+        <section>
+          <p>O seu jogo pode ser acessado no seguinte link:</p>
+          <a id="linkEl" href="" target="_blank">Link aqui</a>
         </section>
-      </main>
+        
+      </section>
+    </main>
 
-    <script src="src/publicar.js"></script>
+    <script src="src/js/index.js"></script>
+    <script src="src/js/publicar.js"></script>
   </body>

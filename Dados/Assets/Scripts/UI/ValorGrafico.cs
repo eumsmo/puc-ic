@@ -19,6 +19,11 @@ public class ValorGrafico : MonoBehaviour {
     public Color corValorNaArea;
     public Color corEscolheValor;
 
+    [Header("Valores"), Range(0, 0.3f)]
+    public float overlapRange = 0.05f; // 5%
+    [Range(0, 1)]
+    public float opacityOnOverlap = 0.5f;
+
     float resposta;
     float min, max, range;
     bool porcentagem;
@@ -108,6 +113,17 @@ public class ValorGrafico : MonoBehaviour {
             sliderCorreto.transform.SetParent(holderMenor.transform);
             pedacoExtra.color = corValorCerto;
         }
+
+        Color cor = informativo.color;
+        
+        if (Mathf.Abs(sliderCorreto.value - slider.value) <= overlapRange) {
+            cor.a = opacityOnOverlap;
+        } else {
+            cor.a = 1;
+        }
+
+        informativo.color = cor;
+
     }
 
     public bool GetResposta() {
