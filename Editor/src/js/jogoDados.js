@@ -10,8 +10,29 @@ class OpcaoDados {
 
     slider = null;
     margemDeErro = null;
-    valorMinimo = null;
-    valorMaximo = null;
+    valorMinimo_porcentagem = null;
+    valorMaximo_porcentagem = null;
+
+    valorMinimo_grafico = null;
+    valorMaximo_grafico = null;
+
+    get valorMinimo() {
+        return this.tipo == "porcentagem" ? this.valorMinimo_porcentagem : this.valorMinimo_grafico;
+    }
+    get valorMaximo() {
+        return this.tipo == "porcentagem" ? this.valorMaximo_porcentagem : this.valorMaximo_grafico;
+    }
+
+    get min() {
+        return this.tipo_porcentagem == "porcentagem" ? 0 : parseFloat(this.valorMinimo.value);
+    }
+
+    get max() {
+        return this.tipo_porcentagem == "porcentagem" ? 100 : parseFloat(this.valorMaximo.value);
+    }
+
+    graficoHolder = null;
+    graficoIdBase = 0;
 
     constructor(id) {
         this.id = id;
@@ -57,6 +78,9 @@ class OpcaoDados {
 
         let porcentagemSection = this.#criarSecaoPorcentagem();
         form.appendChild(porcentagemSection);
+
+        let graficoSection = this.#criarSecaoGrafico();
+        form.appendChild(graficoSection);
 
 
         let footer = document.createElement("footer");
@@ -130,25 +154,29 @@ class OpcaoDados {
 
 
         // <md-outlined-text-field class="input-d3" type="number" label="Margem de erro"></md-outlined-text-field>
+        /*
         this.margemDeErro = document.createElement("md-outlined-text-field");
         this.margemDeErro.label = "Margem de erro";
         this.margemDeErro.type = "number";
         this.margemDeErro.classList.add("input-d3");
         section.appendChild(this.margemDeErro);
+        */
 
         // <md-outlined-text-field class="input-d3" type="number" label="Valor minimo"></md-outlined-text-field>
-        this.valorMinimo = document.createElement("md-outlined-text-field");
-        this.valorMinimo.label = "Valor mínimo";
-        this.valorMinimo.type = "number";
-        this.valorMinimo.classList.add("input-d3", "minmax");
-        section.appendChild(this.valorMinimo);
+        this.valorMinimo_porcentagem = document.createElement("md-outlined-text-field");
+        this.valorMinimo_porcentagem.label = "Valor mínimo";
+        this.valorMinimo_porcentagem.type = "number";
+        this.valorMinimo_porcentagem.classList.add("input-d3", "minmax");
+        this.valorMinimo_porcentagem.addEventListener("change", this.onMinMaxChange.bind(this));
+        section.appendChild(this.valorMinimo_porcentagem);
 
         // <md-outlined-text-field class="input-d3" type="number" label="Valor máximo"></md-outlined-text-field>
-        this.valorMaximo = document.createElement("md-outlined-text-field");
-        this.valorMaximo.label = "Valor máximo";
-        this.valorMaximo.type = "number";
-        this.valorMaximo.classList.add("input-d3", "minmax");
-        section.appendChild(this.valorMaximo);
+        this.valorMaximo_porcentagem = document.createElement("md-outlined-text-field");
+        this.valorMaximo_porcentagem.label = "Valor máximo";
+        this.valorMaximo_porcentagem.type = "number";
+        this.valorMaximo_porcentagem.classList.add("input-d3", "minmax");
+        this.valorMaximo_porcentagem.addEventListener("change", this.onMinMaxChange.bind(this));
+        section.appendChild(this.valorMaximo_porcentagem);
 
         // <md-slider class="sliderPorcentagem" labeled></md-slider>
         this.slider = document.createElement("md-slider");
@@ -159,13 +187,167 @@ class OpcaoDados {
         return section;
     }
 
+    // Retorna section grafico
+    #criarSecaoGrafico() {
+        let section = document.createElement("section");
+        section.classList.add("dadoGrafico");
+
+        let tipoValorField = document.createElement("md-outlined-select");
+        tipoValorField.label = "Tipo de resposta";
+
+        const opcoes = [["porcentagem", "Porcentagem"], ["valor", "Valor bruto"]];
+        opcoes.forEach((tipo, i) => {
+            let option = document.createElement("md-select-option");
+            option.value = tipo[0];
+            if (i == 0) option.selected = true;
+
+            let div = document.createElement("div");
+            div.slot = "headline";
+            div.innerText = tipo[1];
+
+            option.appendChild(div);
+            tipoValorField.appendChild(option);
+        });
+        tipoValorField.addEventListener("change", () => this.setTipoPorcentagem(tipoValorField.value));
+        this.setTipoPorcentagem(opcoes[0][0]);
+        section.appendChild(tipoValorField);
+
+        // <md-outlined-text-field class="input-d3" type="number" label="Valor minimo"></md-outlined-text-field>
+        this.valorMinimo_grafico = document.createElement("md-outlined-text-field");
+        this.valorMinimo_grafico.label = "Valor mínimo";
+        this.valorMinimo_grafico.type = "number";
+        this.valorMinimo_grafico.classList.add("input-d3", "minmax");
+        this.valorMinimo_grafico.addEventListener("change", this.onMinMaxChange.bind(this));
+        section.appendChild(this.valorMinimo_grafico);
+
+        // <md-outlined-text-field class="input-d3" type="number" label="Valor máximo"></md-outlined-text-field>
+        this.valorMaximo_grafico = document.createElement("md-outlined-text-field");
+        this.valorMaximo_grafico.label = "Valor máximo";
+        this.valorMaximo_grafico.type = "number";
+        this.valorMaximo_grafico.classList.add("input-d3", "minmax");
+        this.valorMaximo_grafico.addEventListener("change", this.onMinMaxChange.bind(this));
+        section.appendChild(this.valorMaximo_grafico);
+
+        // <md-filled-button> Adicionar campo </md-filled-button>
+        let novoCampoBtn = document.createElement("md-filled-button");
+        novoCampoBtn.innerText = "Adicionar campo";
+        novoCampoBtn.href = '#';
+        novoCampoBtn.addEventListener("click", () => {
+            let grafico = this.#criarCampoGrafico();
+            this.graficoHolder.appendChild(grafico);
+        });
+        section.appendChild(novoCampoBtn);
+
+
+        this.graficoHolder = document.createElement("div");
+        this.graficoHolder.classList.add("graficoHolder");
+
+        let grafico = this.#criarCampoGrafico();
+        this.graficoHolder.appendChild(grafico);
+
+        section.appendChild(this.graficoHolder);
+        
+
+        return section;
+    }
+
+    #criarCampoGrafico() {
+        const id = this.graficoIdBase++;
+
+        let div = document.createElement("div");
+        div.classList.add("grafico");
+        div.dataset.id = id;
+
+        // <img src="https://via.placeholder.com/150" alt="Grafico">
+        let removerBtn = document.createElement("md-icon-button");
+        removerBtn.addEventListener("click", this.removeGrafico.bind(this, id));
+        let icon = document.createElement("md-icon");
+        icon.innerText = "close";
+        removerBtn.appendChild(icon);
+        div.appendChild(removerBtn);
+
+
+        // <md-outlined-text-field class="input-d3" label="Nome"></md-outlined-text-field>
+        let nome = document.createElement("md-outlined-text-field");
+        nome.label = "Nome";
+        nome.classList.add("input-d3");
+        div.appendChild(nome);
+
+        // <md-outlined-text-field class="input-d3" type="number" label="Valor"></md-outlined-text-field>
+        let valor = document.createElement("md-outlined-text-field");
+        valor.label = "Valor";
+        valor.type = "number";
+        valor.classList.add("input-d3");
+        div.appendChild(valor);
+
+        let slider = document.createElement("md-slider");
+        slider.labeled = true;
+        div.appendChild(slider);
+
+
+        valor.addEventListener("change", () => {
+            let valorFloat = parseFloat(valor.value);
+            if (isNaN(valorFloat)) valorFloat = 0;
+            if (valorFloat < this.min) valorFloat = this.min;
+            if (valorFloat > this.max) valorFloat = this.max;
+
+            valor.value = valorFloat;
+            if (slider.value != valorFloat) slider.value = valorFloat;
+        });
+
+        slider.addEventListener("change", () => {
+            let valorFloat = parseFloat(slider.value);
+            if (isNaN(valorFloat)) valorFloat = 0;
+            if (valorFloat < this.min) valorFloat = this.min;
+            if (valorFloat > this.max) valorFloat = this.max;
+            
+            slider.value = valorFloat;
+            if (valor.value != slider.value) valor.value = slider.value;
+        });
+
+        return div;
+    }
+
+    removeGrafico(id) {
+        let grafico = this.graficoHolder.querySelector(`div[data-id="${id}"]`);
+        if (grafico) grafico.remove();
+    }
+
+    onMinMaxChange() {
+        let min = 0;
+        let max = 100;
+
+        if (this.tipo_porcentagem != "porcentagem") {
+            min = parseFloat(this.valorMinimo.value);
+            max = parseFloat(this.valorMaximo.value);
+
+            if (min > max) {
+                this.valorMaximo.value = min;
+            }
+        }
+
+        console.log("Min: " + min + " Max: " + max);
+
+        
+        let sliders = this.form.querySelectorAll("md-slider");
+        sliders.forEach(slider => {
+            let valor = parseFloat(slider.value);
+            if (valor < min) slider.value = min;
+            if (valor > max) slider.value = max;
+
+            slider.min = min;
+            slider.max = max;
+        });
+    }
+
 
     // Chamado ao escolher um tipo de pergunta
     // tipo: "booleano" ou "porcentagem" (grafico ainda não implementado)
     setTipoPergunta(tipo) {
         const classes = [
             {classe: "dadoBooleano", tipo: "booleano", formSelector: "opcaoBooleano"},
-            {classe: "dadoPorcentagem", tipo: "porcentagem", formSelector: "opcaoPorcentagem"}
+            {classe: "dadoPorcentagem", tipo: "porcentagem", formSelector: "opcaoPorcentagem"},
+            {classe: "dadoGrafico", tipo: "grafico", formSelector: "opcaoGrafico"}
         ];
 
         classes.forEach(c => {
@@ -188,6 +370,8 @@ class OpcaoDados {
         });
 
         this.tipo_porcentagem = tipo;
+
+        this.onMinMaxChange();
     }
 
     // Destroi o form
@@ -211,11 +395,10 @@ class OpcaoDados {
 
         if (this.tipo == "booleano") {
             objeto.respostaBool = this.trueRadio.checked;
-        } else if (this.tipo == "porcentagem") {
-            objeto.respostaFloat = this.slider.value;
+        } else if (this.tipo == "porcentagem" || this.tipo == "grafico") {
             objeto.range = { };
             
-            objeto.range.range = parseFloat(this.margemDeErro.value);
+            // objeto.range.range = parseFloat(this.margemDeErro.value);
             objeto.range.min = this.valorMinimo.value;
             objeto.range.max = this.valorMaximo.value;
             objeto.range.porcentagem = this.tipo_porcentagem == "porcentagem";
@@ -223,12 +406,35 @@ class OpcaoDados {
             if (objeto.range.porcentagem) {
                 delete objeto.range.min;
                 delete objeto.range.max;
-                objeto.respostaFloat =  objeto.respostaFloat / 100.0;
+                objeto.range.range = 0.05; // 5%
             } else {
                 objeto.range.min = parseFloat(objeto.range.min);
                 objeto.range.max = parseFloat(objeto.range.max);
+                objeto.range.range = (objeto.range.max - objeto.range.min) * 0.05;
                 delete objeto.range.porcentagem;
             }
+        } 
+        
+        if (this.tipo == "porcentagem") {
+            objeto.respostaFloat = this.slider.value;
+
+            if (objeto.range.porcentagem) objeto.respostaFloat =  objeto.respostaFloat / 100.0;
+
+        } else if (this.tipo == "grafico") {
+            objeto.grafico = [];
+            let campos = this.graficoHolder.querySelectorAll("div.grafico");
+            campos.forEach(campo => {
+                let obj = {
+                    nome: campo.querySelector("md-outlined-text-field").value,
+                    valor: parseFloat(campo.querySelector("md-outlined-text-field[type=number]").value)
+                };
+
+                if (obj.valor == NaN || obj.valor == null) obj.valor = parseFloat(campo.querySelector("md-slider").value);
+
+                if (objeto.range.porcentagem) obj.valor = obj.valor / 100.0;
+
+                objeto.grafico.push(obj);
+            });
         }
 
         return objeto;
@@ -257,6 +463,7 @@ class JogoDados {
     }
 
     limparPerguntas() {
+        console.log("Limpando perguntas");
         this.dadosHolder.innerHTML = "";
         this.perguntas = [];
     }

@@ -230,6 +230,7 @@ main > section > form {
 
     border: 1px solid #79747e;
     border-radius: 4px;
+    padding-bottom: 1.5em;
 
     box-sizing: border-box;
 }
@@ -245,7 +246,7 @@ main > section > form {
     flex-wrap: wrap;
 }
 
-:not(.opcaoBooleano) > .dadoBooleano, :not(.opcaoPorcentagem) > .dadoPorcentagem {
+:not(.opcaoBooleano) > .dadoBooleano, :not(.opcaoPorcentagem) > .dadoPorcentagem, :not(.opcaoGrafico) > .dadoGrafico {
     display: none !important;
 }
 
@@ -265,6 +266,29 @@ md-radio {
 .sliderPorcentagem {
     width: 80%;
     padding-left: 10%;
+}
+
+.graficoHolder {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grafico {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.grafico > md-slider {
+    width: 80%;
+}
+
+.dadosForm > section.dadoGrafico {
+    justify-content: space-between;
 }
 
 #infoSection {
@@ -340,14 +364,14 @@ md-radio {
         width: 100%;
         max-width: 60em;
         height: 100%;
-        max-height: 40em;
+        max-height: 50em;
     }
 
     .text-input {
         width: calc(50% - 8px);
     }
 
-    .input-d3 {
+    .input-d3, .input-d4 {
         flex-grow: 1;
     }
 
@@ -383,6 +407,10 @@ md-radio {
     }
 
     .input-d3 {
+        width: calc(100%);
+    }
+
+    .input-d4 {
         width: calc(100%);
     }
 
