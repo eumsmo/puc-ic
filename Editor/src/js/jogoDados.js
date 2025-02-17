@@ -195,10 +195,17 @@ class OpcaoDados {
         this.form.remove();
     }
 
+    pegarTipoCorreto() {
+        if (this.tipo == "booleano") return "Boleano";
+        if (this.tipo == "porcentagem") return "Porcentagem";
+        if (this.tipo == "grafico") return "Grafico";
+        return "Desconhecido";
+    }
+
     // To JSON
     toJSON() {
         const objeto = {
-            tipo: this.tipo,
+            tipo: this.pegarTipoCorreto(),
             texto: this.perguntaField.value
         };
 

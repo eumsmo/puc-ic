@@ -103,7 +103,7 @@ class Publicador {
 
     async uplodarDocumentoDrive(documento, access_token) {
         const metadados = {
-            name: file_name,
+            name: documento.name,
             mimeType: 'application/json'
         };
 
@@ -174,7 +174,7 @@ class Publicador {
         googleProgress.value = 1;
         googleProgressText.innerHTML = 'Concluído';
 
-        setarLink(link);
+        this.setarLink(link);
     }
 
     setarLink(link) {
