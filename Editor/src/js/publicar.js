@@ -3,8 +3,13 @@ const drive_token = 'https://oauth2.googleapis.com/token';
 const drive_criar = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
 const drive_permission =  (id) => 'https://www.googleapis.com/drive/v3/files/' + id + '/permissions';
 
+const achar_pasta_query = (nome) => `q=name='${nome}' and mimeType='application/vnd.google-apps.folder'`;
+const drive_achar_pasta = 'https://www.googleapis.com/drive/v3/files?pageSize=1&';
+const drive_criar_pasta = 'https://www.googleapis.com/drive/v3/files';
+
 // Valores fixos
 const redirect_uri = 'https://eumsmo.github.io';
+const nome_pasta = 'Jogos-Artigos';
 const link_jogoResumo = file_id => 'https://eumsmo.github.io/puc-ic/Build/?drive=' + file_id;
 const link_jogoDados = file_id => 'https://eumsmo.github.io/puc-ic/Dados/Build/?drive=' + file_id;
 
@@ -55,8 +60,7 @@ class Publicador {
     async autenticar() {
         console.log('Autenticando...');
 
-        googleProgress.value = 0;
-        googleProgressText.innerHTML = 'Aguardando autenticação do usuário em outra janela...';
+        this.setarProgresso(0, 'Aguardando autenticação do usuário em outra janela...');
 
         let res = null;
 
@@ -81,9 +85,8 @@ class Publicador {
         }
 
         if (res == null) return;
-
-        googleProgress.value = 0.15;
-        googleProgressText.innerHTML = 'Gerando código de acesso...';
+        
+        this.setarProgresso(0.15, 'Gerando código de acesso...');
 
         let code = res.code;
 
@@ -100,11 +103,46 @@ class Publicador {
         return json;
     }
 
+    async encontrarIdPasta(access_token) {
+        const link_achar_pasta = drive_achar_pasta + achar_pasta_query(nome_pasta);
 
-    async uplodarDocumentoDrive(documento, access_token) {
+        const response = await fetch(link_achar_pasta, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${access_token}`
+            }
+        });
+
+        const json = await response.json();
+
+        if (json.files == null || json.files.length == 0) return null;
+        return json.files[0].id;
+    }
+
+    async criarPastaDrive(access_token) {
+        const metadados = {
+            name: nome_pasta,
+            mimeType: 'application/vnd.google-apps.folder'
+        };
+
+        const response = await fetch(drive_criar_pasta, {
+            method: 'POST',
+            headers: {
+                "Authorization": `Bearer ${access_token}`
+            },
+            body: JSON.stringify(metadados)
+        });
+
+        const json = await response.json();
+        return json.id;
+    }
+
+
+    async uplodarDocumentoDrive(documento, folder_id, access_token) {
         const metadados = {
             name: documento.name,
-            mimeType: 'application/json'
+            mimeType: 'application/json',
+            parents: [folder_id]
         };
 
         let formdata = new FormData();
@@ -119,7 +157,7 @@ class Publicador {
             body: formdata
         });
 
-        return response.json();
+        return await response.json();
     }
 
     async setarPermissoesDrive(file_id, access_token) {
@@ -139,25 +177,38 @@ class Publicador {
         return response.json();
     }
 
-    async salvarDocumentoDrive(documento, access_token = this.#auth_token) {
-        googleProgress.value = 0.3; // 30%
-        googleProgressText.innerHTML = 'Dando upload do arquivo no drive...';
+    setarProgresso(valor, texto) {
+        googleProgress.value = valor;
+        googleProgressText.innerHTML = texto;
+    }
 
+    async salvarDocumentoDrive(documento, access_token = this.#auth_token) {
         let file_id = null;
         let deu_erro = false;
 
         try {
-            // Criar o documento
-            const uploadRes = await this.uplodarDocumentoDrive(documento, access_token);
+            // Acha pasta
+            this.setarProgresso(0.25, 'Procurando pasta base no drive...');
+            let folder_id = await this.encontrarIdPasta(access_token);
 
-            googleProgress.value = 0.85; // 85%
-            googleProgressText.innerHTML = 'Setando permissões...';
+            if (folder_id == null) {
+                this.setarProgresso(0.35, 'Não encontrada, criando pasta...');
+
+                // Cria pasta
+                folder_id = await this.criarPastaDrive(access_token);
+            }
+            
+            this.setarProgresso(0.5, 'Dando upload do arquivo no drive...');
+
+            // Criar o documento
+            const uploadRes = await this.uplodarDocumentoDrive(documento, folder_id, access_token);
+
+            this.setarProgresso(0.85, 'Setando permissões...');
 
             file_id = uploadRes.id;
             const permRes = await this.setarPermissoesDrive(file_id, access_token);
 
-            googleProgress.value = 0.95; // 95%
-            googleProgressText.innerHTML = 'Gerando link...';
+            this.setarProgresso(0.95, 'Gerando link...');
             
         } catch (error) {
             googleProgressText.innerHTML = 'Falha ao salvar documento';
@@ -171,8 +222,7 @@ class Publicador {
         let link = this.controlador.pegarLinkFunc()(file_id);
         console.log(link);
 
-        googleProgress.value = 1;
-        googleProgressText.innerHTML = 'Concluído';
+        this.setarProgresso(1, 'Concluído');
 
         this.setarLink(link);
     }
