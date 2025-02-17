@@ -50,40 +50,83 @@
 
       <section id="dadosSection">
         <header>
-          <h1>Criar o jogo - Dados [EM PROGRESO]</h1>
+          <span class="material-symbols-outlined ir-inicio">
+            arrow_back
+          </span>
+          <h1>Criar o jogo - Dados</h1>
         </header>
         <form>
-          <md-outlined-text-field id="titulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
-          <md-outlined-text-field id= "url" class="text-input" label="Link do artigo" type="url" supporting-text="URL de acesso ao artigo"></md-outlined-text-field>
+          <md-outlined-text-field id="dadosTitulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
+          <md-outlined-text-field id= "dadosUrl" class="text-input" label="Link do artigo" type="url" supporting-text="URL de acesso ao artigo"></md-outlined-text-field>
         </form>
+        <section class="dadosPerguntasInfo">
+          <h2>
+            Perguntas
+          </h2>
+
+          <md-filled-button id="novaPerguntaBtn">
+            Nova pergunta
+          </md-filled-button>
+
+        </section>
         <div id="dadosHolder">
           <form class="dadosForm">
-            <md-outlined-text-field class="pergunta" class="text-input" label="Pergunta"></md-outlined-text-field>
-            <md-outlined-select>
-              <md-select-option selected value="booleano">
-                <div slot="headline">Afirmativa</div>
-              </md-select-option>
-              <md-select-option value="porcentagem">
-                <div slot="headline">Porcentagem</div>
-              </md-select-option>
-              <md-select-option value="grafico">
-                <div slot="headline">Grafico</div>
-              </md-select-option>
-            </md-outlined-select>
+            <section>
+              <md-outlined-text-field class="pergunta text-input" label="Pergunta"></md-outlined-text-field>
+              <md-outlined-select label="Tipo de pergunta">
+                <md-select-option selected value="booleano">
+                  <div slot="headline">Afirmativa</div>
+                </md-select-option>
+                <md-select-option value="porcentagem">
+                  <div slot="headline">Valor</div>
+                </md-select-option>
+                <md-select-option value="grafico">
+                  <div slot="headline">Grafico</div>
+                </md-select-option>
+              </md-outlined-select>
+            </section>
             
+            <section class="dadoBooleano">
+              <label> <md-radio name="booleano" value="true"></md-radio> Verdadeiro </label>
+              <label> <md-radio name="booleano" value="false"></md-radio> Falso </label>
+            </section>
+
+            <section class="dadoPorcentagem">
+              <md-outlined-select label="Tipo de resposta">
+                <md-select-option selected value="porcentagem">
+                  <div slot="headline">Porcentagem</div>
+                </md-select-option>
+                <md-select-option value="valor">
+                  <div slot="headline">Valor bruto</div>
+                </md-select-option>
+              </md-outlined-select>
+
+              <md-outlined-text-field class="input-d3" type="number" label="Margem de erro"></md-outlined-text-field>
+              <md-outlined-text-field class="input-d3" type="number" label="Valor minimo"></md-outlined-text-field>
+              <md-outlined-text-field class="input-d3" type="number" label="Valor máximo"></md-outlined-text-field>
+              <md-slider class="sliderPorcentagem" labeled></md-slider>
+            </section>
+            <!--
+            <section class="dadoGrafico">
+              <md-outlined-text-field class="resposta" class="text-input" label="Resposta"></md-outlined-text-field>
+            </section>
+            -->
 
           </form>
         </div>
         <footer>
-            <md-outlined-button>
+            <md-outlined-button class="irGoogle">
               Salvar com Google
             </md-outlined-button>
-            <md-outlined-button>Salvar manualmente</md-outlined-button>
+            <md-outlined-button class="irManual">Salvar manualmente</md-outlined-button>
         </footer>
       </section>
     
       <section id="infoSection">
         <header>
+          <span class="material-symbols-outlined ir-inicio">
+              arrow_back
+          </span>
           <h1>Criar o jogo</h1>
         </header>
         <form>
@@ -98,10 +141,10 @@
           </md-outlined-text-field>
         </form>
         <footer>
-            <md-outlined-button id="irGoogle">
+            <md-outlined-button class="irGoogle">
               Salvar com Google
             </md-outlined-button>
-            <md-outlined-button id="irManual">Salvar manualmente</md-outlined-button>
+            <md-outlined-button class="irManual">Salvar manualmente</md-outlined-button>
         </footer>
       </section>
 
@@ -170,6 +213,7 @@
       </section>
     </main>
 
-    <script src="src/js/index.js"></script>
+    <script src="src/js/jogoResumo.js"></script>
+    <script src="src/js/jogoDados.js"></script>
     <script src="src/js/publicar.js"></script>
   </body>

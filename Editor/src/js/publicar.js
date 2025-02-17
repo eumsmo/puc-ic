@@ -5,26 +5,24 @@ const drive_permission =  (id) => 'https://www.googleapis.com/drive/v3/files/' +
 
 // Valores fixos
 const redirect_uri = 'https://eumsmo.github.io';
-const criar_link_jogo = file_id => 'https://eumsmo.github.io/puc-ic/Build/?drive=' + file_id;
-
-// Outros valores
-const file_name = 'jogo_artigo_info.json';
+const link_jogoResumo = file_id => 'https://eumsmo.github.io/puc-ic/Build/?drive=' + file_id;
+const link_jogoDados = file_id => 'https://eumsmo.github.io/puc-ic/Dados/Build/?drive=' + file_id;
 
 // Elements
 const holder = document.querySelector('#holder');
-const tituloInput = document.querySelector('#titulo');
-const urlInput = document.querySelector('#url');
-const resumoInput = document.querySelector('#resumo');
 const indicador = document.querySelector('#indicadorProvisorio');
+const escolheDados = document.querySelector("#escolheDados");
+const escolheArtigo = document.querySelector("#escolheArtigo");
 
 const voltarBtns = document.querySelectorAll('.voltar');
+const irInicioBtns = document.querySelectorAll('.ir-inicio');
+const irManualBtns = document.querySelectorAll('.irManual');
+const irGoogleBtns = document.querySelectorAll('.irGoogle');
+const baixarManualBtn = document.querySelector('#baixarArquivoBtn');
 
-const irParaManualBtn = document.querySelector('#irManual');
-const baixarBtn = document.querySelector('#baixarArquivoBtn');
 const compartilhamentoLinkInput = document.querySelector('#compartilhamentoLink');
 const gerarLinkBtn = document.querySelector('#gerarLinkBtn');
 
-const irParaGoogleBtn = document.querySelector('#irGoogle');
 const googleProgress = document.querySelector('#googleProgress');
 const googleProgressText = document.querySelector('#googleProgressText');
 
@@ -37,8 +35,10 @@ class Publicador {
     #client_secret = '';
 
     #setup_promise = null;
+    controlador = null;
 
-    constructor() {
+    constructor(controlador) {
+        this.controlador = controlador;
         this.setup();
     }
 
@@ -76,7 +76,7 @@ class Publicador {
             });
         } catch (error) {
             googleProgressText.innerHTML = 'Falha na autenticação';
-            setarEstado('valores');
+            this.voltarAntesDeGerar();
             console.error(error);
         }
 
@@ -161,14 +161,14 @@ class Publicador {
             
         } catch (error) {
             googleProgressText.innerHTML = 'Falha ao salvar documento';
-            setarErro();
+            this.controlador.setarErro();
             console.error(error);
             deu_erro = true;
         }
 
         if (deu_erro) return;
         
-        let link = criar_link_jogo(file_id);
+        let link = this.controlador.pegarLinkFunc()(file_id);
         console.log(link);
 
         googleProgress.value = 1;
@@ -176,29 +176,34 @@ class Publicador {
 
         setarLink(link);
     }
+
+    setarLink(link) {
+        linkHolder.innerHTML = link;
+        linkHolder.href = link;
     
-    gerarDocumento() {
-        let info = {
-            titulo: tituloInput.value,
-            url: urlInput.value,
-            resumo: resumoInput.value
-        };
-    
-        return new File([JSON.stringify(info)], file_name, {type: 'application/json'});
+        this.controlador.setarEstado('link');
+    }
+
+    voltarAntesDeGerar() {
+        let jogo = this.controlador.pegarTipoJogo();
+        if (jogo == 'resumo') this.controlador.setarEstado('valores');
+        else if (jogo == 'dados') this.controlador.setarEstado('dados');
+        else this.controlador.setarEstado('escolha');
     }
 
     async gerarGoogle() {
         await this.setup();
-        setarEstado('google');
+        this.controlador.setarEstado('google');
 
-        const file = this.gerarDocumento();
+        let file = this.controlador.pegarJogo().gerarDocumento();
+
         let res = null;
 
         try {
             res = await this.autenticar();
         } catch (error) {
             googleProgressText.innerHTML = 'Falha na autenticação';
-            setarErro();
+            this.controlador.setarErro();
             console.error(error);
         }
 
@@ -217,49 +222,96 @@ class Publicador {
     }
 
     gerarManual() {
-        const file = this.gerarDocumento();
+        const file = this.controlador.pegarJogo().gerarDocumento();
         this.salvarDocumentoPC(file);
     }
 
     linkCompartilhamentoToGame(link) {
         let parte = link.split('file/d/');
         let id = parte[1].split('/')[0];
-        return criar_link_jogo(id);
+        return this.controlador.pegarLinkFunc()(id);
     }
 }
 
-estados = ['valores', 'manual', 'google', 'link', 'erro'];
-function setarEstado(estado) {
-    estados.forEach(e => holder.classList.remove(e));
-    holder.classList.add(estado);
+class Controlador {
+    static instancia = null;
+    estados = ['escolha', 'valores', 'dados', 'manual', 'google', 'link', 'erro'];
+    jogo_selecionado = null; // 'resumo' ou 'dados'
+
+    publicador = null;
+    jogo_resumo = null;
+    jogo_dados = null;
+
+    constructor() {
+        Controlador.instancia = this;
+
+        this.publicador = new Publicador(this);
+        this.jogo_resumo = new JogoResumo(this);
+        this.jogo_dados = new JogoDados(this);
+    }
+
+    setarEstado(estado) {
+        this.estados.forEach(e => holder.classList.remove(e));
+        holder.classList.add(estado);
+
+        if (estado == 'valores' && this.jogo_selecionado != "resumo") this.setarJogo("resumo");
+        else if (estado == 'dados' && this.jogo_selecionado != "dados") this.setarJogo("dados");
+    }
+
+    pegarEstado() {
+        for (let i = 0; i < this.estados.length; i++) {
+            if (holder.classList.contains(this.estados[i])) return this.estados[i];
+        }
+
+        return escolha;
+    }
+
+    setarErro() {
+        holder.classList.add('erro');
+    }
+
+    setarJogo(jogo) {
+        this.jogo_selecionado = jogo;
+
+        if (jogo == 'resumo') this.setarEstado('valores');
+        else if (jogo == 'dados') this.setarEstado('dados');
+    }
+
+    pegarJogo() {
+        if (this.jogo_selecionado == 'resumo') return this.jogo_resumo;
+        if (this.jogo_selecionado == 'dados') return this.jogo_dados;
+        return null;
+    }
+
+    pegarTipoJogo() {
+        return this.jogo_selecionado;
+    }
+
+    pegarLinkFunc() {
+        if (this.jogo_selecionado == 'resumo') return link_jogoResumo;
+        if (this.jogo_selecionado == 'dados') return link_jogoDados;
+        return null;
+    }
 }
 
-function setarErro() {
-    holder.classList.add('erro');
-}
-
-function setarLink(link) {
-    linkHolder.innerHTML = link;
-    linkHolder.href = link;
-
-    setarEstado('link');
-}
+const controlador = new Controlador();
 
 function receberAutenticacao(conteudo) {
-    publicador.receberAutenticacao(conteudo);
+    controlador.publicador.receberAutenticacao(conteudo);
 }
 
-const publicador = new Publicador();
-
-
-
-baixarBtn.addEventListener('click', () => publicador.gerarManual());
 gerarLinkBtn.addEventListener('click', () => {
-    let link = publicador.linkCompartilhamentoToGame(compartilhamentoLinkInput.value);
-    setarLink(link);
+    let link = controlador.publicador.linkCompartilhamentoToGame(compartilhamentoLinkInput.value);
+    controlador.publicador.setarLink(link);
 });
 
-irParaManualBtn.addEventListener('click', () => setarEstado('manual'));
-irParaGoogleBtn.addEventListener('click', () => publicador.gerarGoogle());
+voltarBtns.forEach(btn => btn.addEventListener('click', () => controlador.publicador.voltarAntesDeGerar()));
+irInicioBtns.forEach(btn => btn.addEventListener('click', () => controlador.setarEstado('escolha')));
 
-voltarBtns.forEach(btn => btn.addEventListener('click', () => setarEstado('valores')));
+
+escolheArtigo.addEventListener("click", () => controlador.setarEstado('valores'));
+escolheDados.addEventListener("click", () => controlador.setarEstado('dados'));
+
+baixarManualBtn.addEventListener('click', () => controlador.publicador.gerarManual());
+irManualBtns.forEach(btn => btn.addEventListener('click', () => controlador.setarEstado('manual')));
+irGoogleBtns.forEach(btn => btn.addEventListener('click', () => controlador.publicador.gerarGoogle()));

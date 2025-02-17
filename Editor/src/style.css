@@ -70,11 +70,11 @@ p {
     margin: 0 0 0 16px;
 }
 
-.voltar:hover {
+.voltar:hover, .ir-inicio:hover {
     cursor: pointer;
 }
 
-#holder footer {
+#holder > section > footer {
     display: flex;
     flex-wrap: wrap;
     justify-content: right;
@@ -100,6 +100,7 @@ main > section > form {
 #holder > section {
     display: flex;
     flex-grow: 1;
+    height: 100%;
     /*
     border: 1px solid #79747e;
     border-radius: 4px;
@@ -182,6 +183,7 @@ main > section > form {
 
 #dadosHolder {
     flex-grow: 1;
+    overflow-y: auto;
 
     display: flex;
     flex-direction: column;
@@ -193,10 +195,36 @@ main > section > form {
     box-sizing: border-box;
 }
 
+.dadosPerguntasInfo {
+    margin-bottom: 1em;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.dadosPerguntasInfo h2 {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+
+    font-size: 20px;
+}
+
+.dadosFooter {
+    display: flex;
+    flex-direction: row-reverse;
+
+    position: absolute;
+    bottom: 4px;
+    right: 0;
+}
+
 .dadosForm {
+    position: relative;
+
     padding: 8px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    flex-wrap: wrap;
     width: 100%;
     gap: 16px;
 
@@ -208,6 +236,35 @@ main > section > form {
 
 .dadosForm .pergunta {
     flex-grow: 1;
+}
+
+.dadosForm > section {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+:not(.opcaoBooleano) > .dadoBooleano, :not(.opcaoPorcentagem) > .dadoPorcentagem {
+    display: none !important;
+}
+
+.dadoBooleano {
+    padding: 8px;
+    justify-content: space-evenly;
+}
+
+md-radio {
+    margin-right: .5em;
+}
+
+:not(.porcentagemValor) > section > .minmax {
+    display: none !important;
+}
+
+.sliderPorcentagem {
+    width: 80%;
+    padding-left: 10%;
 }
 
 #infoSection {
@@ -290,6 +347,10 @@ main > section > form {
         width: calc(50% - 8px);
     }
 
+    .input-d3 {
+        flex-grow: 1;
+    }
+
     .textarea {
         resize: none;
         height: calc(100% - 5em);
@@ -321,13 +382,17 @@ main > section > form {
         width: 100%;
     }
 
+    .input-d3 {
+        width: calc(100%);
+    }
+
     .textarea {
         resize: none;
         height: calc(100% - 9em);
         width: 100%;
     }
 
-    #irGoogle, #irManual {
+    .irGoogle, .irManual {
         flex-grow: 1;
     }
 

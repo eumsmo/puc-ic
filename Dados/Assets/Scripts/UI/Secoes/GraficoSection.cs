@@ -37,18 +37,18 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
         gameObject.SetActive(true);
         texto.text = dados.texto;
 
-        Dados_GraficoInfo grafico = dados.grafico;
+        Dados_Range rangeInfo = dados.range;
 
         foreach (Transform child in graficosHolder.transform) {
             Destroy(child.gameObject);
         }
         campos.Clear();
 
-        string min = "" + grafico.min;
-        string half = "" + (grafico.min + grafico.max) / 2;
-        string max = "" + grafico.max;
+        string min = "" + rangeInfo.min;
+        string half = "" + (rangeInfo.min + rangeInfo.max) / 2;
+        string max = "" + rangeInfo.max;
 
-        if (grafico.porcentagem == true) {
+        if (rangeInfo.porcentagem == true) {
             min = "0%";
             half = "50%";
             max = "100%";
@@ -58,12 +58,12 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
         maxValue.text = max;
         halfValue.text = half;
 
-        porcentagem = grafico.porcentagem;
-        v_min = grafico.min;
-        v_max = grafico.max;
-        range = dados.range;
+        porcentagem = rangeInfo.porcentagem;
+        v_min = porcentagem ? 0 : rangeInfo.min;
+        v_max = porcentagem ? 1 : rangeInfo.max;
+        range = rangeInfo.range;
 
-        foreach (Dados_Grafico_Campo campo in grafico.campos) {
+        foreach (Dados_Grafico_Campo campo in dados.grafico) {
             ValorGrafico vg = GerarCampo(campo);
             campos.Add(vg);
         }

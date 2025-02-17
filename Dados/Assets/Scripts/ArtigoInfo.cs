@@ -10,16 +10,16 @@ public class Dados {
     public string texto;
     public bool respostaBool;
     public float respostaFloat;
-    public float range;
-    public Dados_GraficoInfo grafico;
+    public Dados_Range range;
+    public Dados_Grafico_Campo[] grafico;
     public string explicacao;
 }
 
 [System.Serializable]
-public class Dados_GraficoInfo {
+public class Dados_Range {
     public bool porcentagem = false;
     public float min, max;
-    public Dados_Grafico_Campo[] campos;
+    public float range;
 }
 
 [System.Serializable]

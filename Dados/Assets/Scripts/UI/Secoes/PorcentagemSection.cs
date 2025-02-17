@@ -86,7 +86,7 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
     public bool GetResposta() {
         float resposta = slider.value;
         float respostaCorreta = dados.respostaFloat;
-        float range = dados.range;
+        float range = dados.range.range;
 
         return Mathf.Abs(resposta - respostaCorreta) <= range;
     }

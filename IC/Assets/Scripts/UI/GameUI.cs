@@ -80,10 +80,11 @@ public class GameUI : MonoBehaviour {
     }
 
     public void Tentar(string tentativa) {
-        if (tentativas.Contains(tentativa) || tentativa.Trim() == "") return;
-        
-        List<Termo> termos = GetTermos();
+        tentativa = tentativa.Trim();
+        if (tentativas.Contains(tentativa) || tentativa == "") return;
+        if (palavrasNaoOcultas.Contains(tentativa)) return;
 
+        List<Termo> termos = GetTermos();
 
         int encontrados = 0;
         foreach (Termo termo in termos) {
@@ -109,6 +110,9 @@ public class GameUI : MonoBehaviour {
         inputField.text = "";
 
         Tentar(tentativa);
+
+        inputField.ActivateInputField();
+        inputField.Select();
     }
 
     public bool CheckIfWin() {

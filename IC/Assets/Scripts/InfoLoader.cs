@@ -100,6 +100,18 @@ public class InfoLoader : MonoBehaviour {
         #endif
     }
 
+    public ArtigoInfo ConvertTextIntoInfo(string text) {
+        // Remove conteudo antes do objeto (para comentários legiveis a humanos)
+        int start = text.IndexOf("{");
+        if (start == -1) {
+            throw new System.Exception("Erro ao encontrar objeto JSON");
+        }
+
+        string json = text.Substring(start);
+
+        return JsonUtility.FromJson<ArtigoInfo>(json);
+    }
+
     public IEnumerator LoadTextoWeb(string url) {
         bool deuCerto = false;
         string errorMessage = "Erro não especificado";
@@ -110,10 +122,11 @@ public class InfoLoader : MonoBehaviour {
             if (webRequest.result == UnityWebRequest.Result.Success) {
                 try {
                     string json = webRequest.downloadHandler.text;
-                    info = JsonUtility.FromJson<ArtigoInfo>(json);
-                    deuCerto = true;
+                    info = ConvertTextIntoInfo(json);
+                    deuCerto = info != null;
 
-                    SetarArtigo(info);
+                    if (deuCerto) SetarArtigo(info);
+                    
                 } catch (System.Exception e) {
                     errorMessage = "Erro de resposta: " + e.Message;
 
@@ -165,7 +178,7 @@ public class InfoLoader : MonoBehaviour {
             }
         } else {
             string json = System.IO.File.ReadAllText(filePath);
-            info = JsonUtility.FromJson<ArtigoInfo>(json);
+            info = ConvertTextIntoInfo(json);
             SetarArtigo(info);
         }
 
