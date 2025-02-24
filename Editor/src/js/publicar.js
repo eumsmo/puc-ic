@@ -6,10 +6,12 @@ const drive_permission =  (id) => 'https://www.googleapis.com/drive/v3/files/' +
 const achar_pasta_query = (nome) => `q=name='${nome}' and mimeType='application/vnd.google-apps.folder'`;
 const drive_achar_pasta = 'https://www.googleapis.com/drive/v3/files?pageSize=1&';
 const drive_criar_pasta = 'https://www.googleapis.com/drive/v3/files';
+const drive_atualizar = (id) => 'https://www.googleapis.com/drive/v3/files/' + id + '?uploadType=multipart';
 
 // Valores fixos
 const redirect_uri = 'https://eumsmo.github.io';
 const nome_pasta = 'Jogos-Artigos';
+const link_editor = 'https://eumsmo.github.io/puc-ic/Editor/';
 const link_jogoResumo = file_id => 'https://eumsmo.github.io/puc-ic/Build/?drive=' + file_id;
 const link_jogoDados = file_id => 'https://eumsmo.github.io/puc-ic/Dados/Build/?drive=' + file_id;
 
@@ -32,6 +34,24 @@ const googleProgress = document.querySelector('#googleProgress');
 const googleProgressText = document.querySelector('#googleProgressText');
 
 const linkHolder = document.querySelector('#linkEl');
+
+class PseudoDocumento {
+    name = '';
+    conteudo = {};
+    metadados = {};
+    titulo = '';
+    prefixo = '';
+
+    constructor(conteudo, name, metadados) {
+        this.name = name;
+        this.conteudo = conteudo;
+        this.metadados = metadados;
+    }
+
+    asFile() {
+        return new File([this.prefixo + JSON.stringify(this.conteudo, null, "\t")], this.name, this.metadados);
+    }
+}
 
 
 class Publicador {
@@ -137,7 +157,6 @@ class Publicador {
         return json.id;
     }
 
-
     async uplodarDocumentoDrive(documento, folder_id, access_token) {
         const metadados = {
             name: documento.name,
@@ -147,7 +166,7 @@ class Publicador {
 
         let formdata = new FormData();
         formdata.append('metadata', new Blob([JSON.stringify(metadados)], {type: 'application/json'}));
-        formdata.append('file', documento);
+        formdata.append('file', documento.asFile());
 
         const response = await fetch(drive_criar, {
             method: 'POST',
@@ -177,6 +196,37 @@ class Publicador {
         return response.json();
     }
 
+    async atualizarDocumentoDrive(file_id, documento, access_token) {
+        const metadados = {
+            name: documento.name,
+            mimeType: 'application/json'
+        };
+
+        documento.prefixo = `
+/* 
+Este é um arquivo essencial para o funcionamento do jogo "${this.controlador.pegarNomeJogo()}" do artigo "${documento.conteudo.titulo}".
+O jogo é acessivel pelo link "${this.controlador.pegarLinkFunc()(file_id)}".
+
+Alterar o conteúdo deste arquivo pode causar problemas no jogo.
+Arquivo criado automaticamente através do site "${link_editor}".
+*/
+`;
+
+        let formdata = new FormData();
+        formdata.append('metadata', new Blob([JSON.stringify(metadados)], {type: 'application/json'}));
+        formdata.append('file', documento.asFile());
+
+        const response = await fetch(drive_atualizar(file_id), {
+            method: 'PATCH',
+            headers: {
+                "Authorization": `Bearer ${access_token}`
+            },
+            body: formdata
+        });
+
+        return await response.json();
+    }
+
     setarProgresso(valor, texto) {
         googleProgress.value = valor;
         googleProgressText.innerHTML = texto;
@@ -203,10 +253,13 @@ class Publicador {
             // Criar o documento
             const uploadRes = await this.uplodarDocumentoDrive(documento, folder_id, access_token);
 
-            this.setarProgresso(0.85, 'Setando permissões...');
+            this.setarProgresso(0.8, 'Setando permissões...');
 
             file_id = uploadRes.id;
             const permRes = await this.setarPermissoesDrive(file_id, access_token);
+            
+            this.setarProgresso(0.85, 'Skipando o atualizar arquivo...');
+            //await this.atualizarDocumentoDrive(file_id, documento, access_token);
 
             this.setarProgresso(0.95, 'Gerando link...');
             
@@ -266,7 +319,20 @@ class Publicador {
 
     salvarDocumentoPC(file) {
         const a = document.createElement('a');
-        a.href = URL.createObjectURL(file);
+
+        file.prefixo = `
+/* 
+Este é um arquivo essencial para o funcionamento do jogo "${this.controlador.pegarNomeJogo()}" do artigo "${file.conteudo.titulo}".
+O jogo é acessivel pelo link "${this.controlador.pegarLinkFunc()("SEU_ID_AQUI")}".
+Para conseguir o ID, você deve publicar o arquivo no Google Drive e pegar o ID do arquivo no link compartilhado (deve estar público).
+Exemplo do link do drive: https://drive.google.com/file/d/[ID AQUI]/view?usp=sharing
+
+Alterar o conteúdo deste arquivo pode causar problemas no jogo.
+Arquivo criado automaticamente através do site "${link_editor}".
+*/
+`;
+
+        a.href = URL.createObjectURL(file.asFile());
         a.download = file.name;
         a.click();
     }
@@ -292,9 +358,12 @@ class Controlador {
     jogo_resumo = null;
     jogo_dados = null;
 
+    modal = null;
+
     constructor() {
         Controlador.instancia = this;
 
+        this.modal = new Modal();
         this.publicador = new Publicador(this);
         this.jogo_resumo = new JogoResumo(this);
         this.jogo_dados = new JogoDados(this);
@@ -340,6 +409,12 @@ class Controlador {
     pegarLinkFunc() {
         if (this.jogo_selecionado == 'resumo') return link_jogoResumo;
         if (this.jogo_selecionado == 'dados') return link_jogoDados;
+        return null;
+    }
+
+    pegarNomeJogo() {
+        if (this.jogo_selecionado == 'resumo') return 'Descubrir o Titulo';
+        if (this.jogo_selecionado == 'dados') return 'Responder Perguntas';
         return null;
     }
 }

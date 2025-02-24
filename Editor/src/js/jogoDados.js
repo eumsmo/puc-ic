@@ -16,6 +16,8 @@ class OpcaoDados {
     valorMinimo_grafico = null;
     valorMaximo_grafico = null;
 
+    controlador = null;
+
     get valorMinimo() {
         return this.tipo == "porcentagem" ? this.valorMinimo_porcentagem : this.valorMinimo_grafico;
     }
@@ -34,8 +36,10 @@ class OpcaoDados {
     graficoHolder = null;
     graficoIdBase = 0;
 
-    constructor(id) {
+    constructor(controlador, id) {
         this.id = id;
+        this.controlador = controlador;
+
         this.#criarForm();
     }
 
@@ -86,12 +90,29 @@ class OpcaoDados {
         let footer = document.createElement("footer");
         footer.classList.add("dadosFooter");
         
+        let infoButton = document.createElement("md-icon-button");
+        infoButton.addEventListener("click", evt => {
+            this.mostrarInformativo.call(this);
+            evt.preventDefault();
+        });
+
+        let iconI = document.createElement("md-icon");
+        iconI.innerText = "info";
+        infoButton.appendChild(iconI);
+        footer.appendChild(infoButton);
+
         let removerBtn = document.createElement("md-icon-button");
-        removerBtn.addEventListener("click", this.removerOpcao);
+        removerBtn.addEventListener("click", evt => {
+            this.removerOpcao.call(this);
+            evt.preventDefault();
+        });
+        
         let icon = document.createElement("md-icon");
         icon.innerText = "delete";
         removerBtn.appendChild(icon);
         footer.appendChild(removerBtn);
+
+
         form.appendChild(footer);
 
         return form;
@@ -166,6 +187,7 @@ class OpcaoDados {
         this.valorMinimo_porcentagem = document.createElement("md-outlined-text-field");
         this.valorMinimo_porcentagem.label = "Valor mínimo";
         this.valorMinimo_porcentagem.type = "number";
+        this.valorMinimo_porcentagem.value = 0;
         this.valorMinimo_porcentagem.classList.add("input-d3", "minmax");
         this.valorMinimo_porcentagem.addEventListener("change", this.onMinMaxChange.bind(this));
         section.appendChild(this.valorMinimo_porcentagem);
@@ -174,15 +196,47 @@ class OpcaoDados {
         this.valorMaximo_porcentagem = document.createElement("md-outlined-text-field");
         this.valorMaximo_porcentagem.label = "Valor máximo";
         this.valorMaximo_porcentagem.type = "number";
+        this.valorMaximo_porcentagem.value = 100;
         this.valorMaximo_porcentagem.classList.add("input-d3", "minmax");
         this.valorMaximo_porcentagem.addEventListener("change", this.onMinMaxChange.bind(this));
         section.appendChild(this.valorMaximo_porcentagem);
+
+        let div = document.createElement("div");
+        div.classList.add("porcentagemSliderHolder");
+
+        let valor = document.createElement("md-outlined-text-field");
+        valor.label = "Valor";
+        valor.type = "number";
+        valor.classList.add("input-d3");
+        div.appendChild(valor);
 
         // <md-slider class="sliderPorcentagem" labeled></md-slider>
         this.slider = document.createElement("md-slider");
         this.slider.classList.add("sliderPorcentagem");
         this.slider.labeled = true;
-        section.appendChild(this.slider);
+        div.appendChild(this.slider);
+
+        valor.addEventListener("change", () => {
+            let valorFloat = parseFloat(valor.value);
+            if (isNaN(valorFloat)) valorFloat = 0;
+            if (valorFloat < this.min) valorFloat = this.min;
+            if (valorFloat > this.max) valorFloat = this.max;
+
+            valor.value = valorFloat;
+            if (this.slider.value != valorFloat) this.slider.value = valorFloat;
+        });
+
+        this.slider.addEventListener("change", () => {
+            let valorFloat = parseFloat(this.slider.value);
+            if (isNaN(valorFloat)) valorFloat = 0;
+            if (valorFloat < this.min) valorFloat = this.min;
+            if (valorFloat > this.max) valorFloat = this.max;
+            
+            this.slider.value = valorFloat;
+            if (valor.value != this.slider.value) valor.value = this.slider.value;
+        });
+
+        section.appendChild(div);
 
         return section;
     }
@@ -232,9 +286,10 @@ class OpcaoDados {
         let novoCampoBtn = document.createElement("md-filled-button");
         novoCampoBtn.innerText = "Adicionar campo";
         novoCampoBtn.href = '#';
-        novoCampoBtn.addEventListener("click", () => {
+        novoCampoBtn.addEventListener("click", (evt) => {
             let grafico = this.#criarCampoGrafico();
             this.graficoHolder.appendChild(grafico);
+            evt.preventDefault();
         });
         section.appendChild(novoCampoBtn);
 
@@ -260,7 +315,11 @@ class OpcaoDados {
 
         // <img src="https://via.placeholder.com/150" alt="Grafico">
         let removerBtn = document.createElement("md-icon-button");
-        removerBtn.addEventListener("click", this.removeGrafico.bind(this, id));
+        removerBtn.addEventListener("click", evt => {
+            this.removeGrafico.call(this, id);
+            evt.preventDefault();
+        });
+
         let icon = document.createElement("md-icon");
         icon.innerText = "close";
         removerBtn.appendChild(icon);
@@ -379,6 +438,13 @@ class OpcaoDados {
         this.form.remove();
     }
 
+    mostrarInformativo() {
+        if (this.tipo == "booleano") this.controlador.modal.abrir("dados_booleano");
+        else if (this.tipo == "porcentagem") this.controlador.modal.abrir("dados_porcentagem");
+        else if (this.tipo == "grafico") this.controlador.modal.abrir("dados_grafico");
+        else console.error("Tipo de pergunta desconhecido: " + this.tipo);
+    }
+
     pegarTipoCorreto() {
         if (this.tipo == "booleano") return "Boleano";
         if (this.tipo == "porcentagem") return "Porcentagem";
@@ -451,12 +517,19 @@ class JogoDados {
     #id = -1;
     perguntas = [];
 
+    controlador = null;
+
     constructor(controlador) {
+        this.controlador = controlador;
+
         this.tituloInput = document.querySelector("#dadosTitulo");
         this.urlInput = document.querySelector("#dadosUrl");
         this.dadosHolder = document.querySelector("#dadosHolder");
         this.novaPerguntaBtn = document.querySelector("#novaPerguntaBtn");
-        this.novaPerguntaBtn.addEventListener("click", () => this.gerarNovaPergunta());
+        this.novaPerguntaBtn.addEventListener("click", evt=> {
+            this.gerarNovaPergunta();
+            evt.preventDefault();
+        });
 
         this.limparPerguntas();
         this.gerarNovaPergunta();
@@ -471,7 +544,7 @@ class JogoDados {
     gerarNovaPergunta() {
         this.#id++;
 
-        let opcao = new OpcaoDados(this.#id);
+        let opcao = new OpcaoDados(this.controlador, this.#id);
         this.dadosHolder.appendChild(opcao.form);
 
         this.perguntas.push(opcao);
@@ -485,6 +558,6 @@ class JogoDados {
 
         objeto.dados = this.perguntas.map(pergunta => pergunta.toJSON());
         
-        return new File([JSON.stringify(objeto, null, "\t")], 'JogoArtigoDados.json', {type: "application/json"});
+        return new PseudoDocumento(objeto, 'JogoArtigoDados.json', {type: "application/json"});
     }
 }

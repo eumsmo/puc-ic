@@ -54,6 +54,9 @@
             arrow_back
           </span>
           <h1>Criar o jogo - Dados</h1>
+          <md-icon-button id="modalDados">
+            <md-icon> info </md-icon>
+          </md-icon-button>
         </header>
         <form>
           <md-outlined-text-field id="dadosTitulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
@@ -132,6 +135,9 @@
               arrow_back
           </span>
           <h1>Criar o jogo</h1>
+          <md-icon-button id="modalArtigo">
+            <md-icon> info </md-icon>
+          </md-icon-button>
         </header>
         <form>
           <md-outlined-text-field id="titulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
@@ -217,6 +223,22 @@
       </section>
     </main>
 
+    <div id="modal">
+      <div>
+        <header>
+          <md-icon-button id="fecharModal">
+            <md-icon> close </md-icon>
+          </md-icon-button>
+          <h1 id="modalTitle">Informações e etc</h1>
+        </header>
+        <section>
+          <img src="src/imgs/exemplos/grafico.png" alt="" id="modalImg">
+          <p id="modalText"> Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="src/js/modal.js"></script>
     <script src="src/js/jogoResumo.js"></script>
     <script src="src/js/jogoDados.js"></script>
     <script src="src/js/publicar.js"></script>

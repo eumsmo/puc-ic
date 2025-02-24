@@ -12,6 +12,6 @@ class JogoResumo {
             resumo: this.resumoInput.value
         };
     
-        return new File([JSON.stringify(info, null, "\t")], 'JogoArtigoResumo.json', {type: 'application/json'});
+        return new PseudoDocumento(info, 'JogoArtigoResumo.json', {type: 'application/json'});
     }
 }
