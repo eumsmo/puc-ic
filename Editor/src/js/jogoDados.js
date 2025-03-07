@@ -207,6 +207,7 @@ class OpcaoDados {
         let valor = document.createElement("md-outlined-text-field");
         valor.label = "Valor";
         valor.type = "number";
+        valor.dataset.id = 0;
         valor.classList.add("input-d3");
         div.appendChild(valor);
 
@@ -214,27 +215,12 @@ class OpcaoDados {
         this.slider = document.createElement("md-slider");
         this.slider.classList.add("sliderPorcentagem");
         this.slider.labeled = true;
+        this.slider.dataset.id = 0;
         div.appendChild(this.slider);
 
-        valor.addEventListener("change", () => {
-            let valorFloat = parseFloat(valor.value);
-            if (isNaN(valorFloat)) valorFloat = 0;
-            if (valorFloat < this.min) valorFloat = this.min;
-            if (valorFloat > this.max) valorFloat = this.max;
+        valor.addEventListener("change", () => this.#atualizaSliderPeloInput(valor, this.slider));
 
-            valor.value = valorFloat;
-            if (this.slider.value != valorFloat) this.slider.value = valorFloat;
-        });
-
-        this.slider.addEventListener("change", () => {
-            let valorFloat = parseFloat(this.slider.value);
-            if (isNaN(valorFloat)) valorFloat = 0;
-            if (valorFloat < this.min) valorFloat = this.min;
-            if (valorFloat > this.max) valorFloat = this.max;
-            
-            this.slider.value = valorFloat;
-            if (valor.value != this.slider.value) valor.value = this.slider.value;
-        });
+        this.slider.addEventListener("change", () => this.#atualizaInputPeloSlider(valor, this.slider));
 
         section.appendChild(div);
 
@@ -270,6 +256,7 @@ class OpcaoDados {
         this.valorMinimo_grafico = document.createElement("md-outlined-text-field");
         this.valorMinimo_grafico.label = "Valor mínimo";
         this.valorMinimo_grafico.type = "number";
+        this.valorMinimo_grafico.value = 0;
         this.valorMinimo_grafico.classList.add("input-d3", "minmax");
         this.valorMinimo_grafico.addEventListener("change", this.onMinMaxChange.bind(this));
         section.appendChild(this.valorMinimo_grafico);
@@ -278,6 +265,7 @@ class OpcaoDados {
         this.valorMaximo_grafico = document.createElement("md-outlined-text-field");
         this.valorMaximo_grafico.label = "Valor máximo";
         this.valorMaximo_grafico.type = "number";
+        this.valorMaximo_grafico.value = 100;
         this.valorMaximo_grafico.classList.add("input-d3", "minmax");
         this.valorMaximo_grafico.addEventListener("change", this.onMinMaxChange.bind(this));
         section.appendChild(this.valorMaximo_grafico);
@@ -288,7 +276,9 @@ class OpcaoDados {
         novoCampoBtn.href = '#';
         novoCampoBtn.addEventListener("click", (evt) => {
             let grafico = this.#criarCampoGrafico();
+            let slider = grafico.querySelector("md-slider");
             this.graficoHolder.appendChild(grafico);
+            this.updateMinMaxOfSlider(slider);
             evt.preventDefault();
         });
         section.appendChild(novoCampoBtn);
@@ -336,35 +326,40 @@ class OpcaoDados {
         let valor = document.createElement("md-outlined-text-field");
         valor.label = "Valor";
         valor.type = "number";
+        valor.dataset.id = id;
         valor.classList.add("input-d3");
         div.appendChild(valor);
 
         let slider = document.createElement("md-slider");
         slider.labeled = true;
+        slider.dataset.id = id;
         div.appendChild(slider);
 
 
-        valor.addEventListener("change", () => {
-            let valorFloat = parseFloat(valor.value);
-            if (isNaN(valorFloat)) valorFloat = 0;
-            if (valorFloat < this.min) valorFloat = this.min;
-            if (valorFloat > this.max) valorFloat = this.max;
-
-            valor.value = valorFloat;
-            if (slider.value != valorFloat) slider.value = valorFloat;
-        });
-
-        slider.addEventListener("change", () => {
-            let valorFloat = parseFloat(slider.value);
-            if (isNaN(valorFloat)) valorFloat = 0;
-            if (valorFloat < this.min) valorFloat = this.min;
-            if (valorFloat > this.max) valorFloat = this.max;
-            
-            slider.value = valorFloat;
-            if (valor.value != slider.value) valor.value = slider.value;
-        });
+        valor.addEventListener("change", () => this.#atualizaSliderPeloInput(valor, slider));
+        slider.addEventListener("change", () => this.#atualizaInputPeloSlider(valor, slider));
 
         return div;
+    }
+
+    #atualizaSliderPeloInput(valor, slider) {
+        let valorFloat = parseFloat(valor.value);
+        if (isNaN(valorFloat)) valorFloat = 0;
+        if (valorFloat < this.min) valorFloat = this.min;
+        if (valorFloat > this.max) valorFloat = this.max;
+
+        valor.value = valorFloat;
+        if (slider.value != valorFloat) slider.value = valorFloat;
+    }
+
+    #atualizaInputPeloSlider(valor, slider) {
+        let valorFloat = parseFloat(slider.value);
+        if (isNaN(valorFloat)) valorFloat = 0;
+        if (valorFloat < this.min) valorFloat = this.min;
+        if (valorFloat > this.max) valorFloat = this.max;
+        
+        slider.value = valorFloat;
+        if (valor.value != slider.value) valor.value = slider.value;
     }
 
     removeGrafico(id) {
@@ -396,7 +391,32 @@ class OpcaoDados {
 
             slider.min = min;
             slider.max = max;
+
+            let id = slider.dataset.id;
+            let input = this.form.querySelector(`md-outlined-text-field[data-id="${id}"]`);
+            this.#atualizaInputPeloSlider(input, slider);
         });
+    }
+
+    updateMinMaxOfSlider(slider) {
+        let min = 0;
+        let max = 100;
+
+        if (this.tipo_porcentagem != "porcentagem") {
+            min = parseFloat(this.valorMinimo.value);
+            max = parseFloat(this.valorMaximo.value);
+
+            if (min > max) {
+                this.valorMaximo.value = min;
+            }
+        }
+
+        let valor = parseFloat(slider.value);
+        if (valor < min) slider.value = min;
+        if (valor > max) slider.value = max;
+
+        slider.min = min;
+        slider.max = max;
     }
 
 
