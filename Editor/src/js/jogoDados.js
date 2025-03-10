@@ -17,6 +17,7 @@ class OpcaoDados {
     valorMaximo_grafico = null;
 
     controlador = null;
+    pai = null; // pai = JogoDados
 
     get valorMinimo() {
         return this.tipo == "porcentagem" ? this.valorMinimo_porcentagem : this.valorMinimo_grafico;
@@ -36,9 +37,10 @@ class OpcaoDados {
     graficoHolder = null;
     graficoIdBase = 0;
 
-    constructor(controlador, id) {
+    constructor(pai, id) {
         this.id = id;
-        this.controlador = controlador;
+        this.pai = pai;
+        this.controlador = pai.controlador;
 
         this.#criarForm();
     }
@@ -456,6 +458,7 @@ class OpcaoDados {
     // Destroi o form
     removerOpcao() {
         this.form.remove();
+        this.pai.removePergunta(this);
     }
 
     mostrarInformativo() {
@@ -555,6 +558,13 @@ class JogoDados {
         this.gerarNovaPergunta();
     }
 
+    removePergunta(pergunta) {
+        let index = this.perguntas.indexOf(pergunta);
+        if (index >= 0) {
+            this.perguntas.splice(index, 1);
+        }
+    }
+
     limparPerguntas() {
         console.log("Limpando perguntas");
         this.dadosHolder.innerHTML = "";
@@ -564,7 +574,7 @@ class JogoDados {
     gerarNovaPergunta() {
         this.#id++;
 
-        let opcao = new OpcaoDados(this.controlador, this.#id);
+        let opcao = new OpcaoDados(this, this.#id);
         this.dadosHolder.appendChild(opcao.form);
 
         this.perguntas.push(opcao);
