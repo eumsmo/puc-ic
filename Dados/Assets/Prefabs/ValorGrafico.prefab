@@ -366,6 +366,8 @@ MonoBehaviour:
   corValorCerto: {r: 0.36862746, g: 0.7058824, b: 0.32941177, a: 1}
   corValorNaArea: {r: 0.75686276, g: 0.6392157, b: 0.29803923, a: 1}
   corEscolheValor: {r: 0.29411766, g: 0.63529414, b: 0.7529412, a: 1}
+  overlapRange: 0.05
+  opacityOnOverlap: 0.5
 --- !u!114 &6664077046881749155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,7 +539,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 6, y: 2}
+  m_SizeDelta: {x: 6, y: 3.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2973196750825461065
 CanvasRenderer:
