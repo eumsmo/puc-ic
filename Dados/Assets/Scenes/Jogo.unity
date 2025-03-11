@@ -2161,7 +2161,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 200, y: -273.2975}
-  m_SizeDelta: {x: 281.2585, y: 163.05457}
+  m_SizeDelta: {x: 281.2585, y: 213.05457}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1014474278
 MonoBehaviour:
@@ -2195,7 +2195,7 @@ MonoBehaviour:
     m_Top: 12
     m_Bottom: 6
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 25
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
@@ -2451,8 +2451,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: -704617183, guid: 1d7c6616a53d43c4ebbec467c373da05, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2460,7 +2460,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 500
 --- !u!222 &1075233444
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4130,7 +4130,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 140.62926, y: -75.20111}
+  m_AnchoredPosition: {x: 140.62926, y: -100.20111}
   m_SizeDelta: {x: 281.2585, y: 63.7069}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1670421103
@@ -4384,7 +4384,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 140.62926, y: -132.05457}
+  m_AnchoredPosition: {x: 140.62926, y: -182.05457}
   m_SizeDelta: {x: 281.2585, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1813949816
@@ -5462,7 +5462,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Responda corretamente as quest\xF5es a seguir"
+  m_Text: "Ajuste os valores para tentar responder corretamente \xE0s quest\xF5es
+    a seguir"
 --- !u!224 &1101621505060756345
 RectTransform:
   m_ObjectHideFlags: 0
