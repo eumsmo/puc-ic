@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class ValorGrafico : MonoBehaviour {
     public Slider slider;
@@ -23,6 +24,9 @@ public class ValorGrafico : MonoBehaviour {
     public float overlapRange = 0.05f; // 5%
     [Range(0, 1)]
     public float opacityOnOverlap = 0.5f;
+
+    [Header("Feedback")]
+    public Vector3 feedbackTextoOffset = new Vector3(0, 0.5f, 0);
 
     float resposta;
     float min, max, range;
@@ -79,50 +83,92 @@ public class ValorGrafico : MonoBehaviour {
         AtualizarInformativo(normal);
     }
 
-    public void Tentar() {
+    public void Tentar(float tempoAnimacao = 1f) {
+
+
         slider.interactable = false;
 
         float valorConvertido = GetValorConvertido(slider.value);
+        float valorCorretoNormalizado = GetValorNormalizado(resposta);
 
-        if (valorConvertido == resposta) {
-            sliderCorreto.gameObject.SetActive(false);
-            sliderFill.color = corValorCerto;
-            pedacoExtra.color = corValorCerto;
-            return;
+
+        bool corretissima = GetRespostaCorretissima();
+        bool correta = GetResposta();
+
+        Color corSlider = Color.white;
+
+        if (corretissima) {
+            corSlider = corValorCerto;
+        } else if (correta) { // Se tá no range
+            corSlider = corValorNaArea;
+        } else {
+            corSlider = corValorErrado;
         }
 
-        sliderCorreto.value = GetValorNormalizado(resposta);
+        sliderFill.color = corSlider;
+        pedacoExtra.color = corSlider;
 
-        //informativo.gameObject.SetActive(false);
+        sliderCorreto.value = 0;
+        // sliderCorreto.DOValue(valorCorretoNormalizado, 0.5f);
 
-        informativoCorreto.text = GetValorString(resposta);
+        var atualizaSlider = DOTween.To(() => sliderCorreto.value, x => sliderCorreto.value = x, valorCorretoNormalizado, tempoAnimacao).OnUpdate(() => {
+            if (valorConvertido < sliderCorreto.value) {
+                sliderCorreto.transform.SetParent(holderMaior.transform);
+                pedacoExtra.color = corSlider;
+            } else {
+                sliderCorreto.transform.SetParent(holderMenor.transform);
+                pedacoExtra.color = corValorCerto;
+            }
+
+            Color corInformativo = informativo.color;
+            
+            if (Mathf.Abs(sliderCorreto.value - slider.value) <= overlapRange) {
+                corInformativo.a = opacityOnOverlap;
+            } else {
+                corInformativo.a = 1;
+            }
+
+            informativo.color = corInformativo;
+        });
+        
+        float informativoNum = 0;
+        var atualizaInformativo = DOTween.To(() => informativoNum, x => informativoNum = x, resposta, tempoAnimacao).OnUpdate(() => {
+            float rounded = Mathf.Round(informativoNum * 100.0f) / 100.0f;
+            informativoCorreto.text = GetValorString(rounded);
+        });
+
         sliderCorreto.gameObject.SetActive(true);
 
 
-        if (GetResposta()) { // Se tá no range
-            sliderFill.color = corValorNaArea;
-            pedacoExtra.color = corValorNaArea;
-        } else {
-            sliderFill.color = corValorErrado;
-            pedacoExtra.color = corValorErrado;
-        }
+        Sequence tweener = DOTween.Sequence();
+        tweener.Append(atualizaSlider);
+        tweener.Join(atualizaInformativo);
 
-        if (valorConvertido < resposta) {
-            sliderCorreto.transform.SetParent(holderMaior.transform);
-        } else {
-            sliderCorreto.transform.SetParent(holderMenor.transform);
-            pedacoExtra.color = corValorCerto;
-        }
+        tweener.OnComplete(() => {
+            RespostaStatus status = RespostaStatus.Correto;
 
-        Color cor = informativo.color;
+            if (corretissima) {
+                transform.DOPunchScale(new Vector3(0.3f, 0f, 0f), 0.3f, 1, 1);
+                status = RespostaStatus.Correto;
+            } else if (correta) {
+                transform.DOPunchScale(new Vector3(0.3f, 0f, 0f), 0.3f, 1, 1);
+                status = RespostaStatus.Quase;
+            } else {
+                transform.DOShakePosition(0.3f, new Vector3(10, 0f, 0f), 20, 0.5f, false, true);
+                status = RespostaStatus.Incorreto;
+            }
+
+
+            Vector3 flavorPos = Vector3.zero;
+            
+            if (valorConvertido < resposta) flavorPos = informativoCorreto.transform.position;
+            else flavorPos = informativo.transform.position;
+
+            UIController.game.SpawnStatusAt(flavorPos + feedbackTextoOffset, status);
+        });
+
+       
         
-        if (Mathf.Abs(sliderCorreto.value - slider.value) <= overlapRange) {
-            cor.a = opacityOnOverlap;
-        } else {
-            cor.a = 1;
-        }
-
-        informativo.color = cor;
 
     }
 
@@ -131,4 +177,11 @@ public class ValorGrafico : MonoBehaviour {
 
         return Mathf.Abs(valor - resposta) <= range;
     }
+
+    public bool GetRespostaCorretissima()  {
+        float valor = GetValorConvertido(slider.value);
+
+        return Mathf.Abs(valor - resposta) <= 0.01f;
+    }
+
 }

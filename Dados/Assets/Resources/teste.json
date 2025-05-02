@@ -5,6 +5,16 @@
     "url": "...",
     "dados": [
         {
+            "tipo": "Porcentagem",
+            "texto": "A porcentagem de alguma coisa Defina a porcentagem de água presente nos alimentos abaixo Defina corretamente a quantidade",
+            "respostaFloat": 0.55,
+            "range": {
+                "porcentagem": true,
+                "range": 0.05
+            },
+            "explicação": "é meio que isso né"
+        },
+        {
             "tipo": "Grafico",
             "texto": "Defina a porcentagem de água presente nos alimentos abaixo",
             "range": {

@@ -24,6 +24,74 @@ PrefabInstance:
       propertyPath: pontuacaoFontSize
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: acertouPulseColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: acertouPulseColor.b
+      value: 0.4669811
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: acertouPulseColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: acertouPulseColor.r
+      value: 0.5603435
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.ctime1
+      value: 37008
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.ctime2
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key0.b
+      value: 0.36862746
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key0.g
+      value: 0.2627451
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key0.r
+      value: 0.21960784
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key1.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key1.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key1.r
+      value: 0.17647076
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key2.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key2.g
+      value: 0.90588236
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.key2.r
+      value: 0.87058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: revelandoGradient.m_NumColorKeys
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8560202110695981295, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_Name
       value: Termo
@@ -38,7 +106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8908436504126240781, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8908436504126240781, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_SizeDelta.y

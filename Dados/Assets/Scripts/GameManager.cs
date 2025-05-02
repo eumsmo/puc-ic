@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour {
 
         gameState = GameState.PLAYING;
         UIController.instance.HandleGameStarted();
+        UIController.game.ResetGame();
         UIController.game.UpdateQual(qualPergunta, quantasPerguntas);
 
         LoadPergunta(info.dados[0]);
@@ -97,6 +98,11 @@ public class GameManager : MonoBehaviour {
 
 
         UIController.instance.HandleGameEnded(vitoria);
+    }
+
+    public void VoltarParaInicio() {
+        gameState = GameState.WAITING_TO_START;
+        UIController.instance.HandleGameRestarted();
     }
 
     public void SetError(string error) {

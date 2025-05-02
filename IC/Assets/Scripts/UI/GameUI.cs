@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameUI : MonoBehaviour {
     public GameObject tentativaPrefab, termoPrefab, termoPrefabTitulo;
 
+    public Transform rodape, dicaButton;
     public GameObject holdersHolder, textHolder, tituloHolder;
     public GameObject tentativasList;
     public InputField inputField;
@@ -143,6 +145,12 @@ public class GameUI : MonoBehaviour {
         tentativas.Add(tentativa);
 
         tentativaEl.transform.localScale = Vector3.one;
+        tentativaEl.transform.DOPunchScale(Vector3.one * 0.05f, 0.15f, 1, 0.5f);
+
+        if (resultados == 0) {
+            rodape.transform.DOShakePosition(0.3f, 5, 20, 90, false, false);
+        }
+
     }
 
     public IEnumerator ForceUpdateAsync(int calls = 0) {
@@ -263,6 +271,8 @@ public class GameUI : MonoBehaviour {
         }
 
         dicaDisponivel = true;
+
+        dicaButton.DOPunchScale(Vector3.one * 0.05f, 0.5f, 5, 0.25f);
     }
 
     public string GetPalavraChave() {

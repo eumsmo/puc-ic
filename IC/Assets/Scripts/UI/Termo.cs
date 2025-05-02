@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Termo : MonoBehaviour {
     public static string pontuacoes = ".!?,;:()[]{}<>\"'";
@@ -55,7 +56,7 @@ public class Termo : MonoBehaviour {
     public void SetRevelado() {
         estado = Estado.Revelado;
         text.text = termo;
-
+        
         text.color = reveladoTexto;
         fundo.color = reveladoFundo;
     }

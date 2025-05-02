@@ -1437,6 +1437,7 @@ MonoBehaviour:
   tentativaPrefab: {fileID: 4093114740633860875, guid: c96adc6fd898d23498cf87a97e8ce2c9, type: 3}
   termoPrefab: {fileID: 8525131134756229776, guid: 507c3a0cbe510bc4995b0965be63dd46, type: 3}
   termoPrefabTitulo: {fileID: 8560202110695981295, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+  rodape: {fileID: 930411426}
   holdersHolder: {fileID: 440091489}
   textHolder: {fileID: 1995183234}
   tituloHolder: {fileID: 121536645}

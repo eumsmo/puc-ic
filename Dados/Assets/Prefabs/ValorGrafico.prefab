@@ -368,6 +368,7 @@ MonoBehaviour:
   corEscolheValor: {r: 0.29411766, g: 0.63529414, b: 0.7529412, a: 1}
   overlapRange: 0.05
   opacityOnOverlap: 0.5
+  feedbackTextoOffset: {x: 0, y: 40, z: 0}
 --- !u!114 &6664077046881749155
 MonoBehaviour:
   m_ObjectHideFlags: 0

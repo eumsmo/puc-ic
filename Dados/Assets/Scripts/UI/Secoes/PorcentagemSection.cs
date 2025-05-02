@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
     GameUI game;
     Dados dados;
+
+    public Vector3 feedbackTextoOffset = new Vector3(0, -20f, 0);
 
     public Text texto, informativoValor;
     public Slider slider;
@@ -38,28 +41,51 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
         return (valor * 100).ToString("0.0") + "%";
     }
 
+
+    bool confirmou = false;
     public void HandleConfirmar() {
+        if (confirmou) return;
+        confirmou = true;
+
         slider.interactable = false;
 
-        UIController.game.OnAttemptButtonClicked();
+        bool corretissima = GetRespostaCorretissima();
+        bool correta = GetResposta();
+        RespostaStatus status = UIController.game.CorretissimaCorretaToStatus(corretissima, correta);
 
-        if (slider.value == dados.respostaFloat) {
-            sliderMostraCorreto.gameObject.SetActive(false);
-            sliderImage.color = corValorCerto;
-            return;
-        }
+        float resposta = slider.value;
+        float respostaCorreta = dados.respostaFloat;
+        float tempoAnimacao = 0.5f;
 
-        sliderMostraCorreto.value = dados.respostaFloat;
-        textoMostraCorreto.text = GetValorInText(dados.respostaFloat);
+        sliderMostraCorreto.value = 0;
+        sliderMostraCorreto.DOValue(respostaCorreta, tempoAnimacao).OnUpdate(() => {
+            if (slider.value < sliderMostraCorreto.value) {
+                sliderMostraCorreto.transform.SetParent(corretoMaiorHolder.transform);
+            } else {
+                sliderMostraCorreto.transform.SetParent(corretoMenorHolder.transform);
+            }
+        });
+
+        float informativoNum = 0;
+        DOTween.To(() => informativoNum, x => informativoNum = x, respostaCorreta, tempoAnimacao).OnUpdate(() => {
+            float rounded = Mathf.Round(informativoNum * 100.0f) / 100.0f;
+            textoMostraCorreto.text = GetValorInText(rounded);
+        }).OnComplete(() => {
+            if (corretissima || correta) transform.DOPunchScale(Vector3.one * 0.15f, 0.3f, 1, 1);
+            else transform.DOShakePosition(0.3f, 5f, 20, 0.5f, false, true);
+
+            UIController.game.SpawnStatusAt(slider.transform.position + feedbackTextoOffset, status);
+            UIController.game.OnAttemptButtonClicked();
+        });
+
         sliderMostraCorreto.gameObject.SetActive(true);
 
-        if (slider.value < dados.respostaFloat) {
-            sliderMostraCorreto.transform.SetParent(corretoMaiorHolder.transform);
-        } else {
-            sliderMostraCorreto.transform.SetParent(corretoMenorHolder.transform);
-        }
-
-        if (GetResposta()) // Se tá no range
+        
+        
+        
+        if (corretissima) // Se tá certo
+            sliderImage.color = corValorCerto;
+        else if (correta) // Se tá no range
             sliderImage.color = corValorNaArea;
         else
             sliderImage.color = corValorErrado;
@@ -67,6 +93,7 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
 
     public void Comecar(Dados dados) {
         gameObject.SetActive(true);
+        confirmou = false;
 
         sliderMostraCorreto.gameObject.SetActive(false);
 
@@ -89,5 +116,12 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
         float range = dados.range.range;
 
         return Mathf.Abs(resposta - respostaCorreta) <= range;
+    }
+
+    public bool GetRespostaCorretissima() {
+        float resposta = slider.value;
+        float respostaCorreta = dados.respostaFloat;
+
+        return Mathf.Abs(resposta - respostaCorreta) <= 0.01f;
     }
 }

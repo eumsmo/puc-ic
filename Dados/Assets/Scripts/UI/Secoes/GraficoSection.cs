@@ -25,16 +25,28 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
         gameObject.SetActive(false);
     }
 
-    public void HandleConfirmar() {
-        UIController.game.OnAttemptButtonClicked();
+    bool confirmou = false;
 
+    public void HandleConfirmar() {
+        if (confirmou) return;
+        confirmou = true;
+
+        game.StartCoroutine(HandleConfirmarAnimation());
+    }
+
+    IEnumerator HandleConfirmarAnimation() {
         foreach (ValorGrafico campo in campos) {
-            campo.Tentar();
+            campo.Tentar(0.75f);
+            yield return new WaitForSeconds(0.8f);
         }
+
+        UIController.game.OnAttemptButtonClicked();
     }
 
     public void Comecar(Dados dados) {
         gameObject.SetActive(true);
+        confirmou = false;
+
         texto.text = dados.texto;
 
         Dados_Range rangeInfo = dados.range;
