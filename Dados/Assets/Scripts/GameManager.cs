@@ -44,6 +44,13 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(infoLoader.LoadTexto());
     }
 
+    void FixedUpdate() {
+        if (gameState != GameState.PLAYING) return;
+
+        tempo += Time.fixedDeltaTime;
+        UIController.game.UpdateTempo(Mathf.RoundToInt(tempo));
+    }
+
     public void OnLoadedInfo(DadosInfo info) {
         this.info = info;
         quantasPerguntas = info.dados.Length;
@@ -66,7 +73,10 @@ public class GameManager : MonoBehaviour {
     public void ProximaPergunta() {
         qualPergunta++;
         if (qualPergunta > quantasPerguntas - 1) {
-            EndGame(true);
+            int acertos = UIController.game.acertos;
+            int erros = UIController.game.erros;
+
+            EndGame(acertos >= erros);
             return;
         }
 
@@ -113,12 +123,7 @@ public class GameManager : MonoBehaviour {
         SetError("Ocorreu um erro ao carregar o texto");
     }
 
-    void FixedUpdate() {
-        if (gameState != GameState.PLAYING) return;
-
-        tempo += Time.fixedDeltaTime;
-        UIController.game.UpdateTempo(Mathf.RoundToInt(tempo));
-    }
+    
 
     public DadosInfo GetInfo() {
         return infoLoader.info;

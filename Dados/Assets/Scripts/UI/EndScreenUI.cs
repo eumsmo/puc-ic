@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class EndScreenUI : MonoBehaviour {
     public Text statusLabel, tempoLabel;
     public Text tituloArtigo, conteudoArtigo;
+
+    public Transform performancePanel;
+    public Text acertosLabel, errosLabel, totalLabel;
 
     void Awake() {
         // irAoArtigoButton.clicked += OnIrAoArtigoButtonClicked;
@@ -22,14 +26,16 @@ public class EndScreenUI : MonoBehaviour {
 
         if (vitoria) {
             statusLabel.text = "Parabéns!";
-            tempoLabel.text = "Você acertou " + porcentagemStr + " dos problemas!";
+            tempoLabel.text = "Você acertou " + porcentagemStr + " das questões!";
         } else {
             statusLabel.text = "Que pena!";
-            tempoLabel.text = "Você acertou apenas " + porcentagemStr + " dos problemas!";
+            tempoLabel.text = "Você acertou apenas " + porcentagemStr + " das questões!";
         }
 
-        tituloArtigo.text = info.titulo;
-        // conteudoArtigo.text = info.resumo;
+        performancePanel.DOPunchScale(Vector3.one * 0.1f, 0.5f, 1, 0.5f);
+        totalLabel.text = "<b>Total:</b> " + (UIController.game.acertos + UIController.game.erros);
+        acertosLabel.text = "<b>Acertos:</b> " + UIController.game.acertos;
+        errosLabel.text = "<b>Erros:</b> " + UIController.game.erros;
     }
 
     public void OnIrAoArtigoButtonClicked() {
