@@ -196,6 +196,10 @@ public class InfoLoader : MonoBehaviour {
         UIController.game.GerarPalavras(titulo, palavras);
     }
 
+    public void ResetarArtigo() {
+        SetarArtigo(info);
+    }
+
     List<string> SepararPalavras(string texto) {
         List<string> palavras = new List<string>();
         string[] palavrasSeparadas = texto.Split(' ');

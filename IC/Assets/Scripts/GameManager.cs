@@ -41,6 +41,13 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(infoLoader.LoadTexto());
     }
 
+    void FixedUpdate() {
+        if (gameState != GameState.PLAYING) return;
+
+        tempo += Time.fixedDeltaTime;
+        UIController.game.UpdateTempo(Mathf.RoundToInt(tempo));
+    }
+
     public void StartGame() {
         if (gameState == GameState.PLAYING) return;
 
@@ -65,12 +72,13 @@ public class GameManager : MonoBehaviour {
         SetError("Ocorreu um erro ao carregar o texto");
     }
 
-    void FixedUpdate() {
-        if (gameState != GameState.PLAYING) return;
-
-        tempo += Time.fixedDeltaTime;
-        UIController.game.UpdateTempo(Mathf.RoundToInt(tempo));
+    public void VoltarParaInicio() {
+        gameState = GameState.WAITING_TO_START;
+        UIController.instance.HandleGameRestarted();
+        infoLoader.ResetarArtigo();
     }
+
+    
 
     public ArtigoInfo GetArtigoInfo() {
         return infoLoader.info;

@@ -53,6 +53,13 @@ public class UIController : MonoBehaviour {
         startScreen.SetActive(false);
     }
 
+    public void HandleGameRestarted() {
+        startScreen.SetActive(true);
+        gameScreen.SetActive(false);
+        endScreen.SetActive(false);
+        errorScreen.SetActive(false);
+    }
+
     public void HandleGameError(string error) {
         errorMessage.text = error;
         HandleGameError();

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,10 @@ public class GameUI : MonoBehaviour {
     public InputField inputField;
     public Slider dicaProgress;
     public Text tempoLabel;
+    public Image instrucoesPanel;
+    public Transform instrucoesModal;
+    public Image surePanel;
+    public Transform sureModal;
 
     bool dicaDisponivel = true;
     public float timeToDica = 5f;
@@ -22,6 +27,7 @@ public class GameUI : MonoBehaviour {
     public GameObject linhaTermosPrefab;
     public int caracteresPorLinhaTitulo = 20;
     public int caracteresPorLinha = 20;
+
 
     // Palavras que por padrão não serão ocultas
     string[] palavrasNaoOcultas = new string[] {
@@ -49,11 +55,17 @@ public class GameUI : MonoBehaviour {
     void Start() {
         GameManager.instance.controls.Game.Submit.performed += ctx => OnAttemptButtonClicked();
 
-        dicaProgress.value = 1;
     }
 
     // Chamado quando o jogo é iniciado
     public void OnGameStarted() {
+        foreach (Transform child in tentativasList.transform) {
+            Destroy(child.gameObject);
+        }
+
+        tentativas.Clear();
+
+        dicaProgress.value = 1;
         ForceUpdate();
     }
 
@@ -78,27 +90,32 @@ public class GameUI : MonoBehaviour {
             b = b.Replace(pontuacaoStr + "", "");
         }*/
         
-        return a.ToUpper() == b.ToUpper();
+        return RemoveAccents(a.ToUpper()) == RemoveAccents(b.ToUpper());
     }
 
     public void Tentar(string tentativa) {
         tentativa = tentativa.Trim();
-        if (tentativas.Contains(tentativa) || tentativa == "") return;
+        string versaoSalva = RemoveAccents(tentativa).ToLower();
+
+        if (tentativas.Contains(versaoSalva) || tentativa == "") return;
         if (palavrasNaoOcultas.Contains(tentativa)) return;
 
         List<Termo> termos = GetTermos();
+
+        string escritaCorreta = tentativa.ToLower();
 
         int encontrados = 0;
         foreach (Termo termo in termos) {
             if (termo == null || !termo.oculto) continue;
 
             if (Comparar(termo.termo, tentativa)) {
+                escritaCorreta = termo.termo.ToLower();
                 termo.oculto = false;
                 encontrados++;
             }
         }
 
-        ArmazenarTentativa(tentativa, encontrados);
+        ArmazenarTentativa(escritaCorreta, encontrados);
 
         if (CheckIfWin()) {
             GameManager.instance.EndGame();
@@ -142,7 +159,7 @@ public class GameUI : MonoBehaviour {
         numero.text = "" + resultados;
         
         tentativaEl.transform.SetParent(tentativasList.transform);
-        tentativas.Add(tentativa);
+        tentativas.Add(RemoveAccents(tentativa).ToLower());
 
         tentativaEl.transform.localScale = Vector3.one;
         tentativaEl.transform.DOPunchScale(Vector3.one * 0.05f, 0.15f, 1, 0.5f);
@@ -161,6 +178,7 @@ public class GameUI : MonoBehaviour {
         layouts.Add(holdersHolder.GetComponent<VerticalLayoutGroup>());
 
         foreach (VerticalLayoutGroup layout in layouts) {
+            if (layout == null) continue;
             layout.enabled = false;
             // yield return null;
 
@@ -176,6 +194,12 @@ public class GameUI : MonoBehaviour {
     public void GerarPalavras(List<string> titulo, List<string> palavras) {
         GameObject[] holders = new GameObject[] { textHolder, tituloHolder };
         List<string>[] palavrasList = new List<string>[] { palavras, titulo };
+
+        foreach (GameObject holder in holders) {
+            foreach (Transform child in holder.transform) {
+                Destroy(child.gameObject);
+            }
+        }
 
         for (int i = 0; i < holders.Length; i++) {
             GameObject holder = holders[i];
@@ -334,4 +358,37 @@ public class GameUI : MonoBehaviour {
 
         return termos;
     }
+
+    public void MostrarDesistir() {
+        surePanel.gameObject.SetActive(true);
+
+        sureModal.localScale = Vector3.one;
+        sureModal.DOPunchScale(Vector3.one * 0.05f, 0.5f, 5, 0.25f);
+    }
+
+    public void FecharDesistir() {
+        surePanel.gameObject.SetActive(false);
+    }
+
+    public void MostrarInstrucoes() {
+        instrucoesPanel.gameObject.SetActive(true);
+
+        instrucoesModal.localScale = Vector3.one;
+        instrucoesModal.DOPunchScale(Vector3.one * 0.05f, 0.5f, 5, 0.25f);
+    }
+
+    public void FecharInstrucoes() {
+        instrucoesPanel.gameObject.SetActive(false);
+    }
+
+
+    public string RemoveAccents(string text){   
+        StringBuilder sbReturn = new StringBuilder();   
+        var arrayText = text.Normalize(NormalizationForm.FormD).ToCharArray();
+        foreach (char letter in arrayText){   
+            if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(letter) != System.Globalization.UnicodeCategory.NonSpacingMark)
+                sbReturn.Append(letter);   
+        }   
+        return sbReturn.ToString();   
+    } 
 }

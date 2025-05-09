@@ -22,11 +22,11 @@ public class EndScreenUI : MonoBehaviour {
             tempoLabel.text = "Resolvido em" + string.Format(" {0:00}:{1:00}", tempo / 60, tempo % 60);
         } else {
             statusLabel.text = "Que pena!";
-            tempoLabel.text = "Tempo esgotado!";
+            tempoLabel.text = "Mais sorte da próxima vez!";
         }
 
         tituloArtigo.text = info.titulo;
-        conteudoArtigo.text = info.resumo;
+        conteudoArtigo.text = info.resumo.Replace("\n", "").Replace("\r", "");
     }
 
     public void OnIrAoArtigoButtonClicked() {
