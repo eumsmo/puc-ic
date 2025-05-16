@@ -140,7 +140,8 @@ MonoBehaviour:
   escondidoFundo: {r: 0.2204076, g: 0.2630236, b: 0.3679245, a: 1}
   escondidoTexto: {r: 1, g: 1, b: 1, a: 1}
   pontuacaoFundo: {r: 0, g: 0, b: 0, a: 0}
-  pontuacaoTexto: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  pontuacaoTexto: {r: 0.8509804, g: 0.8509804, b: 0.8509804, a: 1}
+  pontuacaoTextoTitulo: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   reveladoFundo: {r: 0.8705883, g: 0.9058824, b: 1, a: 1}
   reveladoTexto: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
 --- !u!1 &9094303791738823359

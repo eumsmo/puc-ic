@@ -21,6 +21,18 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: pontuacaoTexto.b
+      value: 0.8509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: pontuacaoTexto.g
+      value: 0.8509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: pontuacaoTexto.r
+      value: 0.8509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: pontuacaoFontSize
       value: 12
       objectReference: {fileID: 0}
@@ -39,6 +51,22 @@ PrefabInstance:
     - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: acertouPulseColor.r
       value: 0.5603435
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: pontuacaoTextoTitulo.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: pontuacaoTextoTitulo.b
+      value: 0.19607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: pontuacaoTextoTitulo.g
+      value: 0.19607843
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: pontuacaoTextoTitulo.r
+      value: 0.19607843
       objectReference: {fileID: 0}
     - target: {fileID: 7130957635368074834, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: revelandoGradient.ctime1
@@ -106,7 +134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8908436504126240781, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8908436504126240781, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_SizeDelta.y

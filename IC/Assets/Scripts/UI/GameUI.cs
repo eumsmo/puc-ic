@@ -19,6 +19,8 @@ public class GameUI : MonoBehaviour {
     public Transform instrucoesModal;
     public Image surePanel;
     public Transform sureModal;
+    public Image sureVoltarMenuPanel;
+    public Transform sureVoltarMenuModal;
 
     bool dicaDisponivel = true;
     public float timeToDica = 5f;
@@ -37,8 +39,6 @@ public class GameUI : MonoBehaviour {
         "quando", "onde", "quem", "qual", "quais", "porque",
         "pois", "então", "assim", "logo"
     };
-
-    string pontuacoes = ".!?,;:()[]{}<>\"'";
 
     List<string> tentativas = new List<string>();
 
@@ -72,7 +72,7 @@ public class GameUI : MonoBehaviour {
     public void GerarStopWords(string[] words) {
         List<string> stopWords = new List<string>();
         stopWords.AddRange(words);
-        stopWords.AddRange(pontuacoes.ToCharArray().Select(c => c.ToString()).ToArray());
+        stopWords.AddRange(Termo.pontuacoes.ToCharArray().Select(c => c.ToString()).ToArray());
 
         palavrasNaoOcultas = stopWords.ToArray();
     }
@@ -84,7 +84,7 @@ public class GameUI : MonoBehaviour {
     }
 
     public bool Comparar(string a, string b) {/*
-        foreach (char pontuacao in pontuacoes) {
+        foreach (char pontuacao in Termo.pontuacoes) {
             string pontuacaoStr = pontuacao + "";
             a = a.Replace(pontuacaoStr + "", "");
             b = b.Replace(pontuacaoStr + "", "");
@@ -97,8 +97,11 @@ public class GameUI : MonoBehaviour {
         tentativa = tentativa.Trim();
         string versaoSalva = RemoveAccents(tentativa).ToLower();
 
-        if (tentativas.Contains(versaoSalva) || tentativa == "") return;
-        if (palavrasNaoOcultas.Contains(tentativa)) return;
+        if (tentativa == "" || palavrasNaoOcultas.Contains(tentativa)) return;
+        if (tentativas.Contains(versaoSalva))  {
+            MostrarTentativaJaFeita(versaoSalva);
+            return;
+        }
 
         List<Termo> termos = GetTermos();
 
@@ -124,7 +127,19 @@ public class GameUI : MonoBehaviour {
         ForceUpdate();
     }
 
-    public void OnAttemptButtonClicked() {
+    void MostrarTentativaJaFeita(string tentativa) {
+        Tentativa[] tentativas = tentativasList.GetComponentsInChildren<Tentativa>();
+        foreach (Tentativa tent in tentativas) {
+            if (tent.tentativa == tentativa) {
+                tent.transform.SetAsLastSibling();
+                tent.transform.DOPunchScale(Vector3.one * 0.05f, 0.5f, 5, 0.25f);
+                return;
+            }
+        }
+    }
+
+    public void OnAttemptButtonClicked()
+    {
         string tentativa = inputField.text;
         inputField.text = "";
 
@@ -139,7 +154,6 @@ public class GameUI : MonoBehaviour {
 
         foreach (Termo termo in termosTitulo) {
             if (termo != null && termo.oculto) {
-                // Debug.Log("Ainda tem palavra oculta: " + termo.termo);
                 return false;
             }
         }
@@ -148,26 +162,18 @@ public class GameUI : MonoBehaviour {
     }
 
     public void ArmazenarTentativa(string tentativa, int resultados) {
+        string tentativaDeFato = RemoveAccents(tentativa).ToLower();
+
         GameObject tentativaEl = Instantiate(tentativaPrefab);
 
-        tentativaEl.transform.localScale = Vector3.one;
-
-        Text palavra = tentativaEl.transform.Find("Palavra").GetComponent<Text>();
-        Text numero = tentativaEl.transform.Find("Numero").GetComponent<Text>();
-
-        palavra.text = tentativa;
-        numero.text = "" + resultados;
-        
+        Tentativa tentativaScript = tentativaEl.GetComponent<Tentativa>();
+        tentativaScript.SetTentativa(tentativa, resultados, tentativaDeFato);
         tentativaEl.transform.SetParent(tentativasList.transform);
-        tentativas.Add(RemoveAccents(tentativa).ToLower());
 
         tentativaEl.transform.localScale = Vector3.one;
         tentativaEl.transform.DOPunchScale(Vector3.one * 0.05f, 0.15f, 1, 0.5f);
 
-        if (resultados == 0) {
-            rodape.transform.DOShakePosition(0.3f, 5, 20, 90, false, false);
-        }
-
+        tentativas.Add(tentativaDeFato);
     }
 
     public IEnumerator ForceUpdateAsync(int calls = 0) {
@@ -217,16 +223,17 @@ public class GameUI : MonoBehaviour {
             int limiteCaracteres = i == 1 ? caracteresPorLinhaTitulo : caracteresPorLinha;
 
             foreach (string palavra in termos) {
-                Termo termo = GerarPalavra(palavra, holder, i == 1);
+                string palavraDeFato = palavra.Trim();
+                Termo termo = GerarPalavra(palavraDeFato, holder, i == 1);
 
-                if (pontuacoes.Contains(palavra))
-                    termo.SetPontuacao();
-                else if (OcultarPalavra(palavra))
+                if (Termo.pontuacoes.Contains(palavraDeFato))
+                    termo.SetPontuacao(holder == tituloHolder);
+                else if (OcultarPalavra(palavraDeFato))
                     termo.SetOculto();
                 else
                     termo.SetRevelado();
 
-                caracteres += palavra.Length + 1;
+                caracteres += palavraDeFato.Length + 1;
                 
                 if (linha == null || caracteres > limiteCaracteres) {
                     if (linha != null) {
@@ -237,7 +244,7 @@ public class GameUI : MonoBehaviour {
                     linha.transform.SetParent(holder.transform);
                     linha.transform.localScale = Vector3.one;
 
-                    caracteres = palavra.Length;
+                    caracteres = palavraDeFato.Length;
                 }
 
                 termo.transform.SetParent(linha.transform);
@@ -303,13 +310,7 @@ public class GameUI : MonoBehaviour {
         // if has palavra chave on artigo (não tem ainda)
         // else:
         Dictionary<string, int> palavras = new Dictionary<string, int>();
-
-        List<Termo> termosTexto = GetTermos(false, true);
-        List<Termo> termosTitulo = GetTermos(true, false);
-        List<Termo> termos = new List<Termo>();
-
-        termos.AddRange(termosTexto);
-        termos.AddRange(termosTitulo);
+        List<Termo> termos = GetTermos(true, true, true);
 
         foreach (Termo termo in termos) {
             if (termo != null && termo.oculto) {
@@ -319,24 +320,26 @@ public class GameUI : MonoBehaviour {
         }
 
 
-        List<string> menosOcorrencias = new List<string>();
-        int menorOcorrencia = int.MaxValue;
+        List<string> maioresOcorrencias = new List<string>();
+        int maiorOcorrencia = 0;
 
         foreach (KeyValuePair<string, int> entry in palavras) {
-            if (entry.Value < menorOcorrencia) {
-                menorOcorrencia = entry.Value;
-                menosOcorrencias.Clear();
-                menosOcorrencias.Add(entry.Key);
-            } else if (entry.Value == menorOcorrencia) {
-                menosOcorrencias.Add(entry.Key);
+            if (entry.Value > maiorOcorrencia) {
+                maiorOcorrencia = entry.Value;
+                maioresOcorrencias.Clear();
+                maioresOcorrencias.Add(entry.Key);
+            } else if (entry.Value == maiorOcorrencia) {
+                maioresOcorrencias.Add(entry.Key);
             }
         }
 
-        int indexOcorrencia = (termosTexto.Count - palavras.Count) % menosOcorrencias.Count;
-        return menosOcorrencias[indexOcorrencia];
+        Debug.Log("Maiores ocorrencias [" + maiorOcorrencia + "]: " + string.Join(", ", maioresOcorrencias));
+
+        int indexOcorrencia = Random.Range(0, maioresOcorrencias.Count);
+        return maioresOcorrencias[indexOcorrencia];
     }
 
-    public List<Termo> GetTermos(bool titulo = true, bool palavra = true) {
+    public List<Termo> GetTermos(bool titulo = true, bool palavra = true, bool ignorarJaRevelados = false) {
         List<Termo> termos = new List<Termo>();
 
         GameObject[] holders;
@@ -350,6 +353,8 @@ public class GameUI : MonoBehaviour {
                 foreach (Transform child in linha.transform) {
                     Termo termo = child.GetComponent<Termo>();
                     if (termo != null) {
+                        if (ignorarJaRevelados && !termo.oculto) continue;
+
                         termos.Add(termo);
                     }
                 }
@@ -368,6 +373,17 @@ public class GameUI : MonoBehaviour {
 
     public void FecharDesistir() {
         surePanel.gameObject.SetActive(false);
+    }
+
+    public void MostrarVoltarMenu() {
+        sureVoltarMenuPanel.gameObject.SetActive(true);
+
+        sureVoltarMenuModal.localScale = Vector3.one;
+        sureVoltarMenuModal.DOPunchScale(Vector3.one * 0.05f, 0.5f, 5, 0.25f);
+    }
+
+    public void FecharVoltarMenu() {
+        sureVoltarMenuPanel.gameObject.SetActive(false);
     }
 
     public void MostrarInstrucoes() {

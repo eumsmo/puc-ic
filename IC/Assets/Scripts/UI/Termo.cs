@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 public class Termo : MonoBehaviour {
-    public static string pontuacoes = ".!?,;:()[]{}<>\"'";
+    public static string pontuacoes = ".!?,;:()[]{}<>\"'”©®‐–—•…";
 
     public enum Estado { Oculto, Revelado, Pontuacao }
 
@@ -22,7 +22,7 @@ public class Termo : MonoBehaviour {
     [Header("Cores")]
     public Color escondidoFundo;
     public Color escondidoTexto;
-    public Color pontuacaoFundo, pontuacaoTexto;
+    public Color pontuacaoFundo, pontuacaoTexto, pontuacaoTextoTitulo;
     public Color reveladoFundo, reveladoTexto;
 
     public string termo {
@@ -42,13 +42,14 @@ public class Termo : MonoBehaviour {
         Canvas.ForceUpdateCanvases();
     }
 
-    public void SetPontuacao() {
+    public void SetPontuacao(bool isTitutlo = false) {
         estado = Estado.Pontuacao;
 
-        text.color = pontuacaoTexto;
+        text.color = isTitutlo ? pontuacaoTextoTitulo : pontuacaoTexto;
         fundo.color = pontuacaoFundo;
 
         text.fontSize = pontuacaoFontSize;
+        text.resizeTextForBestFit = true;
         fundo.enabled = false;
         layout.padding = new RectOffset(0, 0, 0, 0);
     }
