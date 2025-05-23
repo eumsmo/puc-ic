@@ -9,7 +9,7 @@ public class BoleanoSection : MonoBehaviour, SecaoDoJogo {
     bool resposta;
 
     public Text texto;
-    
+
     public void Inicializar(GameUI game) {
         this.game = game;
 
@@ -36,5 +36,9 @@ public class BoleanoSection : MonoBehaviour, SecaoDoJogo {
 
     public bool GetResposta() {
         return resposta == dados.respostaBool;
+    }
+    
+    public string GetErroDetails() {
+        return "";
     }
 }

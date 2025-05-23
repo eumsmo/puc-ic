@@ -528,6 +528,43 @@ class OpcaoDados {
 
         return objeto;
     }
+
+    // Retorna: {status: true} ou {status: false, msg: "Mensagem de erro"}
+    validar() {
+        if (this.perguntaField.value.trim() == "") return {status: false, msg: "Pergunta não pode ser vazia"};
+        
+        if (this.tipo == "porcentagem" || this.tipo == "grafico") {
+            let vMin = valorMinimo.value;
+            let vMax = valorMaximo.value;
+            if (vMin == "" || vMax == "") return {status: false, msg: "Valor mínimo e máximo não podem ser vazios"};
+            if (isNaN(vMin) || isNaN(vMax)) return {status: false, msg: "Valor mínimo e máximo devem ser números"};
+            if (parseFloat(vMin) > parseFloat(vMax)) return {status: false, msg: "Valor mínimo não pode ser maior que o máximo"};
+            if (parseFloat(vMin) == parseFloat(vMax)) return {status: false, msg: "Valor mínimo não pode ser igual ao máximo"};
+
+            if (this.tipo == "porcentagem") {
+                let vSlider = this.slider.value;
+                if (vSlider == "") return {status: false, msg: "Valor do slider não pode ser vazio"};
+                if (isNaN(vSlider)) return {status: false, msg: "Valor do slider deve ser um número"};
+                if (parseFloat(vSlider) < parseFloat(vMin)) return {status: false, msg: "Valor do slider não pode ser menor que o mínimo"};
+                if (parseFloat(vSlider) > parseFloat(vMax)) return {status: false, msg: "Valor do slider não pode ser maior que o máximo"};
+            } else {
+                let campos = this.graficoHolder.querySelectorAll("div.grafico");
+                if (campos.length == 0) return {status: false, msg: "Gráfico deve ter pelo menos um campo"};
+                campos.forEach(campo => {
+                    let nome = campo.querySelector("md-outlined-text-field").value;
+                    if (nome.trim() == "") return {status: false, msg: "Campo do gráfico não pode ser vazio"};
+
+                    let valor = campo.querySelector("md-outlined-text-field[type=number]").value;
+                    if (valor == "") return {status: false, msg: "Valor do campo do gráfico não pode ser vazio"};
+                    if (isNaN(valor)) return {status: false, msg: "Valor do campo do gráfico deve ser um número"};
+                    if (parseFloat(valor) < parseFloat(vMin)) return {status: false, msg: "Valor do campo do gráfico não pode ser menor que o mínimo"};
+                    if (parseFloat(valor) > parseFloat(vMax)) return {status: false, msg: "Valor do campo do gráfico não pode ser maior que o máximo"};
+                });
+            }
+        }
+
+        return {status: true};
+    }
 }
 
 // Singleton para gerenciar os dados
@@ -586,8 +623,38 @@ class JogoDados {
             url: this.urlInput.value
         };
 
-        objeto.dados = this.perguntas.map(pergunta => pergunta.toJSON());
+        let dados = [];
+
+        for (let pergunta of this.perguntas) {
+            let validacao = pergunta.validar();
+            if (!validacao.status) {
+                // this.controlador.modal.abrir("dados_invalido", {msg: validacao.msg});
+                console.error("Pergunta inválida: " + validacao.msg);
+                return null;
+            } else {
+                let dado = pergunta.toJSON();
+                if (dado) {
+                    dados.push(dado);
+                }
+            }
+        }
+
+        objeto.dados = dados;
         
         return new PseudoDocumento(objeto, 'JogoArtigoDados.json', {type: "application/json"});
+    }
+
+    validar() {
+        if (this.tituloInput.value.trim() == "") return {status: false, msg: "Título vazio."};
+        if (this.urlInput.value.trim() == "") return { status: false, msg: "URL do artigo vazia." };
+        if (this.perguntas == null || this.perguntas.length == 0) return {status: false, msg: "Nenhuma pergunta criada."};
+
+        for (let i = 0; i < this.perguntas.length; i++) {
+            let pergunta = this.perguntas[i];
+            let validacao = pergunta.validar();
+            if (!validacao.status) return {status: false, msg: "Pergunta nº" + (i+1) + " inválida: " + validacao.msg};
+        }
+
+        return {status: true};
     }
 }

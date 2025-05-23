@@ -28,6 +28,7 @@
       <section id="escolherJogo">
         <header>
           <h1>Crie um jogo!</h1>
+          <p>Selecione qual dos jogos abaixo deseja criar</p>
         </header>
         <section>
           <div class="card" id="escolheArtigo">
@@ -53,7 +54,7 @@
           <span class="material-symbols-outlined ir-inicio">
             arrow_back
           </span>
-          <h1>Criar o jogo - Dados</h1>
+          <h1>Criar jogo - Informações</h1>
           <md-icon-button id="modalDados">
             <md-icon> info </md-icon>
           </md-icon-button>
@@ -134,7 +135,7 @@
           <span class="material-symbols-outlined ir-inicio">
               arrow_back
           </span>
-          <h1>Criar o jogo</h1>
+          <h1>Criar jogo - Artigo</h1>
           <md-icon-button id="modalArtigo">
             <md-icon> info </md-icon>
           </md-icon-button>
@@ -223,7 +224,7 @@
       </section>
     </main>
 
-    <div id="modal">
+    <div id="modal" class="modal">
       <div>
         <header>
           <md-icon-button id="fecharModal">
@@ -238,7 +239,22 @@
       </div>
     </div>
 
+    <div id="modal_erro" class="modal">
+      <div>
+        <header>
+          <md-icon-button id="fecharModal_erro">
+            <md-icon> close </md-icon>
+          </md-icon-button>
+          <h1 id="modalErro_Title">Informações e etc</h1>
+        </header>
+        <section>
+          <p id="modalErro_Text"> Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+        </section>
+      </div>
+    </div>
+
     <script src="src/js/modal.js"></script>
+    <script src="src/js/modal_erro.js"></script>
     <script src="src/js/jogoResumo.js"></script>
     <script src="src/js/jogoDados.js"></script>
     <script src="src/js/publicar.js"></script>

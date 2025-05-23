@@ -24,6 +24,8 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
     public Color corValorCerto;
     public Color corValorNaArea;
     public Color corEscolheValor;
+    
+    public string erroDetails = "";
 
     
     public void Inicializar(GameUI game) {
@@ -115,7 +117,14 @@ public class PorcentagemSection : MonoBehaviour, SecaoDoJogo {
         float respostaCorreta = dados.respostaFloat;
         float range = dados.range.range;
 
-        return Mathf.Abs(resposta - respostaCorreta) <= range;
+        if (Mathf.Abs(resposta - respostaCorreta) <= range) return true;
+
+        erroDetails = "A resposta correta era: " + GetValorInText(respostaCorreta);
+        return false; 
+    }
+    
+    public string GetErroDetails() {
+        return erroDetails;
     }
 
     public bool GetRespostaCorretissima() {

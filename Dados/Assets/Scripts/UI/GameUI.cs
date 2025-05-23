@@ -10,6 +10,7 @@ public interface SecaoDoJogo {
     void Comecar(Dados dados);
     void Finalizar();
     bool GetResposta();
+    string GetErroDetails();
 }
 
 [System.Serializable]
@@ -42,6 +43,9 @@ public class GameUI : MonoBehaviour {
     public Text statusLabel, statusDescricao;
 
     public GameObject instrucoes;
+    public GameObject instrucoesModal;
+    public GameObject sureVoltarMenuPanel;
+    public GameObject sureVoltarMenuModal;
 
     public Flavor flavor;
 
@@ -105,7 +109,12 @@ public class GameUI : MonoBehaviour {
         } else {
             erros++;
             statusLabel.text = "Incorreto!";
-            statusDescricao.text = "Que pena, você errou!";
+            string detalhes = secaoAtual.GetErroDetails();
+            if (detalhes != null && detalhes != "") {
+                statusDescricao.text = "Que pena, você errou!\n" + detalhes;
+            } else {
+                statusDescricao.text = "Que pena, você errou!";
+            }
         }
 
         if (dadosAtuais.explicacao != null && dadosAtuais.explicacao != "") {
@@ -146,14 +155,32 @@ public class GameUI : MonoBehaviour {
         state = CurrentGameState.WaitingStart;
     }
 
-
     public void MostrarInstrucoes() {
         instrucoes.SetActive(true);
-        Time.timeScale = 0;
+        instrucoesModal.transform.localScale = Vector3.one;
+        instrucoesModal.transform.DOPunchScale(Vector3.one * 0.05f, 0.5f, 5, 0.25f).OnComplete(() => {
+            instrucoesModal.transform.localScale = Vector3.one;
+            Time.timeScale = 0;
+        });
     }
 
     public void FecharInstrucoes() {
         instrucoes.SetActive(false);
+        Time.timeScale = 1;
+    }
+
+    public void MostrarConfirmarVoltar() {
+        sureVoltarMenuPanel.SetActive(true);
+
+        sureVoltarMenuModal.transform.localScale = Vector3.one;
+        sureVoltarMenuModal.transform.DOPunchScale(Vector3.one * 0.05f, 0.5f, 5, 0.25f).OnComplete(() => {
+            sureVoltarMenuModal.transform.localScale = Vector3.one;
+            Time.timeScale = 0;
+        });
+    }
+
+    public void FecharConfirmarVoltar() {
+        sureVoltarMenuPanel.SetActive(false);
         Time.timeScale = 1;
     }
 

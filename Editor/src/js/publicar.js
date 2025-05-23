@@ -359,11 +359,13 @@ class Controlador {
     jogo_dados = null;
 
     modal = null;
+    erro = null;
 
     constructor() {
         Controlador.instancia = this;
 
         this.modal = new Modal();
+        this.erro = new Erro();
         this.publicador = new Publicador(this);
         this.jogo_resumo = new JogoResumo(this);
         this.jogo_dados = new JogoDados(this);
@@ -417,6 +419,19 @@ class Controlador {
         if (this.jogo_selecionado == 'dados') return 'Responder Perguntas';
         return null;
     }
+
+    validar() {
+        let jogo = this.pegarJogo();
+        if (jogo == null) return false;
+
+        let validou = jogo.validar();
+        if (!validou.status) {
+            this.erro.abrir(validou.msg);
+            return false;
+        }
+
+        return true;
+    }
 }
 
 const controlador = new Controlador();
@@ -438,5 +453,5 @@ escolheArtigo.addEventListener("click", () => controlador.setarEstado('valores')
 escolheDados.addEventListener("click", () => controlador.setarEstado('dados'));
 
 baixarManualBtn.addEventListener('click', () => controlador.publicador.gerarManual());
-irManualBtns.forEach(btn => btn.addEventListener('click', () => controlador.setarEstado('manual')));
-irGoogleBtns.forEach(btn => btn.addEventListener('click', () => controlador.publicador.gerarGoogle()));
+irManualBtns.forEach(btn => btn.addEventListener('click', () => { if (controlador.validar()) controlador.setarEstado('manual'); }));
+irGoogleBtns.forEach(btn => btn.addEventListener('click', () => { if (controlador.validar()) controlador.publicador.gerarGoogle() }));

@@ -18,7 +18,9 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
     // REF Values
     bool porcentagem;
     float v_min, v_max, range;
-    
+
+    string erroDetails = "";
+
     public void Inicializar(GameUI game) {
         this.game = game;
 
@@ -103,6 +105,13 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
             else incorretas++;
         }
 
-        return corretas >= incorretas;
+        if (corretas >= incorretas) return true;
+
+        erroDetails = "Você acertou menos da metade dos campos!";
+        return false;
+    }
+    
+    public string GetErroDetails() {
+        return erroDetails;
     }
 }
