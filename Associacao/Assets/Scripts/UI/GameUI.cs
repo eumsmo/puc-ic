@@ -52,8 +52,8 @@ public class GameUI : MonoBehaviour {
         if (state != CurrentGameState.WaitingStart) return;
         state = CurrentGameState.Playing;
         
-        List<string> coluna1Set = new List<string>();
-        List<string> coluna2Set = new List<string>();
+        HashSet<string> coluna1Set = new HashSet<string>();
+        HashSet<string> coluna2Set = new HashSet<string>();
         
         foreach (Associacao associacao in info.associacoes) {
             string palavra1 = associacao.palavra1;
@@ -63,9 +63,16 @@ public class GameUI : MonoBehaviour {
             coluna2Set.Add(palavra2);
         }
 
+
         // Embaralhar as colunas
-        coluna1Set = coluna1Set.OrderBy(x => Random.value).ToList();
-        coluna2Set = coluna2Set.OrderBy(x => Random.value).ToList();
+        List<string> coluna1List = coluna1Set.OrderBy(x => Random.value).ToList();
+        List<string> coluna2List = coluna2Set.OrderBy(x => Random.value).ToList();
+
+        coluna1Set.Clear();
+        coluna1Set = null;
+
+        coluna2Set.Clear();
+        coluna2Set = null;
 
         foreach (Transform child in coluna1) {
             Destroy(child.gameObject);
@@ -79,10 +86,10 @@ public class GameUI : MonoBehaviour {
         int coresIndex = 0;
         Color cor = cores[coresIndex];
 
-        for (int i = 0; i < coluna1Set.Count; i++) {
+        for (int i = 0; i < coluna1List.Count; i++) {
             GameObject associacao = Instantiate(associacaoPrefab, coluna1);
             AssociacaoUI associacaoUI = associacao.GetComponent<AssociacaoUI>();
-            associacaoUI.SetarTexto(coluna1Set[i]);
+            associacaoUI.SetarTexto(coluna1List[i]);
             associacaoUI.ladoConexao = LadoConexao.Direita;
             
             associacaoUI.SetarCor(cor);
@@ -90,10 +97,10 @@ public class GameUI : MonoBehaviour {
             cor = cores[coresIndex];
         }
 
-        for (int i = 0; i < coluna2Set.Count; i++) {
+        for (int i = 0; i < coluna2List.Count; i++) {
             GameObject associacao = Instantiate(associacaoPrefab, coluna2);
             AssociacaoUI associacaoUI = associacao.GetComponent<AssociacaoUI>();
-            associacaoUI.SetarTexto(coluna2Set[i]);
+            associacaoUI.SetarTexto(coluna2List[i]);
             associacaoUI.ladoConexao = LadoConexao.Esquerda;
 
             associacaoUI.SetarCor(cor);

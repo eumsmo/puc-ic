@@ -5,7 +5,10 @@
         { "palavra1": "açucar", "palavra2": "doce" },
         { "palavra1": "sal", "palavra2": "salgado" },
         { "palavra1": "limão", "palavra2": "azedo" },
+        { "palavra1": "limão", "palavra2": "gostosin" },
         { "palavra1": "pimenta", "palavra2": "picante" },
+        { "palavra1": "wasabi", "palavra2": "picante" },
+        { "palavra1": "feijão", "palavra2": "picante" },
         { "palavra1": "café", "palavra2": "amargo" }
     ]
 }

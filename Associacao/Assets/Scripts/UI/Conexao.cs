@@ -1,13 +1,34 @@
 using Radishmouse;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class Conexao : MonoBehaviour, IPointerClickHandler {
+public class Conexao : MonoBehaviour, IPointerDownHandler {
     public AssociacaoUI associacao1, associacao2;
     public UILineRenderer linhaConexao;
     Vector2[] pontos = new Vector2[2];
 
-    public void OnPointerClick(PointerEventData eventData) {
+    [Header("Colisor de Raycast")]
+    public Image colisorRaycast;
+    public float paddingThickness;
+
+    [ContextMenu("Atualizar Colisor")]
+    public void RefreshColisor() {
+        if (colisorRaycast == null) return;
+
+        Vector2[] pontosLinha = linhaConexao.points;
+        colisorRaycast.rectTransform.anchoredPosition = pontosLinha[0];
+
+        // Atualizar a posição e o tamanho do colisor
+        float altura = linhaConexao.thickness + paddingThickness * 2;
+        float largura = Vector2.Distance(pontosLinha[0], pontosLinha[1]);
+        float angulo = Vector2.SignedAngle(Vector2.right, pontosLinha[1] - pontosLinha[0]);
+
+        colisorRaycast.rectTransform.sizeDelta = new Vector2(largura, altura);
+        colisorRaycast.rectTransform.localEulerAngles = new Vector3(0, 0, angulo);
+    }
+
+    public void OnPointerDown(PointerEventData eventData) {
         // Destruir a conexão ao clicar nela
         Debug.Log("Conexão clicada, destruindo...");
         ConexaoManager.instance.DestruirConexao(this);
@@ -44,5 +65,7 @@ public class Conexao : MonoBehaviour, IPointerClickHandler {
         // Atualizar cores
         linhaConexao.color = associacao1.cor;
         linhaConexao.color2 = associacao2.cor;
+
+        RefreshColisor();
     }
 }
