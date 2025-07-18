@@ -29,9 +29,8 @@ public class Conexao : MonoBehaviour, IPointerDownHandler {
     }
 
     public void OnPointerDown(PointerEventData eventData) {
-        // Destruir a conexão ao clicar nela
         Debug.Log("Conexão clicada, destruindo...");
-        ConexaoManager.instance.DestruirConexao(this);
+        Destruir();
     }
 
     public void SetarPosicaoInicial(Vector2 posicaoInicial) {
@@ -59,13 +58,29 @@ public class Conexao : MonoBehaviour, IPointerDownHandler {
 
     public void SetarAssociacao(AssociacaoUI associacao1, AssociacaoUI associacao2) {
         if (associacao1 == null || associacao2 == null) return;
-        this.associacao1 = associacao1;
-        this.associacao2 = associacao2;
+        
+        if (associacao1.EstaConectadaCom(associacao2) || associacao2.EstaConectadaCom(associacao1)) {
+            Debug.LogWarning("As associações já estão conectadas.");
+            Destruir();
+            return;
+        }
 
         // Atualizar cores
         linhaConexao.color = associacao1.cor;
         linhaConexao.color2 = associacao2.cor;
 
         RefreshColisor();
+
+        associacao1.AdicionarAssociacao(associacao2);
+        associacao2.AdicionarAssociacao(associacao1);
+
+        this.associacao1 = associacao1;
+        this.associacao2 = associacao2;
+    }
+
+    public void Destruir() {
+        if (associacao1 != null) associacao1.RemoverAssociacao(associacao2);
+        if (associacao2 != null) associacao2.RemoverAssociacao(associacao1);
+        ConexaoManager.instance.DestruirConexao(this);
     }
 }

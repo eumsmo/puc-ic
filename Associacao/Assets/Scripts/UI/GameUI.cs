@@ -107,6 +107,12 @@ public class GameUI : MonoBehaviour {
             coresIndex = (coresIndex + 1) % cores.Length;
             cor = cores[coresIndex];
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(coluna1.GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(coluna2.GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(coluna1.GetComponent<RectTransform>());
+        LayoutRebuilder.ForceRebuildLayoutImmediate(coluna2.GetComponent<RectTransform>());
+
     }
 
 

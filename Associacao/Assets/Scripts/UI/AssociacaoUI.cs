@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Radishmouse;
+using System.Collections.Generic;
 
 public enum LadoConexao {
     Esquerda,
@@ -19,10 +20,10 @@ public class AssociacaoUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public LadoConexao ladoConexao;
     public UILineRenderer linhaConexao;
-    Vector2[] pontos = new Vector2[2];
 
-    public Vector3 pos, localPos;
-    public Vector2 rectPos;
+    [SerializeField]
+    protected List<AssociacaoUI> associacoesConectadas = new List<AssociacaoUI>();
+
 
     public void OnPointerDown(PointerEventData eventData) {
         ComecarAssociacao();
@@ -44,6 +45,23 @@ public class AssociacaoUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void SetarCor(Color cor) {
         this.cor = cor;
         imagemFundo.color = cor;
+    }
+
+
+    public void AdicionarAssociacao(AssociacaoUI associacao) {
+        if (!associacoesConectadas.Contains(associacao)) {
+            associacoesConectadas.Add(associacao);
+        }
+    }
+
+    public void RemoverAssociacao(AssociacaoUI associacao) {
+        if (associacoesConectadas.Contains(associacao)) {
+            associacoesConectadas.Remove(associacao);
+        }
+    }
+
+    public bool EstaConectadaCom(AssociacaoUI associacao) {
+        return associacoesConectadas.Contains(associacao);
     }
 
 }
