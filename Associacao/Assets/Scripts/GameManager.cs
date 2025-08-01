@@ -88,6 +88,7 @@ public class GameManager : MonoBehaviour {
     public void VoltarParaInicio() {
         gameState = GameState.WAITING_TO_START;
         UIController.instance.HandleGameRestarted();
+        ConexaoManager.instance.Reset();
     }
 
     public void SetError(string error) {

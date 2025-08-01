@@ -9,7 +9,7 @@ public class ConexaoManager : MonoBehaviour {
     public GameObject conexaoPrefab;
 
 
-    public Transform conexaoHolder;
+    public Transform conexaoHolder, duranteConexaoHolder;
     public AssociacaoUI primeiraAssociacao;
     Conexao conexaoAtual;
 
@@ -27,6 +27,7 @@ public class ConexaoManager : MonoBehaviour {
     }
 
     void Update() {
+        if (UIController.game.state != GameUI.CurrentGameState.Playing) return;
         if (!conectando || primeiraAssociacao == null) {
             return;
         }
@@ -58,6 +59,21 @@ public class ConexaoManager : MonoBehaviour {
         conexaoAtual.SetarCor2(primeiraAssociacao.cor);
     }
 
+    public void Reset() {
+        foreach (Transform child in conexaoHolder) {
+            Destroy(child.gameObject);
+        }
+
+        foreach (Transform child in duranteConexaoHolder) {
+            Destroy(child.gameObject);
+        }
+
+        conectando = false;
+        primeiraAssociacao = null;
+        associacaoEmBaixo = null;
+        conexaoAtual = null;
+    }
+
     public GraphicRaycaster raycaster;
     public EventSystem eventSystem;
     AssociacaoUI associacaoEmBaixo;
@@ -83,7 +99,7 @@ public class ConexaoManager : MonoBehaviour {
             return;
         }
 
-        GameObject conexaoObj = Instantiate(conexaoPrefab, conexaoHolder);
+        GameObject conexaoObj = Instantiate(conexaoPrefab, duranteConexaoHolder);
         conexaoAtual = conexaoObj.GetComponent<Conexao>();
 
         Vector2 posicaoInicial = associacao.posicaoLadoSelecionado;
@@ -105,13 +121,22 @@ public class ConexaoManager : MonoBehaviour {
             conexaoAtual.SetarAssociacao(primeiraAssociacao, associacaoEmBaixo);
         }
 
+        conexaoAtual.transform.SetParent(conexaoHolder, true);
+
         conectando = false;
         conexaoAtual = null;
         primeiraAssociacao = null;
     }
 
-    public void DestruirConexao(Conexao conexao) {
-        if (conexao == null) return;
-        Destroy(conexao.gameObject);
+    public Conexao[] GetConexoes() {
+        List<Conexao> conexoes = new List<Conexao>();
+        foreach (Transform child in conexaoHolder) {
+            if (child.TryGetComponent(out Conexao conexao)) {
+                conexoes.Add(conexao);
+            }
+        }
+        return conexoes.ToArray();
     }
+
+    
 }

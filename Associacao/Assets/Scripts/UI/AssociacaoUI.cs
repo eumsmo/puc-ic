@@ -23,13 +23,21 @@ public class AssociacaoUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     [SerializeField]
     protected List<AssociacaoUI> associacoesConectadas = new List<AssociacaoUI>();
+    public List<Conexao> conexoes = new List<Conexao>();
+
+    public System.Action<AssociacaoUI> onAssociacaoClicada;
+
+    public string palavra => texto.text;
 
 
     public void OnPointerDown(PointerEventData eventData) {
+        onAssociacaoClicada?.Invoke(this);
+        if (UIController.game.state != GameUI.CurrentGameState.Playing) return;
         ComecarAssociacao();
     }
 
     public void OnPointerUp(PointerEventData eventData) {
+        if (UIController.game.state != GameUI.CurrentGameState.Playing) return;
         ConexaoManager.instance.TerminarAssociacao(this);
     }
 
@@ -48,9 +56,13 @@ public class AssociacaoUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
 
-    public void AdicionarAssociacao(AssociacaoUI associacao) {
+    public void AdicionarAssociacao(AssociacaoUI associacao, Conexao conexao = null) {
         if (!associacoesConectadas.Contains(associacao)) {
             associacoesConectadas.Add(associacao);
+        }
+
+        if (conexao != null && !conexoes.Contains(conexao)) {
+            conexoes.Add(conexao);
         }
     }
 
@@ -58,10 +70,44 @@ public class AssociacaoUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         if (associacoesConectadas.Contains(associacao)) {
             associacoesConectadas.Remove(associacao);
         }
+
+        foreach (Conexao conexao in conexoes) {
+            if (conexao.associacao1 == associacao || conexao.associacao2 == associacao) {
+                conexao.Destruir();
+            }
+        }
     }
 
     public bool EstaConectadaCom(AssociacaoUI associacao) {
         return associacoesConectadas.Contains(associacao);
     }
+
+    public void ClearAssociacoes() {
+        associacoesConectadas.Clear();
+        conexoes.Clear();
+    }
+
+
+    #region Feedback
+
+    bool modoFeedback = false;
+    public void SetarModoFeedback() {
+        modoFeedback = true;
+        
+        foreach (Conexao conexao in conexoes) {
+            conexao.OcultarParaFeedback();
+        }
+    }
+
+    public void MostrarConexoes() {
+        if (!modoFeedback) return;
+
+        foreach (Conexao conexao in conexoes) {
+            conexao.transform.SetAsLastSibling();
+            conexao.DesocultarParaFeedback();
+        }
+    }
+
+    #endregion
 
 }

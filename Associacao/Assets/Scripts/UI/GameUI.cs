@@ -15,6 +15,7 @@ public class GameUI : MonoBehaviour {
     }
 
     public CurrentGameState state = CurrentGameState.WaitingStart;
+    AssociacaoInfo associacaoInfo;
 
     public Text acertosLabel;
     public Image acertosImage;
@@ -34,7 +35,7 @@ public class GameUI : MonoBehaviour {
     public Color[] cores;
 
 
-    public int acertos = 0, erros = 0;
+    public int acertos = 0, erros = 0, naoFeitos = 0;
 
 
     void Start() {
@@ -51,16 +52,20 @@ public class GameUI : MonoBehaviour {
     public void GerarAssociacoes(AssociacaoInfo info) {
         if (state != CurrentGameState.WaitingStart) return;
         state = CurrentGameState.Playing;
+        this.associacaoInfo = info;
         
         HashSet<string> coluna1Set = new HashSet<string>();
         HashSet<string> coluna2Set = new HashSet<string>();
         
         foreach (Associacao associacao in info.associacoes) {
-            string palavra1 = associacao.palavra1;
-            string palavra2 = associacao.palavra2;
+            string palavra = associacao.palavra;
+            string[] conexoes = associacao.conexoes;
 
-            coluna1Set.Add(palavra1);
-            coluna2Set.Add(palavra2);
+            coluna1Set.Add(palavra);
+
+            foreach (string conexao in conexoes) {
+                coluna2Set.Add(conexao);
+            }
         }
 
 
@@ -75,6 +80,10 @@ public class GameUI : MonoBehaviour {
         coluna2Set = null;
 
         foreach (Transform child in coluna1) {
+            Destroy(child.gameObject);
+        }
+
+        foreach (Transform child in coluna2) {
             Destroy(child.gameObject);
         }
 
@@ -121,50 +130,66 @@ public class GameUI : MonoBehaviour {
         if (state == CurrentGameState.ShowingStatus) return;
         state = CurrentGameState.ShowingStatus;
 
-        bool resposta = true;
-        statusHolder.SetActive(true);
-        statusHolderController.SetTrigger("Aparecer");
+        acertosLabel.text = "" + acertos;
+        StartCoroutine(FeedbackProgressivo());
+    }
 
-        ultimoFoiAcerto = resposta;
+    IEnumerator FeedbackProgressivo() {
+        Conexao[] conexoes = ConexaoManager.instance.GetConexoes();
+        foreach (Conexao conexao in conexoes) {
+            conexao.OcultarParaFeedback();
+            yield return new WaitForSeconds(0.025f);
+        }
 
-        if (resposta) {
-            acertos++;
-            statusLabel.text = "Correto!";
-            statusDescricao.text = "Parabéns, você acertou!";
-            
-            acertosLabel.transform.DOPunchScale(Vector3.one * 0.4f, 0.5f, 1, 0.5f);
-            acertosImage.transform.DOPunchScale(Vector3.one * 0.4f, 0.5f, 1, 0.5f);
-        } else {
-            erros++;
-            statusLabel.text = "Incorreto!";
-            string detalhes = null;
-            if (detalhes != null && detalhes != "") {
-                statusDescricao.text = "Que pena, você errou!\n" + detalhes;
-            } else {
-                statusDescricao.text = "Que pena, você errou!";
+        foreach (AssociacaoUI associacao in coluna1.GetComponentsInChildren<AssociacaoUI>()) {
+            List<string> conexoesDaPalavra = new List<string>(associacaoInfo.GetConexoes(associacao.palavra));
+            string palavra = associacao.palavra;
+
+            foreach (Conexao conexao in associacao.conexoes) {
+                bool existe = associacaoInfo.Existe(conexao.palavra1, conexao.palavra2) || associacaoInfo.Existe(conexao.palavra2, conexao.palavra1);
+                if (existe) {
+                    acertos++;
+                    acertosLabel.text = "" + acertos;
+                    acertosLabel.transform.DOPunchScale(Vector3.one * 0.4f, 0.5f, 1, 0.25f);
+                    acertosImage.transform.DOPunchScale(Vector3.one * 0.4f, 0.5f, 1, 0.25f);
+                    conexoesDaPalavra.Remove(conexao.palavra2);
+                } else {
+                    erros++;
+                }
+
+                conexao.MostrarFeedback(existe);
+                yield return new WaitForSeconds(0.5f);
+            }
+
+            foreach (string palavraFaltante in conexoesDaPalavra) {
+                Debug.Log("Palavra não conectada: " + palavraFaltante);
+                naoFeitos++;
             }
         }
 
-        acertosLabel.text = "" + acertos;
-        StartCoroutine(FeedbackNoStatusHolder());
+        yield return new WaitForSeconds(0.25f);
+
+        statusHolder.SetActive(true);
+        statusHolderController.SetTrigger("Aparecer");
+
+        if (acertos == associacaoInfo.associacoes.Length) {
+            statusLabel.text = "Parabéns!";
+            statusDescricao.text = "Você acertou todas as associações!";
+        } else {
+            statusLabel.text = "Ops!";
+            statusDescricao.text = "Você errou algumas associações.";
+        }
     }
 
     public void GoToNext() {
         if (state != CurrentGameState.ShowingStatus) return;
 
-        // statusHolder.SetActive(false);
+        statusHolder.SetActive(false);
         statusHolderController.SetTrigger("Desaparecer");
-        GameManager.instance.ProximaPergunta();
+        GameManager.instance.EndGame();
     }
 
-    IEnumerator FeedbackNoStatusHolder() {
-        yield return new WaitForSeconds(0.25f);
-        if (ultimoFoiAcerto) {
-            statusHolder.transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 1, 0.5f);
-        } else {
-            statusHolder.transform.DOShakePosition(0.3f, new Vector3(2, 0f, 0f), 20, 0.5f, false, true);
-        }
-    }
+    
 
     public bool CheckIfWin() {
         return true;
@@ -173,6 +198,7 @@ public class GameUI : MonoBehaviour {
     public void ResetGame() {
         acertos = 0;
         erros = 0;
+        naoFeitos = 0;
         acertosLabel.text = "" + acertos;
         statusHolder.SetActive(false);
         state = CurrentGameState.WaitingStart;

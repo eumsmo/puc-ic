@@ -17,7 +17,7 @@ public class InfoLoader : MonoBehaviour {
     public AssociacaoInfo info;
     public LoadMode loadMode = LoadMode.LOCAL;
 
-    private const string localPath = "Resources/teste.json";
+    public string localPath = "Resources/testeSimples.json";
 
 
     public string API_KEY { 

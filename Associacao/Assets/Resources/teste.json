@@ -2,13 +2,18 @@
     "titulo": "alguma coisa",
     "url": "...",
     "associacoes": [
-        { "palavra1": "açucar", "palavra2": "doce" },
-        { "palavra1": "sal", "palavra2": "salgado" },
-        { "palavra1": "limão", "palavra2": "azedo" },
-        { "palavra1": "limão", "palavra2": "gostosin" },
-        { "palavra1": "pimenta", "palavra2": "picante" },
-        { "palavra1": "wasabi", "palavra2": "picante" },
-        { "palavra1": "feijão", "palavra2": "picante" },
-        { "palavra1": "café", "palavra2": "amargo" }
+        {"palavra": "Challenge", "conexoes": ["challenge", "control", "curiosity", "feedback", "goals"]},
+        {"palavra": "Control", "conexoes": ["control", "customization", "feedback", "novelty", "real world relation", "sensory curiosity"]},
+        {"palavra": "Creativity", "conexoes": ["competence", "control", "curiosity", "customization", "fantasy", "recognition"]},
+        {"palavra": "Exploration", "conexoes": ["control", "curiosity", "discovery", "navigation", "physical movement", "real world relation"]},
+        {"palavra": "Fairness", "conexoes": ["challenge", "competence", "moral sense", "rules"]},
+        {"palavra": "Feedback", "conexoes": ["control", "competence", "emotions", "feedback", "goals", "novelty", "rules", "sensory curiosity", "cognitive curiosity", "usefulness"]},
+        {"palavra": "Goals", "conexoes": ["challenge", "competence", "fantasy", "feedback", "goals", "rules", "status", "usefulness"]},
+        {"palavra": "Learning", "conexoes": ["cognitive curiosity", "competence", "feedback", "immersion", "real world relation", "usefulness"]},
+        {"palavra": "Profile and ownership", "conexoes": ["competence", "control", "feedback", "goals", "recognition", "status"]},
+        {"palavra": "Relevance and relatedness", "conexoes": ["control", "real world relation"]},
+        {"palavra": "Resources and economy", "conexoes": ["cognitive curiosity", "competition", "control", "recognition", "rules", "social interaction", "tension"]},
+        {"palavra": "Social play", "conexoes": ["control", "collaboration", "competence", "competition", "recognition", "relatedness", "social interaction", "status"]},
+        {"palavra": "Storytelling and fantasy", "conexoes": ["control", "customization", "emotions", "escapism", "fantasy", "immersion", "real world relation"]}
     ]
 }

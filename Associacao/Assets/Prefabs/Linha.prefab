@@ -64,6 +64,9 @@ MonoBehaviour:
   linhaConexao: {fileID: 90728049851385542}
   colisorRaycast: {fileID: 9152559618006703174}
   paddingThickness: 2
+  corretoColor: {r: 0, g: 1, b: 0, a: 1}
+  erradoColor: {r: 1, g: 0, b: 0, a: 1}
+  alphaOculto: 0.5
 --- !u!114 &90728049851385542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,7 +91,7 @@ MonoBehaviour:
   - {x: 300, y: 100}
   - {x: 215.1, y: 74.4}
   color2: {r: 0.15632057, g: 0, b: 1, a: 1}
-  thickness: 10
+  thickness: 7
   center: 0
 --- !u!1 &5222361958086019440
 GameObject:

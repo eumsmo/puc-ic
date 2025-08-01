@@ -1,0 +1,17 @@
+{
+    "titulo": "alguma coisa",
+    "url": "...",
+    "associacoes": [
+        {"palavra": "açucar", "conexoes": ["doce"]},
+        {"palavra": "sal", "conexoes": ["salgado"]},
+        {"palavra": "pimenta", "conexoes": ["picante"]},
+        {"palavra": "wasabi", "conexoes": ["picante"]},
+        {"palavra": "limão", "conexoes": ["azedo"]},
+        {"palavra": "chocolate", "conexoes": ["doce"]},
+        {"palavra": "café", "conexoes": ["amargo"]},
+        {"palavra": "queijo", "conexoes": ["salgado"]},
+        {"palavra": "fruta", "conexoes": ["doce"]},
+        {"palavra": "carne", "conexoes": ["salgado"]},
+        {"palavra": "peixe", "conexoes": ["salgado"]}
+    ]
+}
