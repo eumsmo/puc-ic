@@ -32,7 +32,7 @@ public class InfoLoader : MonoBehaviour {
     }
 
     public IEnumerator LoadTexto() {
-        string url = ""; //GetURLInParams();
+        string url = GetURLInParams();
 
         if (string.IsNullOrEmpty(url)){
             loadMode = LoadMode.LOCAL;

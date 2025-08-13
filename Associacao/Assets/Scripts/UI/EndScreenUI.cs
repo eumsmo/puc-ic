@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -18,8 +19,25 @@ public class EndScreenUI : MonoBehaviour {
     public Transform coluna1, coluna2;
     AssociacaoInfo info;
 
+    OrderedDictionary tituloBaseadoNaPorcentagem = new OrderedDictionary();
+
     void Awake() {
+        
         // irAoArtigoButton.clicked += OnIrAoArtigoButtonClicked;
+    }
+
+    void InicializarDicionario() {
+        if (tituloBaseadoNaPorcentagem.Count > 0) {
+            return; // Já inicializado
+        }
+
+        tituloBaseadoNaPorcentagem.Add(100f, "Incrível!");
+        tituloBaseadoNaPorcentagem.Add(80f, "Parabéns!");
+        tituloBaseadoNaPorcentagem.Add(60f, "Bom trabalho!");
+        tituloBaseadoNaPorcentagem.Add(40f, "Quase lá!");
+        tituloBaseadoNaPorcentagem.Add(20f, "Eita!");
+        tituloBaseadoNaPorcentagem.Add(0.001f, "Poxa...");
+        tituloBaseadoNaPorcentagem.Add(0f, "Nenhuma?");
     }
 
     public void SetarValores(bool vitoria) {
@@ -31,12 +49,28 @@ public class EndScreenUI : MonoBehaviour {
         float porcentagem = (acertos + naoFeitos) == 0 ? 0 : ( 1.0f * acertos / (acertos + naoFeitos)) * 100;
         string porcentagemStr = Mathf.Round(porcentagem) + "%";
 
-        if (vitoria) {
-            statusLabel.text = "Parabéns!";
-            tempoLabel.text = "Você acertou " + porcentagemStr + " das questões!";
+        string status = "";
+
+        InicializarDicionario(); // Inicializa dicionario, apenas se não houver
+
+        foreach (DictionaryEntry item in tituloBaseadoNaPorcentagem) {
+            float min = (float)item.Key;
+            string label = (string)item.Value;
+
+            if (porcentagem >= min) {
+                status = label;
+                break;
+            }
+        }
+
+        statusLabel.text = status;
+
+        if (porcentagem >= 60) {
+            tempoLabel.text = "Você acertou " + porcentagemStr + " das conexões!";
+        } else if (porcentagem > 0) {
+            tempoLabel.text = "Você acertou apenas " + porcentagemStr + " das conexões!";
         } else {
-            statusLabel.text = "Que pena!";
-            tempoLabel.text = "Você acertou apenas " + porcentagemStr + " das questões!";
+            tempoLabel.text = "Você não acertou nenhuma conexão.";
         }
 
         performancePanel.DOPunchScale(Vector3.one * 0.1f, 0.5f, 1, 0.5f);
