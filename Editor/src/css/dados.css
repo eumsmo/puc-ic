@@ -1,0 +1,141 @@
+#dadosSection {
+    flex-direction: column;
+}
+
+#dadosHolder {
+    flex-grow: 1;
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+
+    border: 1px solid #79747e;
+    border-radius: 4px;
+    gap: 0.5em;
+
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.dadosPerguntasInfo {
+    margin-bottom: 1em;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.dadosPerguntasInfo h2 {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+
+    font-size: 20px;
+}
+
+.dadosFooter {
+    display: flex;
+    flex-direction: row-reverse;
+
+    position: absolute;
+    bottom: 4px;
+    right: 0;
+}
+
+.dadosForm {
+    position: relative;
+
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 16px;
+
+    border: 1px solid #79747e;
+    border-radius: 4px;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+
+    box-sizing: border-box;
+}
+
+.dadosForm .pergunta {
+    flex-grow: 1;
+}
+
+.dadosForm > section {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+:not(.opcaoBooleano) > .dadoBooleano, :not(.opcaoPorcentagem) > .dadoPorcentagem, :not(.opcaoGrafico) > .dadoGrafico {
+    display: none !important;
+}
+
+.dadoBooleano {
+    padding: 8px;
+    justify-content: space-evenly;
+}
+
+md-radio {
+    margin-right: .5em;
+}
+
+:not(.porcentagemValor) > section > .minmax {
+    display: none !important;
+}
+
+.sliderPorcentagem {
+    flex-grow: 1;
+    align-items: center;
+}
+
+.porcentagemSliderHolder {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+
+    width: 100%;
+}
+
+.porcentagemSliderHolder > .input-d3 {
+    flex-grow: 0;
+}
+
+.graficoHolder {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.grafico {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.grafico > md-slider {
+    width: 80%;
+}
+
+.dadosForm > section.dadoGrafico {
+    justify-content: space-between;
+}
+
+#novaPerguntaBtn {
+    --md-outlined-button-container-shape: 0px;
+    --md-outlined-button-label-text-font: system-ui;
+    width: calc(100%/3);
+}
+
+div:has( > #novaPerguntaBtn) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0.75em;
+    box-sizing: border-box;
+}

@@ -14,12 +14,14 @@ const nome_pasta = 'Jogos-Artigos';
 const link_editor = 'https://eumsmo.github.io/puc-ic/Editor/';
 const link_jogoResumo = file_id => 'https://eumsmo.github.io/puc-ic/Build/?drive=' + file_id;
 const link_jogoDados = file_id => 'https://eumsmo.github.io/puc-ic/Dados/Build/?drive=' + file_id;
+const link_jogoAssociacoes = file_id => 'https://eumsmo.github.io/puc-ic/Associacoes/Build/?drive=' + file_id;
 
 // Elements
 const holder = document.querySelector('#holder');
 const indicador = document.querySelector('#indicadorProvisorio');
 const escolheDados = document.querySelector("#escolheDados");
 const escolheArtigo = document.querySelector("#escolheArtigo");
+const escolheAssociacoes = document.querySelector("#escolheAssociacoes");
 
 const voltarBtns = document.querySelectorAll('.voltar');
 const irInicioBtns = document.querySelectorAll('.ir-inicio');
@@ -53,7 +55,7 @@ class PseudoDocumento {
     }
 }
 
-
+// Trata APENAS da parte de publicar o jogo
 class Publicador {
     #auth_token = '';
     #client_id = '';
@@ -349,14 +351,16 @@ Arquivo criado automaticamente através do site "${link_editor}".
     }
 }
 
+
 class Controlador {
     static instancia = null;
-    estados = ['escolha', 'valores', 'dados', 'manual', 'google', 'link', 'erro'];
-    jogo_selecionado = null; // 'resumo' ou 'dados'
+    estados = ['escolha', 'valores', 'dados', 'associacoes', 'manual', 'google', 'link', 'erro'];
+    jogo_selecionado = null; // 'resumo', 'dados' ou 'associacoes'
 
     publicador = null;
     jogo_resumo = null;
     jogo_dados = null;
+    jogo_associacoes = null;
 
     modal = null;
     erro = null;
@@ -369,6 +373,7 @@ class Controlador {
         this.publicador = new Publicador(this);
         this.jogo_resumo = new JogoResumo(this);
         this.jogo_dados = new JogoDados(this);
+        this.jogo_associacoes = new JogoConexoes(this);
     }
 
     setarEstado(estado) {
@@ -377,6 +382,7 @@ class Controlador {
 
         if (estado == 'valores' && this.jogo_selecionado != "resumo") this.setarJogo("resumo");
         else if (estado == 'dados' && this.jogo_selecionado != "dados") this.setarJogo("dados");
+        else if (estado == 'associacoes' && this.jogo_selecionado != "associacoes") this.setarJogo("associacoes");
     }
 
     pegarEstado() {
@@ -396,11 +402,13 @@ class Controlador {
 
         if (jogo == 'resumo') this.setarEstado('valores');
         else if (jogo == 'dados') this.setarEstado('dados');
+        else if (jogo == 'associacoes') this.setarEstado('associacoes');
     }
 
     pegarJogo() {
         if (this.jogo_selecionado == 'resumo') return this.jogo_resumo;
         if (this.jogo_selecionado == 'dados') return this.jogo_dados;
+        if (this.jogo_selecionado == 'associacoes') return this.jogo_associacoes;
         return null;
     }
 
@@ -411,12 +419,14 @@ class Controlador {
     pegarLinkFunc() {
         if (this.jogo_selecionado == 'resumo') return link_jogoResumo;
         if (this.jogo_selecionado == 'dados') return link_jogoDados;
+        if (this.jogo_selecionado == 'associacoes') return link_jogoAssociacoes;
         return null;
     }
 
     pegarNomeJogo() {
         if (this.jogo_selecionado == 'resumo') return 'Descubrir o Titulo';
         if (this.jogo_selecionado == 'dados') return 'Responder Perguntas';
+        if (this.jogo_selecionado == 'associacoes') return 'Conexões';
         return null;
     }
 
@@ -451,6 +461,7 @@ irInicioBtns.forEach(btn => btn.addEventListener('click', () => controlador.seta
 
 escolheArtigo.addEventListener("click", () => controlador.setarEstado('valores'));
 escolheDados.addEventListener("click", () => controlador.setarEstado('dados'));
+escolheAssociacoes.addEventListener("click", () => controlador.setarEstado('associacoes'));
 
 baixarManualBtn.addEventListener('click', () => controlador.publicador.gerarManual());
 irManualBtns.forEach(btn => btn.addEventListener('click', () => { if (controlador.validar()) controlador.setarEstado('manual'); }));

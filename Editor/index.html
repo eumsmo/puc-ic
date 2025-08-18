@@ -1,4 +1,6 @@
-<head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
     <script type="importmap">
@@ -25,12 +27,18 @@
   <body>
     <main id="holder" class="escolha">
 
+      <!-- Tela inicial. Permite escolher qual tipo de jogo será criado -->
       <section id="escolherJogo">
+
         <header>
           <h1>Crie um jogo!</h1>
           <p>Selecione qual dos jogos abaixo deseja criar</p>
         </header>
+
+
+
         <section>
+
           <div class="card" id="escolheArtigo">
             <img src="src/imgs/artigo.png" alt="">
             <div>
@@ -46,9 +54,20 @@
               <p>Responda corretamente as questões relacionadas ao artigo!</p>
             </div>
           </div>
+
+          <div class="card" id="escolheAssociacoes">
+            <img src="src/imgs/conexao.png" alt="">
+            <div>
+              <h2>Associações</h2>
+              <p>Crie associações entre diferentes termos!</p>
+            </div>
+          </div>
+
         </section>
+
       </section>
 
+      <!-- Jogo de Dados -->
       <section id="dadosSection">
         <header>
           <span class="material-symbols-outlined ir-inicio">
@@ -67,11 +86,6 @@
           <h2>
             Perguntas
           </h2>
-
-          <md-filled-button id="novaPerguntaBtn">
-            Nova pergunta
-          </md-filled-button>
-
         </section>
         <div id="dadosHolder">
           <form class="dadosForm">
@@ -121,15 +135,23 @@
               </div>
             </section>
           </form>
+
+          <div>
+            <md-outlined-button id="novaPerguntaBtn" hasIcon="true" trailingIcon="true">
+              <span>Nova pergunta</span>
+            </md-outlined-button>
+          </div>
+
         </div>
         <footer>
             <md-outlined-button class="irGoogle">
               Salvar com Google
             </md-outlined-button>
-            <md-outlined-button class="irManual">Salvar manualmente</md-outlined-button>
+            <md-text-button class="irManual">Salvar manualmente</md-text-button>
         </footer>
       </section>
     
+      <!-- Jogo de Artigo -->
       <section id="infoSection">
         <header>
           <span class="material-symbols-outlined ir-inicio">
@@ -155,10 +177,123 @@
             <md-outlined-button class="irGoogle">
               Salvar com Google
             </md-outlined-button>
-            <md-outlined-button class="irManual">Salvar manualmente</md-outlined-button>
+            <md-text-button class="irManual">Salvar manualmente</md-text-button>
         </footer>
       </section>
 
+      <!-- Jogo de Associações -->
+      <section id="associacoesSection">
+        <header>
+          <span class="material-symbols-outlined ir-inicio">
+            arrow_back
+          </span>
+          <h1>Criar jogo - Associações</h1>
+          <md-icon-button id="modalAssociacoes">
+            <md-icon> info </md-icon>
+          </md-icon-button>
+        </header>
+        <form>
+          <md-outlined-text-field id="associacaoTitulo" class="text-input" label="Titulo do artigo"></md-outlined-text-field>
+          <md-outlined-text-field id= "associacaoUrl" class="text-input" label="Link do artigo" type="url" supporting-text="URL de acesso ao artigo"></md-outlined-text-field>
+        </form>
+
+        <div class="tabsHolder">
+          <md-tabs id="associacoesTabs">
+            <md-primary-tab id="categorias-tab" aria-controls="categorias-panel">Categorias</md-primary-tab>
+            <md-primary-tab id="conexoes-tab" aria-controls="associacoesHolder">Conexões</md-primary-tab>
+          </md-tabs>
+
+          <section>
+            <form class="associacoesForm" id="categorias-panel" role="tabpanel" aria-labelledby="categorias-tab">
+
+              <p>Defina as categorias que serão conectadas no jogo.</p>
+
+              <section>
+                <h2>Categoria 1 <span class="categoriaQuant" id="termosCategoria1Count">(0/10)</span> </h2>
+                <div class="adicionarTermoRow">
+                  <md-outlined-text-field id="termosCaterogia1Inp" class="text-input" label="Insira um termo"></md-outlined-text-field>
+                  <md-icon-button id="termosCaterogia1Btn"> <md-icon>add</md-icon> </md-icon-button>
+                </div>
+                <div class="termosHolder">
+                  <md-chip-set id="termosCat1Chipset">
+                  </md-chip-set>
+                </div>
+              </section>
+
+              <section>
+                <h2>Categoria 2 <span class="categoriaQuant" id="termosCategoria2Count">(0/10)</span> </h2>
+                <div class="adicionarTermoRow">
+                  <md-outlined-text-field id="termosCaterogia2Inp" class="text-input" label="Insira um termo"></md-outlined-text-field>
+                  <md-icon-button id="termosCaterogia2Btn"> <md-icon>add</md-icon> </md-icon-button>
+                </div>
+                <div class="termosHolder">
+                  <md-chip-set id="termosCat2Chipset">
+                  </md-chip-set>
+                </div>
+              </section>
+              
+            </form>
+
+            <div id="associacoesHolder" role="tabpanel" aria-labelledby="conexoes-tab">
+              <!--
+              <form class="associacoesForm">
+                <section>
+                  <md-outlined-select label="Categoria 1">
+                    <md-select-option selected value="booleano">
+                      <div slot="headline">Afirmativa</div>
+                    </md-select-option>
+                    <md-select-option value="porcentagem">
+                      <div slot="headline">Valor</div>
+                    </md-select-option>
+                    <md-select-option value="grafico">
+                      <div slot="headline">Grafico</div>
+                    </md-select-option>
+                  </md-outlined-select>
+                </section>
+
+                <section>
+                  <md-outlined-select label="Categoria 2">
+                    <md-select-option selected value="booleano">
+                      <div slot="headline">Afirmativa</div>
+                    </md-select-option>
+                    <md-select-option value="porcentagem">
+                      <div slot="headline">Valor</div>
+                    </md-select-option>
+                    <md-select-option value="grafico">
+                      <div slot="headline">Grafico</div>
+                    </md-select-option>
+                  </md-outlined-select>
+                </section>
+
+                <footer>
+                  <md-icon-button> <md-icon> delete </md-icon> </md-icon-button>
+                </footer>
+                
+              </form>
+              -->
+              
+              <div>
+                <md-outlined-button id="novaAssociacaoBtn">
+                  Nova Conexão
+                </md-outlined-button>
+              </div>
+              
+
+            </div>
+          </section>
+        </div>
+
+        
+
+        <footer>
+            <md-outlined-button class="irGoogle">
+              Salvar com Google
+            </md-outlined-button>
+            <md-text-button class="irManual">Salvar manualmente</md-text-button>
+        </footer>
+      </section>
+
+      <!-- Tela de salvar o jogo manualmente -->
       <section id="manualSaveSection">
         <header>
           <span class="material-symbols-outlined voltar">
@@ -194,6 +329,7 @@
         
       </section>
       
+      <!-- Tela de salvar o jogo com o Google -->
       <section id="googleSaveSection">
         <header>
           <span class="material-symbols-outlined voltar">
@@ -209,6 +345,7 @@
         
       </section>
 
+      <!-- Tela com o link do jogo gerado através do Google -->
       <section id="linkSection">
         <header>
           <span class="material-symbols-outlined voltar">
@@ -222,8 +359,11 @@
         </section>
         
       </section>
+
     </main>
 
+
+    <!-- Modal utilizada no script 'modal.js'. Utilizada para mostrar informações mais aprofundadas -->
     <div id="modal" class="modal">
       <div>
         <header>
@@ -239,6 +379,7 @@
       </div>
     </div>
 
+    <!-- Modal utilizada no script 'modal_erro.js'. Utilizada para mostrar erros durante o processo -->
     <div id="modal_erro" class="modal">
       <div>
         <header>
@@ -257,5 +398,7 @@
     <script src="src/js/modal_erro.js"></script>
     <script src="src/js/jogoResumo.js"></script>
     <script src="src/js/jogoDados.js"></script>
+    <script src="src/js/jogoConexoes.js"></script>
     <script src="src/js/publicar.js"></script>
   </body>
+</html>

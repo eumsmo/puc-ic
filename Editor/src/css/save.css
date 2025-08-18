@@ -1,0 +1,64 @@
+
+#manualSaveSection {
+    align-content: flex-start;
+    flex-direction: column;
+}
+
+#manualSaveSection > section {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+    flex-wrap: wrap;
+}
+
+#manualSaveSection > section > section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#manualSaveSection > section > section:first-child::after {
+    content: '';
+    display: block;
+    background-color: #cac4d0;
+    position: absolute;
+}
+
+#googleSaveSection, #linkSection {
+    flex-direction: column;
+}
+
+#googleSaveSection > section, #linkSection > section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#googleSaveSection #googleProgress {
+    width: 60%;
+}
+
+#googleSaveSection .indeterminateProgress {
+    margin-bottom: 5em;
+}
+
+#googleProgressText {
+    text-align: center;
+}
+
+.erro .indeterminateProgress, .erro #googleProgress {
+    display: none !important;
+}
+
+#linkSection p {
+    margin-top: 0;
+}
+
+#linkSection a {
+    text-align: center;
+}

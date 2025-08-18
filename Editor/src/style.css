@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Open%20Sans:wght@400;500;700&display=swap');
+@import url('css/dados.css');
+@import url('css/associacoes.css');
+@import url('css/save.css');
+@import url('css/modal.css');
 
 
 #holder:not(.escolha) #escolherJogo {
@@ -10,6 +14,10 @@
 }
 
 #holder:not(.dados) #dadosSection {
+    display: none !important;
+}
+
+#holder:not(.associacoes) #associacoesSection {
     display: none !important;
 }
 
@@ -25,7 +33,11 @@
     display: none !important;
 }
 
-body {
+
+html, body {
+    width: 100%;
+    height: 100%;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -139,6 +151,7 @@ main > section > form {
 #escolherJogo > section {
     display: flex;
     flex-grow: 1;
+    gap: 2em;
 
     width: 100%;
     align-items: center;
@@ -188,268 +201,10 @@ main > section > form {
     margin: 0;
 }
 
-#dadosSection {
-    flex-direction: column;
-}
-
-#dadosHolder {
-    flex-grow: 1;
-    overflow-y: auto;
-
-    display: flex;
-    flex-direction: column;
-
-    border: 1px solid #79747e;
-    border-radius: 4px;
-
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-.dadosPerguntasInfo {
-    margin-bottom: 1em;
-
-    display: flex;
-    justify-content: space-between;
-}
-
-.dadosPerguntasInfo h2 {
-    margin: 0;
-    font-family: 'Open Sans', sans-serif;
-
-    font-size: 20px;
-}
-
-.dadosFooter {
-    display: flex;
-    flex-direction: row-reverse;
-
-    position: absolute;
-    bottom: 4px;
-    right: 0;
-}
-
-.dadosForm {
-    position: relative;
-
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    width: 100%;
-    gap: 16px;
-
-    border: 1px solid #79747e;
-    border-radius: 4px;
-    padding-top: 1.5em;
-    padding-bottom: 1.5em;
-
-    box-sizing: border-box;
-}
-
-.dadosForm .pergunta {
-    flex-grow: 1;
-}
-
-.dadosForm > section {
-    display: flex;
-    gap: 16px;
-    width: 100%;
-    flex-wrap: wrap;
-}
-
-:not(.opcaoBooleano) > .dadoBooleano, :not(.opcaoPorcentagem) > .dadoPorcentagem, :not(.opcaoGrafico) > .dadoGrafico {
-    display: none !important;
-}
-
-.dadoBooleano {
-    padding: 8px;
-    justify-content: space-evenly;
-}
-
-md-radio {
-    margin-right: .5em;
-}
-
-:not(.porcentagemValor) > section > .minmax {
-    display: none !important;
-}
-
-.sliderPorcentagem {
-    flex-grow: 1;
-    align-items: center;
-}
-
-.porcentagemSliderHolder {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-
-    width: 100%;
-}
-
-.porcentagemSliderHolder > .input-d3 {
-    flex-grow: 0;
-}
-
-.graficoHolder {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.grafico {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-}
-
-.grafico > md-slider {
-    width: 80%;
-}
-
-.dadosForm > section.dadoGrafico {
-    justify-content: space-between;
-}
-
 #infoSection {
     flex-direction: column;
 }
 
-#manualSaveSection {
-    align-content: flex-start;
-    flex-direction: column;
-}
-
-#manualSaveSection > section {
-    display: flex;
-    justify-content: center;
-    flex-grow: 1;
-    flex-wrap: wrap;
-}
-
-#manualSaveSection > section > section {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-#manualSaveSection > section > section:first-child::after {
-    content: '';
-    display: block;
-    background-color: #cac4d0;
-    position: absolute;
-}
-
-#googleSaveSection, #linkSection {
-    flex-direction: column;
-}
-
-#googleSaveSection > section, #linkSection > section {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-#googleSaveSection #googleProgress {
-    width: 60%;
-}
-
-#googleSaveSection .indeterminateProgress {
-    margin-bottom: 5em;
-}
-
-#googleProgressText {
-    text-align: center;
-}
-
-.erro .indeterminateProgress, .erro #googleProgress {
-    display: none !important;
-}
-
-#linkSection p {
-    margin-top: 0;
-}
-
-#linkSection a {
-    text-align: center;
-}
-
-
-.modal {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-
-    display: none;
-    justify-content: center;
-    align-items: center;
-
-    background-color: #00000080;
-    z-index: 1000;
-
-    text-align: justify;
-}
-
-#modal_erro.modal > div {
-    width: unset !important;
-    height: unset !important;
-}
-
-.modal.aberto {
-    display: flex !important;
-}
-
-.modal > div {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 16px;
-    background-color: white;
-    border-radius: 8px;
-
-    width: 100%;
-    height: 100%;
-    max-width: 40em;
-    max-height: 40em;
-}
-
-.modal > div > header {
-    display: flex;
-    align-items: center;
-    gap: 1em;
-}
-
-.modal h1 {
-    margin: 0;
-}
-
-.modal section {
-    width: 100%;
-    flex-grow: 1;
-    overflow-y: auto;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.modal img {
-    max-height: 20em;
-}
-
-.modal p {
-    width: 100%;
-    text-align: justify;
-}
 
 
 @media (min-width: 550px) {
@@ -458,6 +213,10 @@ md-radio {
         max-width: 60em;
         height: 100%;
         max-height: 50em;
+    }
+
+    #escolherJogo > section {
+        flex-direction: row;
     }
 
     .text-input {
@@ -493,6 +252,10 @@ md-radio {
     #holder {
         width: 100%;
         height: 100%;
+    }
+
+    #escolherJogo > section {
+        flex-direction: column;
     }
 
     .text-input {

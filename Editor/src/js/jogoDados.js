@@ -573,6 +573,7 @@ class JogoDados {
     urlInput = null;
     dadosHolder = null;
     novaPerguntaBtn = null;
+    novaPerguntaHolder = null;
 
     #id = -1;
     perguntas = [];
@@ -586,6 +587,7 @@ class JogoDados {
         this.urlInput = document.querySelector("#dadosUrl");
         this.dadosHolder = document.querySelector("#dadosHolder");
         this.novaPerguntaBtn = document.querySelector("#novaPerguntaBtn");
+        this.novaPerguntaHolder = document.querySelector("div:has( > #novaPerguntaBtn)");
         this.novaPerguntaBtn.addEventListener("click", evt=> {
             this.gerarNovaPergunta();
             evt.preventDefault();
@@ -604,7 +606,12 @@ class JogoDados {
 
     limparPerguntas() {
         console.log("Limpando perguntas");
-        this.dadosHolder.innerHTML = "";
+
+        for (const child of this.dadosHolder.children) {
+            if (child == this.novaPerguntaHolder) continue;
+            this.dadosHolder.removeChild(child);
+        }
+
         this.perguntas = [];
     }
 
@@ -612,7 +619,7 @@ class JogoDados {
         this.#id++;
 
         let opcao = new OpcaoDados(this, this.#id);
-        this.dadosHolder.appendChild(opcao.form);
+        this.dadosHolder.insertBefore(opcao.form, this.novaPerguntaHolder);
 
         this.perguntas.push(opcao);
     }
