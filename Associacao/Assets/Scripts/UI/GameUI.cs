@@ -17,6 +17,8 @@ public class GameUI : MonoBehaviour {
     public CurrentGameState state = CurrentGameState.WaitingStart;
     AssociacaoInfo associacaoInfo;
 
+    public Text quantConexoesLabel;
+
     public Text acertosLabel;
     public Image acertosImage;
 
@@ -56,6 +58,8 @@ public class GameUI : MonoBehaviour {
         
         HashSet<string> coluna1Set = new HashSet<string>();
         HashSet<string> coluna2Set = new HashSet<string>();
+
+        quantMaxConexoes = 0;
         
         foreach (Associacao associacao in info.associacoes) {
             string palavra = associacao.palavra;
@@ -65,6 +69,7 @@ public class GameUI : MonoBehaviour {
 
             foreach (string conexao in conexoes) {
                 coluna2Set.Add(conexao);
+                quantMaxConexoes++;
             }
         }
 
@@ -122,6 +127,7 @@ public class GameUI : MonoBehaviour {
         LayoutRebuilder.ForceRebuildLayoutImmediate(coluna1.GetComponent<RectTransform>());
         LayoutRebuilder.ForceRebuildLayoutImmediate(coluna2.GetComponent<RectTransform>());
 
+        AtualizarQuantidadeConexoes(0);
     }
 
 
@@ -140,6 +146,10 @@ public class GameUI : MonoBehaviour {
             conexao.OcultarParaFeedback();
             yield return new WaitForSeconds(0.025f);
         }
+
+        acertos = 0;
+        erros = 0;
+        naoFeitos = 0;
 
         foreach (AssociacaoUI associacao in coluna1.GetComponentsInChildren<AssociacaoUI>()) {
             List<string> conexoesDaPalavra = new List<string>(associacaoInfo.GetConexoes(associacao.palavra));
@@ -172,12 +182,15 @@ public class GameUI : MonoBehaviour {
         statusHolder.SetActive(true);
         statusHolderController.SetTrigger("Aparecer");
 
-        if (acertos == associacaoInfo.associacoes.Length) {
+        if (erros > 0) {
+            statusLabel.text = "Eita!";
+            statusDescricao.text = "Você errou algumas associações.";
+        } else if (acertos == associacaoInfo.associacoes.Length) {
             statusLabel.text = "Parabéns!";
             statusDescricao.text = "Você acertou todas as associações!";
         } else {
             statusLabel.text = "Ops!";
-            statusDescricao.text = "Você errou algumas associações.";
+            statusDescricao.text = "Você deixou de fazer algumas associações.";
         }
     }
 
@@ -189,7 +202,10 @@ public class GameUI : MonoBehaviour {
         GameManager.instance.EndGame();
     }
 
-    
+    int quantMaxConexoes = 0;
+    public void AtualizarQuantidadeConexoes(int quantConexoes) {
+        quantConexoesLabel.text = quantConexoes + "/" + quantMaxConexoes;
+    }
 
     public bool CheckIfWin() {
         return true;

@@ -1,3 +1,4 @@
+// Para cada pergunta, um OpcaoDados
 class OpcaoDados {
     id = -1;
     form = null;

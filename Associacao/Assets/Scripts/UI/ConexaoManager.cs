@@ -13,7 +13,7 @@ public class ConexaoManager : MonoBehaviour {
     public AssociacaoUI primeiraAssociacao;
     Conexao conexaoAtual;
 
-
+    int quantidadeConexoes = 0;
     bool conectando = false;
 
 
@@ -72,6 +72,8 @@ public class ConexaoManager : MonoBehaviour {
         primeiraAssociacao = null;
         associacaoEmBaixo = null;
         conexaoAtual = null;
+
+        quantidadeConexoes = 0;
     }
 
     public GraphicRaycaster raycaster;
@@ -126,6 +128,14 @@ public class ConexaoManager : MonoBehaviour {
         conectando = false;
         conexaoAtual = null;
         primeiraAssociacao = null;
+
+        quantidadeConexoes++;
+        AtualizarQuantidadeConexoes();
+    }
+
+    public void RegistrarConexaoDestruida() {
+        quantidadeConexoes--;
+        AtualizarQuantidadeConexoes();
     }
 
     public Conexao[] GetConexoes() {
@@ -135,8 +145,13 @@ public class ConexaoManager : MonoBehaviour {
                 conexoes.Add(conexao);
             }
         }
+
+        quantidadeConexoes = conexoes.Count;
+        AtualizarQuantidadeConexoes();
         return conexoes.ToArray();
     }
 
-    
+    public void AtualizarQuantidadeConexoes() {
+        UIController.game.AtualizarQuantidadeConexoes(quantidadeConexoes);
+    }
 }

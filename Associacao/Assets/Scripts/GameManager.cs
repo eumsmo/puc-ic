@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum GameState {
@@ -21,6 +19,9 @@ public class GameManager : MonoBehaviour {
 
     public int qualPergunta = 0;
     public int quantasPerguntas = 0;
+    
+    [Header("URLs")]
+    public string feedbackURL = "";
 
     float tempo = 0;
     public float TempoPartida {
@@ -105,5 +106,9 @@ public class GameManager : MonoBehaviour {
 
     public void IrAoArtigo() {
         Application.OpenURL(GetInfo().url);
+    }
+
+    public void AbrirFeedbackForm() {
+        Application.OpenURL(feedbackURL);
     }
 }

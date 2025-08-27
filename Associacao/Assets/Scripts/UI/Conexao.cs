@@ -106,6 +106,8 @@ public class Conexao : MonoBehaviour, IPointerDownHandler {
         if (associacao1 != null) associacao1.RemoverAssociacao(associacao2);
         if (associacao2 != null) associacao2.RemoverAssociacao(associacao1);
         Destroy(gameObject);
+
+        ConexaoManager.instance.RegistrarConexaoDestruida();
     }
 
 

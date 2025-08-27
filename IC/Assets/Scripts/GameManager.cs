@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour {
         get { return tempo; }
     }
 
+    [Header("URLs")]
+    public string feedbackURL = "";
+    
     void Awake() {
         if (instance == null) {
             instance = this;
@@ -86,5 +89,9 @@ public class GameManager : MonoBehaviour {
 
     public void IrAoArtigo() {
         Application.OpenURL(GetArtigoInfo().url);
+    }
+
+    public void AbrirFeedbackForm() {
+        Application.OpenURL(feedbackURL);
     }
 }

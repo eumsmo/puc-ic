@@ -1,4 +1,4 @@
-// URL API
+// URL API do Google (utilizamos a API do Drive para armazenar o 'JSON' dos jogos produzidos)
 const drive_token = 'https://oauth2.googleapis.com/token';
 const drive_criar = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
 const drive_permission =  (id) => 'https://www.googleapis.com/drive/v3/files/' + id + '/permissions';
@@ -9,12 +9,15 @@ const drive_criar_pasta = 'https://www.googleapis.com/drive/v3/files';
 const drive_atualizar = (id) => 'https://www.googleapis.com/drive/v3/files/' + id + '?uploadType=multipart';
 
 // Valores fixos
-const redirect_uri = 'https://eumsmo.github.io';
-const nome_pasta = 'Jogos-Artigos';
-const link_editor = 'https://eumsmo.github.io/puc-ic/Editor/';
-const link_jogoResumo = file_id => 'https://eumsmo.github.io/puc-ic/Build/?drive=' + file_id;
-const link_jogoDados = file_id => 'https://eumsmo.github.io/puc-ic/Dados/Build/?drive=' + file_id;
-const link_jogoAssociacoes = file_id => 'https://eumsmo.github.io/puc-ic/Associacoes/Build/?drive=' + file_id;
+const url_base = 'https://eumsmo.github.io'; // URL base do github (conta proprietária do repositório)
+const url_repositorio = url_base + '/puc-ic/'; // URL do repositorio contendo todo os jogos
+const redirect_uri = url_base;
+const nome_pasta = 'Jogos-Artigos'; // Nome da pasta a ser criada no drive do usuário
+const link_editor = url_repositorio + 'Editor/'; // Link do próprio editor
+
+const link_jogoResumo = file_id => url_repositorio +'Build/?drive=' + file_id;
+const link_jogoDados = file_id => url_repositorio + 'Dados/Build/?drive=' + file_id;
+const link_jogoAssociacoes = file_id => url_repositorio + 'Associacao/Build/?drive=' + file_id;
 
 // Elements
 const holder = document.querySelector('#holder');
