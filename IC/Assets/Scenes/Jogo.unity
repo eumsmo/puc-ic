@@ -6078,7 +6078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 0
-  feedbackURL: https://www.pucminas.br/destaques/Paginas/default.aspx
+  feedbackURL: https://docs.google.com/forms/d/e/1FAIpQLSfsiudVGO1XmjBSR6dimMPrKsTuk_4bt72ps2LaWByfjJ8YXg/viewform?usp=header
 --- !u!4 &1419520401
 Transform:
   m_ObjectHideFlags: 0

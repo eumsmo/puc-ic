@@ -5475,7 +5475,7 @@ MonoBehaviour:
   gameState: 0
   qualPergunta: 0
   quantasPerguntas: 0
-  feedbackURL: https://www.pucminas.br/destaques/Paginas/default.aspx
+  feedbackURL: https://docs.google.com/forms/d/e/1FAIpQLSfsiudVGO1XmjBSR6dimMPrKsTuk_4bt72ps2LaWByfjJ8YXg/viewform?usp=header
 --- !u!4 &1419520401
 Transform:
   m_ObjectHideFlags: 0
@@ -13693,7 +13693,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 176, y: -18.494417}
+  m_AnchoredPosition: {x: 176, y: -18.49442}
   m_SizeDelta: {x: 99.9071, y: 32.037}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5381876342082154654

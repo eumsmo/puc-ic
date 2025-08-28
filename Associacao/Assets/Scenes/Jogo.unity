@@ -891,132 +891,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 344466254}
   m_CullTransparentMesh: 1
---- !u!1001 &347642969
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1170536431}
-    m_Modifications:
-    - target: {fileID: 2443675444900945017, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_Name
-      value: Palavra 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2765085142719442936, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2765085142719442936, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2765085142719442936, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 117
-      objectReference: {fileID: 0}
-    - target: {fileID: 2765085142719442936, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2765085142719442936, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 62.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2765085142719442936, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -14.333334
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 125
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 62.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -130.74165
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
---- !u!224 &347642970 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 8313456194475313896, guid: 828cb0b4b375783439f7bab9c57cd1fb, type: 3}
-  m_PrefabInstance: {fileID: 347642969}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &351217192
 GameObject:
   m_ObjectHideFlags: 0
@@ -3590,7 +3464,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 347642970}
   - {fileID: 423244908}
   - {fileID: 1796475750}
   m_Father: {fileID: 2127435128}
@@ -4099,7 +3972,7 @@ MonoBehaviour:
   gameState: 0
   qualPergunta: 0
   quantasPerguntas: 0
-  feedbackURL: https://www.pucminas.br/destaques/Paginas/default.aspx
+  feedbackURL: https://docs.google.com/forms/d/e/1FAIpQLSfsiudVGO1XmjBSR6dimMPrKsTuk_4bt72ps2LaWByfjJ8YXg/viewform?usp=header
 --- !u!4 &1419520401
 Transform:
   m_ObjectHideFlags: 0
