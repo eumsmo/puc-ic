@@ -90,6 +90,10 @@ public class GraficoSection : MonoBehaviour, SecaoDoJogo {
 
         campoObj.transform.SetParent(graficosHolder.transform);
         campoObj.transform.localScale = Vector3.one;
+        
+        Vector3 pos = campoObj.transform.localPosition;
+        pos.z = 0;
+        campoObj.transform.localPosition = pos;
 
         return valorGrafico;
     }
