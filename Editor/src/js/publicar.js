@@ -14,6 +14,7 @@ const url_repositorio = url_base + '/puc-ic/'; // URL do repositorio contendo to
 const redirect_uri = url_base;
 const nome_pasta = 'Jogos-Artigos'; // Nome da pasta a ser criada no drive do usuário
 const link_editor = url_repositorio + 'Editor/'; // Link do próprio editor
+const form_feedback = "https://docs.google.com/forms/d/e/1FAIpQLSfsiudVGO1XmjBSR6dimMPrKsTuk_4bt72ps2LaWByfjJ8YXg/viewform?usp=header";
 
 const link_jogoResumo = file_id => url_repositorio +'Build/?drive=' + file_id;
 const link_jogoDados = file_id => url_repositorio + 'Dados/Build/?drive=' + file_id;
@@ -39,6 +40,8 @@ const googleProgress = document.querySelector('#googleProgress');
 const googleProgressText = document.querySelector('#googleProgressText');
 
 const linkHolder = document.querySelector('#linkEl');
+
+const feedbackBtn = document.querySelector('#feedbackBtn');
 
 class PseudoDocumento {
     name = '';
@@ -469,3 +472,5 @@ escolheAssociacoes.addEventListener("click", () => controlador.setarEstado('asso
 baixarManualBtn.addEventListener('click', () => controlador.publicador.gerarManual());
 irManualBtns.forEach(btn => btn.addEventListener('click', () => { if (controlador.validar()) controlador.setarEstado('manual'); }));
 irGoogleBtns.forEach(btn => btn.addEventListener('click', () => { if (controlador.validar()) controlador.publicador.gerarGoogle() }));
+
+feedbackBtn.addEventListener("click", () => window.open(form_feedback, '_blank').focus());

@@ -205,6 +205,18 @@ main > section > form {
     flex-direction: column;
 }
 
+footer:has(#feedbackBtn) {
+    justify-content: center !important;
+}
+
+#feedbackBtn {
+    --md-outlined-button-container-shape: 0px;
+    --md-outlined-button-label-text-font: system-ui;
+    --md-sys-color-primary: #fff;
+    --md-sys-color-outline: #fff;
+    background-color: #ffffff12;
+}
+
 
 
 @media (min-width: 550px) {

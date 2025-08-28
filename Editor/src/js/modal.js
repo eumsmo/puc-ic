@@ -24,10 +24,16 @@ const modalInfo = {
         texto: 'Nesse jogo, o jogador deve descobrir o título do artigo com base em um resumo. O resumo é uma descrição curta do conteúdo do artigo. Tanto o titulo quanto o resumo terão suas palavras ocultadas que só serão reveladas se o jogador digitar a palavra corretamente.',
         img: 'src/imgs/artigo.png'
     },
+    conexoes: {
+        titulo: 'Associações',
+        texto: 'Nesse jogo, o jogador deve conectar palavras entre duas colunas. Ao clicar em uma palavra de uma das colunas, o jogador pode conecta-la a outra palavra de uma outra coluna. Cada palavra pode ter mais de uma conexão, porém o limite a ser inserido são no máximo 3 conexões por palavra.',
+        img: 'src/imgs/conexao.png'
+    },
 };
 
 const abrirDadosEl = document.querySelector('#modalDados');
 const abrirArtigoEl = document.querySelector('#modalArtigo');
+const abrirConexoesEl = document.querySelector('#modalAssociacoes');
 
 class Modal {
     modal = document.querySelector('#modal');
@@ -52,6 +58,7 @@ class Modal {
 
         abrirDadosEl.addEventListener('click', () => this.abrir('dados'));
         abrirArtigoEl.addEventListener('click', () => this.abrir('resumo'));
+        abrirConexoesEl.addEventListener('click', () => this.abrir('conexoes'));
     }
 
     abrir(tipo) {
