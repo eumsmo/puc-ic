@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6718056426471120451, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: b7408014fb3b13846a009136dfa8787e, type: 3}
+    - target: {fileID: 6718056426471120451, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_FontData.m_MaxSize
       value: 67
       objectReference: {fileID: 0}
@@ -134,7 +138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8908436504126240781, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8908436504126240781, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_SizeDelta.y
@@ -214,7 +218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8949684332112615044, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -17.46576
+      value: -17.46582
       objectReference: {fileID: 0}
     - target: {fileID: 8949684332112615044, guid: aca0611f2cf1b174fac03d6fb60009f7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
