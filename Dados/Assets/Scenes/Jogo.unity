@@ -5475,7 +5475,7 @@ MonoBehaviour:
   gameState: 0
   qualPergunta: 0
   quantasPerguntas: 0
-  feedbackURL: https://docs.google.com/forms/d/e/1FAIpQLSfsiudVGO1XmjBSR6dimMPrKsTuk_4bt72ps2LaWByfjJ8YXg/viewform?usp=header
+  feedbackURL: https://forms.gle/hQwgY5Z1ysrQfEEPA
 --- !u!4 &1419520401
 Transform:
   m_ObjectHideFlags: 0

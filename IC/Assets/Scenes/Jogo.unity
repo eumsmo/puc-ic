@@ -6122,7 +6122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 0
-  feedbackURL: https://docs.google.com/forms/d/e/1FAIpQLSfsiudVGO1XmjBSR6dimMPrKsTuk_4bt72ps2LaWByfjJ8YXg/viewform?usp=header
+  feedbackURL: https://forms.gle/jMVTPbk8JhFvaa3D7
 --- !u!4 &1419520401
 Transform:
   m_ObjectHideFlags: 0
